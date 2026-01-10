@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Roboto", sans-serif;
+}
+
+/* su dung font chu voi don vi rem */
+html {
+  font-size: 62.5%;
+}
+
+/* Common */
+a {
+  text-decoration: none;
+}
+
+.content {
+  display: flex;
+  height: 100%;
+}
+
+/* left content */
+.left-content {
+  background-color: #748c70;
+  display: flex;
+  width: 250px;
+  /* height: 100vh; */
+  flex-direction: column;
+  align-items: center;
+}
+
+.left-content h1 {
+  color: #ffffff;
+  margin-top: 35px;
+  width: 200px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.divider {
+  width: 250px;
+  height: 1px;
+  background-color: #fdf7f7;
+  margin: 16px auto;
+}
+
+/* Sidebar */
+.side-bar ul li:not(:first-child) {
+  margin-top: 15px;
+}
+
+.side-bar ul li a {
+  display: flex;
+  align-items: center;
+  width: 250px;
+  height: 50px;
+  padding-left: 25px;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #fff;
+  white-space: nowrap;
+  gap: 35px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.side-bar ul li a:hover {
+  background-color: #e2e1e1;
+}
+
+.side-bar ul li a img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.right-content {
+  background-color: #efefec;
+  flex: 1;
+  /* height: 100%; */
+}
+
+.side-bar li.active {
+  background: #d6d8d8;
+}
+
+.side-bar li.active a {
+  color: #fff;
+  font-weight: 600;
+}

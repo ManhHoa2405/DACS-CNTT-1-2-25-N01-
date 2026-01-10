@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý đơn hàng</title>
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/manageOrder.css}" />
+
+    <!-- JS modal (giữ nguyên) -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("orderModal");
+        const orderIdText = document.getElementById("orderId");
+
+        document.querySelectorAll(".btn.edit").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const orderId = btn.dataset.orderId;
+            orderIdText.innerText = orderId;
+            modal.classList.add("show");
+          });
+        });
+
+        window.closeModal = function () {
+          modal.classList.remove("show");
+        };
+
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="content">
+      <!-- Left content -->
+      <div class="left-content">
+        <h1>ADMIN CONTROL</h1>
+        <div class="divider"></div>
+
+        <nav class="side-bar">
+          <ul>
+            <li>
+              <a th:href="@{/admin/dashboard}">
+                <img th:src="@{/img/Subtract.svg}" /> Tổng quan
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/product/add}">
+                <img th:src="@{/img/add-icon.svg}" /> Thêm sản phẩm
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/product}">
+                <img th:src="@{/img/manage-product.svg}" /> Quản lý sản phẩm
+              </a>
+            </li>
+
+            <li class="active">
+              <a th:href="@{/admin/order}">
+                <img th:src="@{/img/manage-order.svg}" /> Quản lý đơn hàng
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/customer}">
+                <img th:src="@{/img/customer.svg}" /> Khách hàng
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Right content -->
+      <div class="right-content">
+        <h1>Quản lý đơn hàng</h1>
+
+        <div class="order-container">
+          <!-- Stats -->
+          <div class="order-stats">
+            <div class="stat stat-blue">
+              <h2 th:text="${totalOrders}">150</h2>
+              <p>Tổng đơn hàng</p>
+            </div>
+            <div class="stat stat-yellow">
+              <h2 th:text="${pendingOrders}">15</h2>
+              <p>Chờ xử lý</p>
+            </div>
+            <div class="stat stat-gray">
+              <h2 th:text="${shippingOrders}">10</h2>
+              <p>Đang giao</p>
+            </div>
+            <div class="stat stat-green">
+              <h2 th:text="${successOrders}">125</h2>
+              <p>Thành công</p>
+            </div>
+          </div>
+
+          <!-- Search -->
+          <div class="search-bar">
+            <input type="text" placeholder="Tìm kiếm tên sản phẩm..." />
+            <button>Tìm Kiếm</button>
+          </div>
+
+          <!-- Tabs (UI demo) -->
+          <div class="order-tabs">
+            <button class="active">Tất cả</button>
+            <button>Chờ xử lý</button>
+            <button>Đang giao</button>
+            <button>Hoàn thành</button>
+            <button>Đã hủy</button>
+          </div>
+
+          <!-- Table -->
+          <div class="order-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Khách hàng</th>
+                  <th>Ngày đặt</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr th:each="order : ${orders}">
+                  <td th:text="${order.code}">#12034</td>
+                  <td>
+                    <div class="up" th:text="${order.customerName}">
+                      Nguyễn Văn A
+                    </div>
+                    <small th:text="${order.phone}">0988xxxxxx</small>
+                  </td>
+                  <td>
+                    <div class="up" th:text="${order.date}">3/1/2026</div>
+                    <small th:text="${order.time}">21:33</small>
+                  </td>
+                  <td th:text="${order.total}">550.000 VND</td>
+                  <td>
+                    <span
+                      class="badge"
+                      th:classappend="${order.status}"
+                      th:text="${order.statusText}"
+                      >Đang xử lý</span
+                    >
+                  </td>
+                  <td>
+                    <button
+                      class="btn edit"
+                      th:attr="data-order-id=${order.code}"
+                    >
+                      <i class="fa-solid fa-pen"></i> Xử lý
+                    </button>
+
+                    <button class="btn delete">
+                      <i class="fa-solid fa-xmark"></i> Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="orderModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Cập nhật đơn <span id="orderId">#12034</span></h3>
+          <button class="modal-close" onclick="closeModal()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <label>Trạng thái mới:</label>
+          <select>
+            <option>Chờ xác nhận</option>
+            <option>Đang vận chuyển</option>
+            <option>Thành công</option>
+            <option>Đã hủy</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn cancel" onclick="closeModal()">Đóng</button>
+          <button class="btn save">Lưu thay đổi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script th:src="@{/js/sidebar-active.js}"></script>
+  </body>
+</html>

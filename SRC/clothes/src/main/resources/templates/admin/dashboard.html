@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+  </head>
+
+  <body>
+    <div class="content">
+      <!-- ================= Left Content ================= -->
+      <div class="left-content">
+        <h1>ADMIN CONTROL</h1>
+
+        <div class="divider"></div>
+
+        <!-- Sidebar -->
+        <nav class="side-bar">
+          <ul>
+            <li class="active">
+              <a th:href="@{/admin/dashboard}">
+                <img th:src="@{/img/Subtract.svg}" /> Tổng quan
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/product/add}">
+                <img th:src="@{/img/add-icon.svg}" /> Thêm sản phẩm
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/product}">
+                <img th:src="@{/img/manage-product.svg}" /> Quản lý sản phẩm
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/order}">
+                <img th:src="@{/img/manage-order.svg}" /> Quản lý đơn hàng
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/customer}">
+                <img th:src="@{/img/customer.svg}" /> Khách hàng
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- ================= Right Content ================= -->
+      <div class="right-content">
+        <h1>Tổng quan hệ thống</h1>
+
+        <!-- Top content -->
+        <div class="general">
+          <div class="general-item" style="border-left: solid 2px blue">
+            <div class="menu-title">Tổng đơn hàng</div>
+            <div class="data" th:text="${totalOrders}">2345</div>
+          </div>
+
+          <div class="general-item" style="border-left: solid 2px green">
+            <div class="menu-title">Doanh thu</div>
+            <div class="data" th:text="${revenue}">180.545.000 VND</div>
+          </div>
+
+          <div class="general-item" style="border-left: solid 2px yellow">
+            <div class="menu-title">Khách hàng</div>
+            <div class="data" th:text="${totalCustomers}">80</div>
+          </div>
+
+          <div class="general-item" style="border-left: solid 2px red">
+            <div class="menu-title">Sản phẩm</div>
+            <div class="data" th:text="${totalProducts}">250</div>
+          </div>
+        </div>
+
+        <!-- Bottom content -->
+        <div class="bottom-content">
+          <div class="menu-orders">
+            <h1>Đơn hàng mới nhất</h1>
+
+            <div class="table-wrapper">
+              <table class="order-table">
+                <thead>
+                  <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr th:each="order : ${orders}">
+                    <td th:text="${order.code}">#ORD-01</td>
+                    <td th:text="${order.customerName}">Nguyễn Văn A</td>
+                    <td th:text="${order.orderDate}">01/01/2026</td>
+                    <td th:text="${order.total}">1.600.000 VND</td>
+                    <td>
+                      <span
+                        class="status"
+                        th:classappend="${order.status}"
+                        th:text="${order.statusText}"
+                        >Hoàn thành</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination (demo UI) -->
+            <div class="pagination">
+              <button>‹</button>
+              <button class="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script th:src="@{/js/sidebar-active.js}"></script>
+  </body>
+</html>

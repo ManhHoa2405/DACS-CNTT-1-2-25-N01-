@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý sản phẩm</title>
+
+    <!-- GOOGLE FONT -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/manageProduct.css}" />
+  </head>
+
+  <body>
+    <div class="content">
+      <!-- LEFT -->
+      <div class="left-content">
+        <h1>ADMIN CONTROL</h1>
+        <div class="divider"></div>
+
+        <nav class="side-bar">
+          <ul>
+            <li data-page="dashboard">
+              <a th:href="@{/admin/dashboard}">
+                <img th:src="@{/img/Subtract.svg}" /> Tổng quan
+              </a>
+            </li>
+
+            <li data-page="addProduct">
+              <a th:href="@{/admin/products/add}">
+                <img th:src="@{/img/add-icon.svg}" /> Thêm sản phẩm
+              </a>
+            </li>
+
+            <li data-page="manageProduct">
+              <a th:href="@{/admin/products}">
+                <img th:src="@{/img/manage-product.svg}" /> Quản lý sản phẩm
+              </a>
+            </li>
+
+            <li data-page="manageOrder">
+              <a th:href="@{/admin/orders}">
+                <img th:src="@{/img/manage-order.svg}" /> Quản lý đơn hàng
+              </a>
+            </li>
+
+            <li data-page="manageCustomer">
+              <a th:href="@{/admin/customers}">
+                <img th:src="@{/img/customer.svg}" /> Khách hàng
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right-content">
+        <h1>Danh sách sản phẩm</h1>
+
+        <div class="container">
+          <!-- FILTER -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <input type="text" placeholder="Tìm Kiếm Sản Phẩm" />
+              <img th:src="@{/img/Search_light.svg}" class="icon" />
+            </div>
+
+            <select>
+              <option>Áo</option>
+              <option>Quần</option>
+              <option>Đầm</option>
+            </select>
+
+            <select>
+              <option>Đang Bán</option>
+              <option>Ngừng Bán</option>
+            </select>
+
+            <button class="btn-search">Tìm Kiếm</button>
+          </div>
+
+          <!-- TABLE -->
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Sản Phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- PRODUCT -->
+              <tr class="product-row">
+                <td>25ADKE097F</td>
+
+                <td>
+                  <div class="product">
+                    <img
+                      th:src="@{/img/Đầm tay dài, Dáng ôm 25ADKE097F 2.png}"
+                    />
+                    <div class="product-info">
+                      <div class="product-name">Đầm tay dài, Dáng ôm</div>
+                      <div class="product-size">S, M, L, XL</div>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="price">650.000 VND</td>
+                <td class="qty">250</td>
+
+                <td>
+                  <span class="status selling">Đang Bán</span>
+                </td>
+
+                <td class="action-cell">
+                  <button class="btn-detail">▼ Chi tiết</button>
+                </td>
+              </tr>
+
+              <!-- SKU DETAIL -->
+              <tr class="sku-row">
+                <td colspan="6">
+                  <div class="sku-box">
+                    <div class="sku-header">
+                      <strong>Danh sách SKU</strong>
+                      <button class="btn-add-sku">+ Thêm SKU</button>
+                    </div>
+
+                    <table class="sku-table">
+                      <thead>
+                        <tr>
+                          <th>Size</th>
+                          <th>Màu</th>
+                          <th>Tồn kho</th>
+                          <th>Giá</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td><span>S</span><input value="S" /></td>
+                          <td><span>Đen</span><input value="Đen" /></td>
+                          <td>
+                            <span>50</span>
+                            <input type="number" value="50" />
+                          </td>
+                          <td>
+                            <span>650000</span>
+                            <input type="number" value="650000" />
+                          </td>
+                          <td>
+                            <button class="btn-edit">✏</button>
+                            <button class="btn-save">✔</button>
+                            <button class="btn-cancel">✖</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- PAGINATION -->
+          <div class="pagination">
+            <span class="page disabled">‹</span>
+            <span class="page active">1</span>
+            <span class="page">2</span>
+            <span class="page">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+      // Toggle SKU
+      document.querySelectorAll(".btn-detail").forEach((btn) => {
+        btn.onclick = () => {
+          const skuRow = btn.closest("tr").nextElementSibling;
+          skuRow.classList.toggle("show");
+          btn.textContent = skuRow.classList.contains("show")
+            ? "▲ Chi tiết"
+            : "▼ Chi tiết";
+        };
+      });
+
+      // Edit SKU
+      document.addEventListener("click", (e) => {
+        const row = e.target.closest("tr");
+        if (!row) return;
+
+        if (e.target.classList.contains("btn-edit")) {
+          row.classList.add("editing");
+        }
+
+        if (e.target.classList.contains("btn-cancel")) {
+          row.classList.remove("editing");
+        }
+
+        if (e.target.classList.contains("btn-save")) {
+          const spans = row.querySelectorAll("span");
+          const inputs = row.querySelectorAll("input");
+
+          inputs.forEach((input, i) => {
+            spans[i].textContent = input.value;
+          });
+
+          row.classList.remove("editing");
+        }
+      });
+    </script>
+
+    <!-- SIDEBAR JS -->
+    <script th:src="@{/js/sidebar-active.js}"></script>
+  </body>
+</html>

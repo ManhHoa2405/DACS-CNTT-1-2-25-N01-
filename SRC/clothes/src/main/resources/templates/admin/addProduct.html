@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thêm sản phẩm</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS (Spring Boot static) -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/addProduct.css}" />
+  </head>
+
+  <body>
+    <div class="content">
+      <div class="left-content">
+        <h1>ADMIN CONTROL</h1>
+
+        <div class="divider"></div>
+
+        <!-- Sidebar -->
+        <nav class="side-bar">
+          <ul>
+            <li>
+              <a th:href="@{/admin/dashboard}">
+                <img th:src="@{/img/Subtract.svg}" /> Tổng quan
+              </a>
+            </li>
+
+            <li class="active">
+              <a th:href="@{/admin/product/add}">
+                <img th:src="@{/img/add-icon.svg}" /> Thêm sản phẩm
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/product}">
+                <img th:src="@{/img/manage-product.svg}" /> Quản lý sản phẩm
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/order}">
+                <img th:src="@{/img/manage-order.svg}" /> Quản lý đơn hàng
+              </a>
+            </li>
+
+            <li>
+              <a th:href="@{/admin/customer}">
+                <img th:src="@{/img/customer.svg}" /> Khách hàng
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Right content -->
+      <div class="right-content">
+        <div class="up-content">
+          <h1>Thêm sản phẩm mới</h1>
+          <div class="divider-2"></div>
+        </div>
+
+        <div class="down-content">
+          <div class="form-wrapper">
+            <div class="form-wrapper-up">
+              <div class="form-group">
+                <label>Tên sản phẩm</label>
+                <input type="text" placeholder="Nhập Tên Sản Phẩm :" />
+              </div>
+
+              <div class="form-group">
+                <label>Mô Tả Chi Tiết</label>
+                <textarea></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Giá Gốc (VND)</label>
+                  <input type="number" />
+                </div>
+
+                <div class="form-group">
+                  <label>Danh Mục</label>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-wrapper-down">
+              <div class="variant-box">
+                <div class="variant-header">
+                  <span>Size</span>
+                  <span>Số Lượng</span>
+                  <span></span>
+                </div>
+
+                <div class="variant-row">
+                  <input type="text" placeholder="S, M, L..." />
+                  <input type="number" value="0" min="0" class="quanity" />
+                  <button class="btn-delete">Xóa</button>
+                </div>
+
+                <div class="divider-3"></div>
+
+                <button class="btn-add">Thêm</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-column">
+            <div class="image-box">
+              <h3>Ảnh Sản Phẩm</h3>
+              <div class="divider-3"></div>
+
+              <div class="upload-row" th:each="i : ${#numbers.sequence(1,4)}">
+                <img th:src="@{/img/Img_box_fill.svg}" alt="image icon" />
+                <label class="file-label">
+                  Chọn ảnh
+                  <input type="file" hidden />
+                </label>
+              </div>
+            </div>
+
+            <button class="btn-save">Lưu sản phẩm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script th:src="@{/js/sidebar-active.js}"></script>
+  </body>
+</html>
