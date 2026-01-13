@@ -1,0 +1,275 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* su dung font chu voi don vi rem */
+html {
+  font-size: 62.5%;
+}
+
+/* Common */
+a {
+  text-decoration: none;
+}
+
+/* Header */
+.header .banner {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5a6d57;
+}
+
+.banner p {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.navbar {
+  background-color: #fff;
+  height: 80px;
+  margin: 0 108px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar .nav-products {
+  display: flex;
+  gap: 120px;
+}
+
+.navbar .nav-products li a {
+  color: #404040;
+}
+
+.navbar .nav-products li a:hover {
+  text-decoration: underline;
+}
+
+.navbar .actions {
+  display: flex;
+  gap: 24px;
+}
+
+.navbar .actions a {
+  display: inline-block; /* BẮT BUỘC */
+  transition: transform 0.3s ease; /* cho mượt */
+}
+
+.navbar .actions a:hover {
+  transform: scale(1.5);
+}
+
+/* Footer */
+.footer {
+  background-color: #404040;
+  color: #fff;
+  padding: 60px 120px 30px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 80px;
+}
+
+/* Column */
+.footer-col h4 {
+  font-size: 15px;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer-col ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Subscribe */
+.footer-subscribe {
+  display: flex;
+  align-items: center;
+  border: 1px solid #aaa;
+  margin-bottom: 12px;
+}
+
+.footer-subscribe input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  color: white;
+  font-size: 13px;
+}
+
+.footer-subscribe input::placeholder {
+  color: #ccc;
+}
+
+.footer-subscribe span {
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+/* Checkbox */
+.footer-checkbox {
+  font-size: 12px;
+  color: #ccc;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* Social icons */
+.footer-social {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-social img {
+  width: 18px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.footer-social img:hover {
+  opacity: 1;
+}
+
+/* Bottom */
+.footer-bottom {
+  margin-top: 40px;
+  font-size: 12px;
+  color: #ccc;
+}
+
+/* icon chatbox */
+/* Chat icon */
+.chat-icon {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: #5a6d57;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.chat-icon img {
+  width: 30px;
+}
+
+/* Chat modal */
+.chat-modal {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  width: 320px;
+  height: 420px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+/* Header */
+.chat-header {
+  background-color: #5a6d57;
+  color: white;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Body */
+.chat-body {
+  flex: 1;
+  padding: 12px;
+  font-size: 13px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+
+.chat-message.bot {
+  background-color: #f1f1f1;
+  color: #000;
+}
+
+/* Input */
+.chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  outline: none; /* quan trọng */
+  box-shadow: none; /* quan trọng */
+}
+
+.chat-input input:focus {
+  border-color: #5f6f52; /* giữ nguyên màu viền */
+  outline: none;
+  box-shadow: none;
+}
+
+.chat-input button {
+  width: 40px;
+  border: none;
+  background-color: #5a6d57;
+  color: white;
+  cursor: pointer;
+}

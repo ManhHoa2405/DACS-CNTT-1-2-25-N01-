@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="banner">
+        <p>Miễn phí vận chuyển cho mọi đơn hàng</p>
+      </div>
+
+      <nav class="navbar">
+        <!-- Logo -->
+        <a th:href="@{/}">
+          <img th:src="@{/img/Logo.svg}" alt="Modimal" />
+        </a>
+
+        <ul class="nav-products">
+          <li><a th:href="@{/products/ao}">Áo</a></li>
+          <li><a th:href="@{/products/quan}">Quần</a></li>
+          <li><a th:href="@{/products/dam}">Đầm</a></li>
+          <li><a th:href="@{/products/chan-vay}">Chân váy</a></li>
+          <li><a th:href="@{/products/phu-kien}">Phụ kiện</a></li>
+        </ul>
+
+        <div class="actions">
+          <a th:href="@{/login}">
+            <img th:src="@{/img/Header profile icon.svg}" />
+          </a>
+          <a th:href="@{/cart}">
+            <img th:src="@{/img/Header bag icon.svg}" />
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="content">
+        <div class="register-image">
+          <img th:src="@{/img/Frame 26086866.png}" />
+        </div>
+
+        <div class="register-box">
+          <h2>Tạo Tài Khoản</h2>
+
+          <form th:action="@{/register}" method="post">
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Họ và Tên"
+              required
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Số Điện Thoại"
+              required
+            />
+            <input type="email" name="email" placeholder="Email" required />
+
+            <div class="password-field">
+              <input
+                type="password"
+                name="password"
+                placeholder="Mật Khẩu"
+                id="password"
+                required
+              />
+              <img
+                th:src="@{/img/crossed-eye.png}"
+                onclick="togglePassword('password', this)"
+              />
+            </div>
+
+            <div class="password-field">
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Nhập Lại Mật Khẩu"
+                id="confirmPassword"
+                required
+              />
+              <img
+                th:src="@{/img/crossed-eye.png}"
+                onclick="togglePassword('confirmPassword', this)"
+              />
+            </div>
+
+            <button type="submit">Đăng Ký Tài Khoản</button>
+          </form>
+
+          <p class="login-text">
+            Bạn đã có tài khoản ?
+            <a th:href="@{/login}">Đăng nhập</a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- JS -->
+    <script>
+      function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+          input.type = "text";
+          icon.src = "/img/eye.png";
+        } else {
+          input.type = "password";
+          icon.src = "/img/crossed-eye.png";
+        }
+      }
+    </script>
+
+    <script th:src="@{/js/chat.js}"></script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="banner">
+        <p>Miễn phí vận chuyển cho mọi đơn hàng</p>
+      </div>
+
+      <nav class="navbar">
+        <!-- Logo -->
+        <a th:href="@{/}" title="Trang chủ">
+          <img th:src="@{/img/Logo.svg}" alt="Modimal" />
+        </a>
+
+        <!-- Navigation -->
+        <ul class="nav-products">
+          <li><a th:href="@{/products/ao}">Áo</a></li>
+          <li><a th:href="@{/products/quan}">Quần</a></li>
+          <li><a th:href="@{/products/dam}">Đầm</a></li>
+          <li><a th:href="@{/products/chan-vay}">Chân váy</a></li>
+          <li><a th:href="@{/products/phu-kien}">Phụ kiện</a></li>
+        </ul>
+
+        <!-- Action -->
+        <div class="actions">
+          <div class="search-box">
+            <a th:href="@{/search}">
+              <img th:src="@{/img/Search_light.svg}" alt="Search" />
+            </a>
+          </div>
+
+          <div class="account">
+            <a th:href="@{/login}">
+              <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
+            </a>
+          </div>
+
+          <div class="cart">
+            <a th:href="@{/cart}">
+              <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main -->
+    <main>
+      <div class="content">
+        <!-- Left image -->
+        <div class="register-image">
+          <img th:src="@{/img/Frame 26086866.png}" alt="Register Poster" />
+        </div>
+
+        <!-- Right form -->
+        <div class="register-box">
+          <h2>Đăng nhập</h2>
+
+          <form th:action="@{/login}" method="post">
+            <input type="email" name="email" placeholder="Email" required />
+
+            <div class="password-field">
+              <input
+                type="password"
+                name="password"
+                placeholder="Mật khẩu"
+                id="password"
+                required
+              />
+              <img
+                th:src="@{/img/crossed-eye.png}"
+                class="toggle-eye"
+                onclick="togglePassword('password', this)"
+              />
+            </div>
+
+            <label class="saved-password">
+              <input type="checkbox" name="rememberMe" />
+              Nhớ mật khẩu
+              <a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+            </label>
+
+            <button type="submit">Đăng nhập</button>
+          </form>
+
+          <p class="login-text">
+            Bạn chưa có tài khoản ?
+            <a th:href="@{/register}">Tạo tài khoản</a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h4>Tham Gia CLB – Giảm 15% Dịp Sinh Nhật</h4>
+
+          <div class="footer-subscribe">
+            <input type="email" placeholder="Nhập Email Của Bạn" />
+            <span>→</span>
+          </div>
+
+          <label class="footer-checkbox">
+            <input type="checkbox" />
+            Gửi email đồng nghĩa với việc đồng ý nhận thông tin từ Modimal
+          </label>
+
+          <div class="footer-social">
+            <img th:src="@{/img/instagram.svg}" />
+            <img th:src="@{/img/fb.svg}" />
+            <img th:src="@{/img/pinterest.svg}" />
+            <img th:src="@{/img/tiktok.svg}" />
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Về Modimal</h4>
+          <ul>
+            <li><a th:href="@{/about}">Bộ Sưu Tập</a></li>
+            <li><a th:href="@{/sustainability}">Bền Vững</a></li>
+            <li><a th:href="@{/privacy}">Chính Sách Bảo Mật</a></li>
+            <li><a th:href="@{/support}">Hệ Thống Hỗ Trợ</a></li>
+            <li><a th:href="@{/terms}">Điều Khoản & Điều Kiện</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ Trợ</h4>
+          <ul>
+            <li><a th:href="@{/orders}">Đơn & Vận Chuyển</a></li>
+            <li><a th:href="@{/refund}">Đổi & Hoàn Tiền</a></li>
+            <li><a th:href="@{/faq}">Câu Hỏi Thường Gặp</a></li>
+            <li><a th:href="@{/contact}">Liên Hệ</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JS -->
+    <script>
+      function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+          input.type = "text";
+          icon.src = "/img/eye.png";
+        } else {
+          input.type = "password";
+          icon.src = "/img/crossed-eye.png";
+        }
+      }
+    </script>
+
+    <script th:src="@{/js/chat.js}"></script>
+  </body>
+</html>
