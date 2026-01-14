@@ -5,8 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class UserController {
-    @GetMapping("/admin/mangeCustomer")
-    public String manageCustomer() {
-        return "admin/manageCustomer";
+   
+    // hiển thị đăng nhập
+    @GetMapping("/account/login")
+    public String ViewLogin(){
+        return "account/login";
+    }
+
+    // hiển thị đăng ký
+    @GetMapping("/account/register")
+    public String ViewRegister(){
+        return "account/register";
     }
 }
