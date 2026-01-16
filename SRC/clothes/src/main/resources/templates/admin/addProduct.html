@@ -69,8 +69,27 @@
         </div>
 
         <div class="down-content">
+          <!-- <div th:if="${message}" th:text="${message}" 
+               th:attr="data-message-type=${messageType}"></div> -->
+
+              <script th:if="${message}" th:inline="javascript">
+                /*<![CDATA[*/
+                    let message = /*[[${message}]]*/ "";
+                    let messageType = /*[[${messageType}]]*/ "";
+
+                    if (messageType === 'success') {
+                        alert(message);
+                    } else if (messageType === 'error') {
+                        alert(message);
+                    }
+                /*]]>*/
+              </script>
+
+
           <form
             method="post"
+            th:action="@{/admin/addProductSubmit}"
+            th:object="${productDTO}"
             enctype="multipart/form-data"
             style="display: flex; width: 100%"
           >
@@ -78,23 +97,23 @@
               <div class="form-wrapper-up">
                 <div class="form-group">  
                   <label>Tên sản phẩm</label>
-                  <input type="text" name="productName" />
+                  <input type="text" name="productName"  autocomplete="off" required/>
                 </div>
 
                 <div class="form-group">
                   <label>Mô tả chi tiết</label>
-                  <textarea name="description"></textarea>
+                  <textarea name="description" required></textarea>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label>Giá gốc (VND)</label>
-                    <input type="number" name="price" />
+                    <input type="number" name="price" required  autocomplete="off"/>
                   </div>
 
                   <div class="form-group">
                     <label>Danh mục</label>
-                    <input type="text" name="category" />
+                    <input type="text" name="categoryName" required autocomplete="off" />
                   </div>
                 </div>
               </div>
@@ -106,15 +125,16 @@
                     <span>Số lượng</span>
                     <span></span>
                   </div>
-
-                  <div class="variant-row">
-                    <input type="text" name="sizes[]" />
-                    <input type="number" name="quantities[]" value="0" />
-                    <button type="button" class="btn-delete">Xóa</button>
+                  <div id="variant-container">
+                    <div class="variant-row">
+                      <input type="text" name="sizes" required autocomplete="off"/>
+                      <input type="number" name="quantities" value="0" required min="0" autocomplete="off" />
+                      <button type="button" class="btn-delete" onclick="removeVariant(this)">Xóa</button>
+                    </div>
                   </div>
 
                   <div class="divider-3"></div>
-                  <button type="button" class="btn-add">Thêm</button>
+                  <button type="button" class="btn-add" onclick="addVariant()">Thêm</button>
                 </div>
               </div>
             </div>
@@ -128,7 +148,7 @@
                   <img th:src="@{/img/Img_box_fill.svg}" />
                   <label class="file-label">
                     Chọn ảnh
-                    <input type="file" name="images" hidden />
+                    <input type="file" name="images" hidden accept="image/*" onchange="previewImage(this)"/>
                   </label>
                 </div>
               </div>
@@ -139,7 +159,7 @@
         </div>
       </div>
     </div>
-
+    
     <!-- JS -->
     <script th:src="@{/js/sidebar-active.js}"></script>
   </body>
