@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng ký</title>
 
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,53 +27,60 @@
       </div>
 
       <nav class="navbar">
-        <!-- Logo -->
-        <a th:href="@{/}">
+        <!-- logo -->
+        <a th:href="@{/}" title="Trang chủ">
           <img th:src="@{/img/Logo.svg}" alt="Modimal" />
         </a>
 
+        <!-- Navigation -->
         <ul class="nav-products">
-          <li><a th:href="@{/products/ao}">Áo</a></li>
-          <li><a th:href="@{/products/quan}">Quần</a></li>
-          <li><a th:href="@{/products/dam}">Đầm</a></li>
-          <li><a th:href="@{/products/chan-vay}">Chân váy</a></li>
-          <li><a th:href="@{/products/phu-kien}">Phụ kiện</a></li>
+          <li><a href="#">Áo</a></li>
+          <li><a href="#">Quần</a></li>
+          <li><a href="#">Đầm</a></li>
+          <li><a href="#">Chân váy</a></li>
+          <li><a href="#">Phụ kiện</a></li>
         </ul>
 
+        <!-- Action -->
         <div class="actions">
-          <a th:href="@{/login}">
-            <img th:src="@{/img/Header profile icon.svg}" />
-          </a>
-          <a th:href="@{/cart}">
-            <img th:src="@{/img/Header bag icon.svg}" />
-          </a>
+          <div class="search-box">
+            <a href="#">
+              <img th:src="@{/img/Search_light.svg}" alt="Search" />
+            </a>
+          </div>
+
+          <div class="account">
+            <a th:href="@{/login}">
+              <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
+            </a>
+          </div>
+
+          <div class="cart">
+            <a href="#">
+              <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
+            </a>
+          </div>
         </div>
       </nav>
     </header>
 
     <main>
+      <!-- Content account -->
       <div class="content">
+        <!-- Left image -->
         <div class="register-image">
-          <img th:src="@{/img/Frame 26086866.png}" />
+          <img th:src="@{/img/Frame 26086866.png}" alt="Register Poster" />
         </div>
 
+        <!-- Right form -->
         <div class="register-box">
           <h2>Tạo Tài Khoản</h2>
 
+          <!-- FORM (chưa xử lý backend) -->
           <form th:action="@{/register}" method="post">
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Họ và Tên"
-              required
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Số Điện Thoại"
-              required
-            />
-            <input type="email" name="email" placeholder="Email" required />
+            <input type="text" name="fullName" placeholder="Họ và Tên" />
+            <input type="tel" name="phone" placeholder="Số Điện Thoại" />
+            <input type="email" name="email" placeholder="Email" />
 
             <div class="password-field">
               <input
@@ -80,10 +88,10 @@
                 name="password"
                 placeholder="Mật Khẩu"
                 id="password"
-                required
               />
               <img
                 th:src="@{/img/crossed-eye.png}"
+                class="toggle-eye"
                 onclick="togglePassword('password', this)"
               />
             </div>
@@ -91,13 +99,12 @@
             <div class="password-field">
               <input
                 type="password"
-                name="confirmPassword"
                 placeholder="Nhập Lại Mật Khẩu"
                 id="confirmPassword"
-                required
               />
               <img
                 th:src="@{/img/crossed-eye.png}"
+                class="toggle-eye"
                 onclick="togglePassword('confirmPassword', this)"
               />
             </div>
@@ -109,9 +116,80 @@
             Bạn đã có tài khoản ?
             <a th:href="@{/login}">Đăng nhập</a>
           </p>
+
+          <p class="policy">
+            Bằng cách nhấn “Đăng ký ngay”, bạn đồng ý với
+            <a href="#">Điều khoản & Điều kiện</a> Và
+            <a href="#">Chính sách bảo mật</a>
+          </p>
         </div>
       </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h4>Tham Gia CLB – Giảm 15% Dịp Sinh Nhật</h4>
+
+          <div class="footer-subscribe">
+            <input type="email" placeholder="Nhập Email Của Bạn" />
+            <span>→</span>
+          </div>
+
+          <label class="footer-checkbox">
+            <input type="checkbox" />
+            Gửi email đồng nghĩa với việc đồng ý nhận thông tin từ Modimal
+          </label>
+
+          <div class="footer-social">
+            <img th:src="@{/img/instagram.svg}" />
+            <img th:src="@{/img/fb.svg}" />
+            <img th:src="@{/img/pinterest.svg}" />
+            <img th:src="@{/img/tiktok.svg}" />
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Về Modimal</h4>
+          <ul>
+            <li><a href="#">Bộ Sưu Tập</a></li>
+            <li><a href="#">Bền Vững</a></li>
+            <li><a href="#">Chính Sách Bảo Mật</a></li>
+            <li><a href="#">Hệ Thống Hỗ Trợ</a></li>
+            <li><a href="#">Điều Khoản & Điều Kiện</a></li>
+            <li><a href="#">Bản Quyền</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Hỗ Trợ</h4>
+          <ul>
+            <li><a href="#">Đơn & Vận Chuyển</a></li>
+            <li><a href="#">Đổi & Hoàn Tiền</a></li>
+            <li><a href="#">Câu Hỏi Thường Gặp</a></li>
+            <li><a href="#">Liên Hệ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Tham Gia</h4>
+          <ul>
+            <li><a href="#">CLB Modimal</a></li>
+            <li><a href="#">Tuyển Dụng</a></li>
+            <li><a href="#">Cửa Hàng</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2023 Modimal. Đã Có Bản Quyền.</p>
+
+        <div class="chat-icon" onclick="toggleChat()">
+          <img th:src="@{/img/Footer Chat box.png}" />
+        </div>
+      </div>
+    </footer>
 
     <!-- JS -->
     <script>
@@ -128,5 +206,6 @@
     </script>
 
     <script th:src="@{/js/chat.js}"></script>
+    <script th:src="@{/js/register-success.js}"></script>
   </body>
 </html>

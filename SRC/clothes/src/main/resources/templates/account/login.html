@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng nhập</title>
 
-    <!-- Google Font -->
+    <!-- Google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -34,30 +34,30 @@
 
         <!-- Navigation -->
         <ul class="nav-products">
-          <li><a th:href="@{/products/ao}">Áo</a></li>
-          <li><a th:href="@{/products/quan}">Quần</a></li>
-          <li><a th:href="@{/products/dam}">Đầm</a></li>
-          <li><a th:href="@{/products/chan-vay}">Chân váy</a></li>
-          <li><a th:href="@{/products/phu-kien}">Phụ kiện</a></li>
+          <li><a href="#">Áo</a></li>
+          <li><a href="#">Quần</a></li>
+          <li><a href="#">Đầm</a></li>
+          <li><a href="#">Chân váy</a></li>
+          <li><a href="#">Phụ kiện</a></li>
         </ul>
 
-        <!-- Action -->
+        <!-- Actions -->
         <div class="actions">
           <div class="search-box">
-            <a th:href="@{/search}">
-              <img th:src="@{/img/Search_light.svg}" alt="Search" />
+            <a href="#">
+              <img th:src="@{/img/Search_light.svg}" />
             </a>
           </div>
 
           <div class="account">
-            <a th:href="@{/login}">
-              <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
+            <a th:href="@{/account/login}">
+              <img th:src="@{/img/Header profile icon.svg}" />
             </a>
           </div>
 
           <div class="cart">
-            <a th:href="@{/cart}">
-              <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
+            <a href="#">
+              <img th:src="@{/img/Header bag icon.svg}" />
             </a>
           </div>
         </div>
@@ -69,14 +69,14 @@
       <div class="content">
         <!-- Left image -->
         <div class="register-image">
-          <img th:src="@{/img/Frame 26086866.png}" alt="Register Poster" />
+          <img th:src="@{/img/Frame 26086866.png}" alt="Login Poster" />
         </div>
 
         <!-- Right form -->
         <div class="register-box">
           <h2>Đăng nhập</h2>
 
-          <form th:action="@{/login}" method="post">
+          <form method="post">
             <input type="email" name="email" placeholder="Email" required />
 
             <div class="password-field">
@@ -95,17 +95,17 @@
             </div>
 
             <label class="saved-password">
-              <input type="checkbox" name="rememberMe" />
+              <input type="checkbox" />
               Nhớ mật khẩu
-              <a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+              <a href="#">Quên mật khẩu?</a>
             </label>
 
             <button type="submit">Đăng nhập</button>
           </form>
 
           <p class="login-text">
-            Bạn chưa có tài khoản ?
-            <a th:href="@{/register}">Tạo tài khoản</a>
+            Bạn chưa có tài khoản?
+            <a th:href="@{/account/register}">Tạo tài khoản</a>
           </p>
         </div>
       </div>
@@ -138,22 +138,40 @@
         <div class="footer-col">
           <h4>Về Modimal</h4>
           <ul>
-            <li><a th:href="@{/about}">Bộ Sưu Tập</a></li>
-            <li><a th:href="@{/sustainability}">Bền Vững</a></li>
-            <li><a th:href="@{/privacy}">Chính Sách Bảo Mật</a></li>
-            <li><a th:href="@{/support}">Hệ Thống Hỗ Trợ</a></li>
-            <li><a th:href="@{/terms}">Điều Khoản & Điều Kiện</a></li>
+            <li><a href="#">Bộ Sưu Tập</a></li>
+            <li><a href="#">Bền Vững</a></li>
+            <li><a href="#">Chính Sách Bảo Mật</a></li>
+            <li><a href="#">Hệ Thống Hỗ Trợ</a></li>
+            <li><a href="#">Điều Khoản & Điều Kiện</a></li>
+            <li><a href="#">Bản Quyền</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h4>Hỗ Trợ</h4>
           <ul>
-            <li><a th:href="@{/orders}">Đơn & Vận Chuyển</a></li>
-            <li><a th:href="@{/refund}">Đổi & Hoàn Tiền</a></li>
-            <li><a th:href="@{/faq}">Câu Hỏi Thường Gặp</a></li>
-            <li><a th:href="@{/contact}">Liên Hệ</a></li>
+            <li><a href="#">Đơn & Vận Chuyển</a></li>
+            <li><a href="#">Đổi & Hoàn Tiền</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Liên Hệ</a></li>
           </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Tham Gia</h4>
+          <ul>
+            <li><a href="#">CLB Modimal</a></li>
+            <li><a href="#">Tuyển Dụng</a></li>
+            <li><a href="#">Cửa Hàng</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2023 Modimal. Đã Có Bản Quyền.</p>
+
+        <div class="chat-icon" onclick="toggleChat()">
+          <img th:src="@{/img/Footer Chat box.png}" />
         </div>
       </div>
     </footer>
