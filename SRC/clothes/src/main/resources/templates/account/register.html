@@ -77,10 +77,10 @@
           <h2>Tạo Tài Khoản</h2>
 
           <!-- FORM (chưa xử lý backend) -->
-          <form th:action="@{/register}" method="post">
-            <input type="text" name="fullName" placeholder="Họ và Tên" />
-            <input type="tel" name="phone" placeholder="Số Điện Thoại" />
-            <input type="email" name="email" placeholder="Email" />
+          <form th:action="@{/register}" method="post" onsubmit="return checkPasswordMatch()">
+            <input type="text" name="name" placeholder="Họ và Tên"  required/>
+            <input type="tel" name="phone" placeholder="Số Điện Thoại" required/>
+            <input type="email" name="email" placeholder="Email"  required/>
 
             <div class="password-field">
               <input
@@ -88,6 +88,7 @@
                 name="password"
                 placeholder="Mật Khẩu"
                 id="password"
+                required
               />
               <img
                 th:src="@{/img/crossed-eye.png}"
@@ -101,6 +102,7 @@
                 type="password"
                 placeholder="Nhập Lại Mật Khẩu"
                 id="confirmPassword"
+                required
               />
               <img
                 th:src="@{/img/crossed-eye.png}"

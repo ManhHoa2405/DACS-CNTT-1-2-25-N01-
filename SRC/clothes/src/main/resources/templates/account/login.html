@@ -75,8 +75,10 @@
         <!-- Right form -->
         <div class="register-box">
           <h2>Đăng nhập</h2>
-
-          <form method="post">
+          <div th:if="${error}" class="alert alert-danger" style="color: red; text-align: center; margin-bottom: 10px;">
+            <span th:text="${error}"></span>
+          </div>
+          <form method="post" th:ation="@{/account/login}">
             <input type="email" name="email" placeholder="Email" required />
 
             <div class="password-field">
