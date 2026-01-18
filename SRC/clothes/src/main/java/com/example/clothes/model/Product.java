@@ -29,7 +29,7 @@ import lombok.ToString;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", nullable = false, length = 200)
     private String name;
@@ -58,4 +58,20 @@ public class Product {
     @ToString.Exclude
     private List<ProductImage> images;
 
+    public String getMainImage() {
+        if (images != null && !images.isEmpty()) {
+            return images.get(0).getImageUrl(); // Lấy ảnh đầu tiên
+        }
+        return "/img/default.png"; // Trả về ảnh mặc định nếu chưa có ảnh
+    }
+
+    public int getTotalStock() {
+        if (variants == null || variants.isEmpty()) {
+            return 0;
+        }
+        // Cộng dồn stock của tất cả variant lại
+        return variants.stream()
+                .mapToInt(v -> v.getStock() == null ? 0 : v.getStock())
+                .sum();
+    }
 }

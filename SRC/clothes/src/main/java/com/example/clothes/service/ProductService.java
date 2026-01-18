@@ -19,6 +19,7 @@ import java.nio.file.*;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -113,5 +114,48 @@ public class ProductService {
         String normalized = Normalizer.normalize(nowhitespace, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase().replaceAll("đ", "d");
+    }
+
+    public List<Product> getAllProducts(String keyword) {
+        if (keyword != null && !keyword.isEmpty()) {
+            // Gọi hàm tối ưu có JOIN FETCH
+            return productRepo.searchByNameWithVariants(keyword);
+        }
+        // Gọi hàm tối ưu có JOIN FETCH
+        return productRepo.findAllWithVariants();
+    }
+
+    // Cập nhật tồn kho (Stock)
+    // Hàm cập nhật số lượng tồn kho
+    public void updateVariantStock(Integer variantId, Integer newStock) {
+        ProductVariant variant = variantRepo.findById(variantId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy SKU!"));
+        
+        variant.setStock(newStock);
+        variantRepo.save(variant);
+    }
+
+    public ProductVariant addVariant(Integer productId, String size, Integer stock) {
+        // 1. Tìm sản phẩm cha
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm ID: " + productId));
+
+        // 2. Tạo SKU mới
+        ProductVariant variant = new ProductVariant();
+        variant.setProduct(product);
+        variant.setSize(size);
+        variant.setStock(stock);
+
+        // 3. Lưu và trả về
+        return variantRepo.save(variant);
+    }
+    
+    // 👇 NẾU THIẾU CẢ HÀM XÓA THÌ THÊM LUÔN:
+    public void deleteVariant(Integer variantId) {
+        if (variantRepo.existsById(variantId)) {
+            variantRepo.deleteById(variantId);
+        } else {
+            throw new RuntimeException("Không tìm thấy SKU để xóa!");
+        }
     }
 }

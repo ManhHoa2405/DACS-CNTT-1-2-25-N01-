@@ -24,6 +24,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Tắt bảo mật CSRF để test cho dễ
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**").permitAll()
                 .requestMatchers("/**").permitAll() // Cho phép truy cập TẤT CẢ các link (không cần đăng nhập)
             )
             .formLogin(login -> login.disable()) // Tắt form login mặc định của Spring

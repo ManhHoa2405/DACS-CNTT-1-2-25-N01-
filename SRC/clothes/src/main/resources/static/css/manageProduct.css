@@ -260,3 +260,18 @@ td {
 .btn-edit {
   cursor: pointer;
 }
+/* Mặc định ẩn dòng chi tiết */
+.sku-row {
+    display: none;
+}
+
+/* Khi có class show thì hiện ra */
+.sku-row.show {
+    display: table-row;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

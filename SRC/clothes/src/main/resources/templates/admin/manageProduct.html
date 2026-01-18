@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý sản phẩm</title>
-
-    <!-- GOOGLE FONT -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/reset.css}" />
     <link rel="stylesheet" th:href="@{/css/admin.css}" />
     <link rel="stylesheet" th:href="@{/css/manageProduct.css}" />
-  </head>
+    
+    <style>
+        /* CSS CHỮA CHÁY: Đảm bảo bảng hiển thị đẹp ngay cả khi file css ngoài bị lỗi */
+        .sku-row { display: none; }
+        .sku-row.show { display: table-row; }
+        .sku-box { padding: 15px; background: #f8f9fa; border: 1px solid #eee; margin: 10px; }
+        .sku-table { width: 100%; border-collapse: collapse; background: #fff; }
+        .sku-table th, .sku-table td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        
+        /* QUAN TRỌNG: Giúp ô nhập liệu hiện rõ số ngay cả khi bị khóa */
+        .stock-input:disabled {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #333 !important;
+            opacity: 1; /* Fix lỗi mờ trên một số trình duyệt */
+            -webkit-text-fill-color: #333;
+            font-weight: bold;
+            text-align: center;
+        }
+        .stock-input:not(:disabled) {
+            background: #fff;
+            border: 1px solid #007bff;
+        }
+    </style>
+</head>
 
-  <body>
-    <div class="content">
-      <!-- LEFT -->
-      <div class="left-content">
+<body>
+<div class="content">
+    <div class="left-content">
         <h1>ADMIN CONTROL</h1>
         <div class="divider"></div>
 
@@ -59,171 +76,156 @@
         </nav>
       </div>
 
-      <!-- RIGHT -->
-      <div class="right-content">
+    <div class="right-content">
         <h1>Danh sách sản phẩm</h1>
 
         <div class="container">
           <!-- FILTER -->
-          <div class="filter-bar">
+          <form th:action="@{/admin/manageProduct}" method="get" class="filter-bar">
             <div class="search-box">
-              <input type="text" placeholder="Tìm Kiếm Sản Phẩm" />
+              <input type="text"
+               placeholder="Tìm Kiếm Sản Phẩm"
+               name="keyword"
+              />
               <img th:src="@{/img/Search_light.svg}" class="icon" />
             </div>
 
-            <select>
-              <option>Áo</option>
-              <option>Quần</option>
-              <option>Đầm</option>
+            <select name="categoryName">
+              <option value=""> Tất cả loại </option>
+              <option value="Áo" th:selected="${param.categoryName == 'Áo'}">Áo</option>
+              <option value="Quần" th:selected="${param.categoryName == 'Quần'}">Quần</option>
+              <option value="Đầm" th:selected="${param.categoryName == 'Đầm'}">Đầm</option>
+              <option value="Chân Váy" th:selected="${param.categoryName == 'Chân Váy'}">Chân Váy</option>
+              <option value="Phụ Kiện" th:selected="${param.categoryName == 'Phụ Kiện'}">Phụ Kiện</option>
             </select>
 
-            <select>
-              <option>Đang Bán</option>
-              <option>Ngừng Bán</option>
+            <select name="status">
+              <option value="">-- Tất cả trạng thái --</option>
+              <option value="true" th:selected="${param.status == 'true'}">Đang Bán</option>
+              <option value="false" th:selected="${param.status == 'false'}">Ngừng Bán</option>
             </select>
 
-            <button class="btn-search">Tìm Kiếm</button>
-          </div>
+            <button type="submit" class="btn-search">Tìm Kiếm</button>
+            <a th:href="@{/admin/manageProduct}" 
+              th:if="${!#strings.isEmpty(param.keyword) or !#strings.isEmpty(param.categoryName) or !#strings.isEmpty(param.status)}"
+              style="margin-left: 10px; color: #dc3545; text-decoration: none; font-size: 0.9em; display: flex; align-items: center; cursor: pointer; font-weight: bold;">
+              <span style="font-size: 20px;">
+                <i class="fa-solid fa-xmark" style="font-size: 30px;"></i>
+              </span>
+               Xóa lọc
+            </a>
+          </form>
 
-          <!-- TABLE -->
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Sản Phẩm</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                <tr style="background: #eee;">
+                    <th style="padding:10px;">ID</th>
+                    <th>Sản Phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
 
-            <tbody>
-              <!-- PRODUCT -->
-              <tr class="product-row">
-                <td>25ADKE097F</td>
+                <tbody>
+                <th:block th:each="p : ${products}">
 
-                <td>
-                  <div class="product">
-                    <img
-                      th:src="@{/img/Đầm tay dài, Dáng ôm 25ADKE097F 2.png}"
-                    />
-                    <div class="product-info">
-                      <div class="product-name">Đầm tay dài, Dáng ôm</div>
-                      <div class="product-size">S, M, L, XL</div>
-                    </div>
-                  </div>
-                </td>
+                    <tr class="product-row" th:id="'product-row-' + ${p.id}" style="border-bottom: 1px solid #ddd;">
+                        <td th:text="${p.id}" style="padding: 10px;"></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img th:src="${p.mainImage}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
+                                <div>
+                                    <div th:text="${p.name}" style="font-weight: bold;"></div>
+                                    <div style="font-size: 0.9em; color: #666;">
+                                        <span th:each="v, iter : ${p.variants}" th:text="${v.size} + ${!iter.last ? ', ' : ''}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                        
+                        <td class="qty" th:id="'total-stock-' + ${p.id}" th:text="${p.totalStock}" style="font-weight: bold;"></td>
 
-                <td class="price">650.000 VND</td>
-                <td class="qty">250</td>
+                        <td>
+                            <span th:text="${p.status} ? 'Đang Bán' : 'Ngừng Bán'"
+                                  th:style="${p.status} ? 'color: green; background: #e6fffa; padding: 4px 8px; border-radius: 4px;' : 'color: red;'">
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-detail" style="cursor: pointer; padding: 5px 10px;">▼ Chi tiết</button>
+                        </td>
+                    </tr>
 
-                <td>
-                  <span class="status selling">Đang Bán</span>
-                </td>
+                    <tr class="sku-row" th:data-parent-id="${p.id}">
+                        <td colspan="6" style="padding: 0;">
+                            <div class="sku-box">
+                                <div style="margin-bottom: 10px; font-weight: bold;">Danh sách SKU</div>
 
-                <td class="action-cell">
-                  <button class="btn-detail">▼ Chi tiết</button>
-                </td>
-              </tr>
+                                <table class="sku-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Tồn kho</th>
+                                        
+                                        <th>Hành động</th>
+                                    </tr>
+                                    </thead>
 
-              <!-- SKU DETAIL -->
-              <tr class="sku-row">
-                <td colspan="6">
-                  <div class="sku-box">
-                    <div class="sku-header">
-                      <strong>Danh sách SKU</strong>
-                      <button class="btn-add-sku">+ Thêm SKU</button>
-                    </div>
+                                    <tbody>
+                                          <tr th:each="v : ${p.variants}" th:data-id="${v.id}">
+                                              <td style="vertical-align: middle;">
+                                                  <span th:text="${v.size}" style="font-weight: bold;"></span>
+                                              </td>
 
-                    <table class="sku-table">
-                      <thead>
-                        <tr>
-                          <th>Size</th>
-                          <th>Màu</th>
-                          <th>Tồn kho</th>
-                          <th>Giá</th>
-                          <th></th>
-                        </tr>
-                      </thead>
+                                              
 
-                      <tbody>
-                        <tr>
-                          <td><span>S</span><input value="S" /></td>
-                          <td><span>Đen</span><input value="Đen" /></td>
-                          <td>
-                            <span>50</span>
-                            <input type="number" value="50" />
-                          </td>
-                          <td>
-                            <span>650000</span>
-                            <input type="number" value="650000" />
-                          </td>
-                          <td>
-                            <button class="btn-edit">✏</button>
-                            <button class="btn-save">✔</button>
-                            <button class="btn-cancel">✖</button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                                              <td style="vertical-align: middle;">
+                                                    <span class="stock-display" 
+                                                          th:text="${v.stock}" 
+                                                          style="font-weight: bold; font-size: 1.1em; color: #333;">
+                                                    </span>
 
-          <!-- PAGINATION -->
-          <div class="pagination">
-            <span class="page disabled">‹</span>
-            <span class="page active">1</span>
-            <span class="page">2</span>
-            <span class="page">›</span>
-          </div>
+                                                    <input type="number" 
+                                                          class="stock-input" 
+                                                          th:value="${v.stock}" 
+                                                          min="0"
+                                                          style="display: none; width: 80px; text-align: center; border: 1px solid #007bff;">
+                                                </td>
+
+                                              <td style="vertical-align: middle;">
+                                                  <button class="btn-edit" title="Sửa" style="cursor: pointer; border: none; background: none; font-size: 1.2em;"><i class="fa-solid fa-pen"></i></button>
+                                                  <button class="btn-save" title="Lưu" style="display: none; cursor: pointer; border: none; background: none; color: green; font-size: 1.2em;"><i class="fa-solid fa-check"></i></button>
+                                                  <button class="btn-cancel" title="Hủy" style="display: none; cursor: pointer; border: none; background: none; color: red; font-size: 1.2em;"><i class="fa-solid fa-xmark"></i></button>
+                                                  <button class="btn-delete" title="Xóa" style="cursor: pointer; border: none; background: none; color: red; font-size: 1.2em; margin-left: 10px;"><i class="fa-solid fa-trash"></i></button>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                </table>
+                                <div class="add-form" style="margin-top: 15px; padding: 15px; background: #f1f8ff; border: 1px dashed #007bff; border-radius: 5px; display: flex; align-items: center; gap: 10px;">
+                                    <strong style="white-space: nowrap;">+ Thêm SKU mới:</strong>
+                                    
+                                    <input type="text" class="new-size" placeholder="Nhập Size (VD: XXL)" 
+                                          style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 150px;">
+                                    
+                                    <input type="number" class="new-stock" placeholder="Số lượng" min="0"
+                                          style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100px;">
+                                    
+                                    <button class="btn-add-confirm" 
+                                            style="background: #28a745; color: white; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                        Lưu
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
         </div>
-      </div>
     </div>
-
-    <!-- JS -->
-    <script>
-      // Toggle SKU
-      document.querySelectorAll(".btn-detail").forEach((btn) => {
-        btn.onclick = () => {
-          const skuRow = btn.closest("tr").nextElementSibling;
-          skuRow.classList.toggle("show");
-          btn.textContent = skuRow.classList.contains("show")
-            ? "▲ Chi tiết"
-            : "▼ Chi tiết";
-        };
-      });
-
-      // Edit SKU
-      document.addEventListener("click", (e) => {
-        const row = e.target.closest("tr");
-        if (!row) return;
-
-        if (e.target.classList.contains("btn-edit")) {
-          row.classList.add("editing");
-        }
-
-        if (e.target.classList.contains("btn-cancel")) {
-          row.classList.remove("editing");
-        }
-
-        if (e.target.classList.contains("btn-save")) {
-          const spans = row.querySelectorAll("span");
-          const inputs = row.querySelectorAll("input");
-
-          inputs.forEach((input, i) => {
-            spans[i].textContent = input.value;
-          });
-
-          row.classList.remove("editing");
-        }
-      });
-    </script>
-
-    <!-- SIDEBAR JS -->
-    <script th:src="@{/js/sidebar-active.js}"></script>
-  </body>
+</div>
+</body>
+<script th:src="@{/js/manageProduct.js}"></script>
 </html>

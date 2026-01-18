@@ -19,7 +19,7 @@ import jakarta.persistence.GenerationType;
 public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
