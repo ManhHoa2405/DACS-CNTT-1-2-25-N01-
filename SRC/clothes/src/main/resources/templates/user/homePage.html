@@ -1,11 +1,15 @@
 <!doctype html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trang chủ</title>
-
-    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,14 +17,11 @@
       rel="stylesheet"
     />
 
-    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/reset.css}" />
     <link rel="stylesheet" th:href="@{/css/user.css}" />
     <link rel="stylesheet" th:href="@{/css/homePage.css}" />
   </head>
-
   <body>
-    <!-- First Visit Modal -->
     <div class="welcome-overlay" id="welcomeOverlay">
       <div class="welcome-modal">
         <button class="welcome-close" onclick="closeWelcome()">✕</button>
@@ -38,57 +39,63 @@
       </div>
     </div>
 
-    <!-- Header -->
     <header class="header">
       <div class="banner">
         <p>Miễn phí vận chuyển cho mọi đơn hàng</p>
       </div>
-
       <nav class="navbar">
-        <!-- Logo -->
-        <a th:href="@{/}" title="Trang chủ">
+        <a th:href="@{/home}" title="Trang chủ">
           <img th:src="@{/img/Logo.svg}" alt="Modimal" />
         </a>
 
-        <!-- Navigation -->
         <ul class="nav-products">
-          <li><a href="#">Áo</a></li>
-          <li><a href="#">Quần</a></li>
-          <li><a href="#">Đầm</a></li>
-          <li><a href="#">Chân váy</a></li>
-          <li><a href="#">Phụ kiện</a></li>
+          <li title="Áo"><a th:href="@{/products/ao}">Áo</a></li>
+          <li title="Quần"><a th:href="@{/products/quan}">Quần</a></li>
+          <li title="Đầm"><a th:href="@{/products/dam}">Đầm</a></li>
+          <li title="Chân váy">
+            <a th:href="@{/products/chan-vay}">Chân váy</a>
+          </li>
+          <li title="Phụ kiện">
+            <a th:href="@{/products/phu-kien}">Phụ kiện</a>
+          </li>
         </ul>
 
-        <!-- Actions -->
         <div class="actions">
           <div class="search-box">
             <a href="javascript:void(0)" onclick="toggleSearch()">
-              <img th:src="@{/img/Search_light.svg}" alt="Search" />
+              <img th:src="@{/img/Search_light.svg}" alt="Search-icon" />
             </a>
           </div>
 
           <div class="account">
             <a th:href="@{/login}">
-              <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
+              <img th:src="@{/img/Header profile icon.svg" alt="Account" />
             </a>
           </div>
-
           <div class="cart">
-            <a href="#">
+            <a th:href="@{/cart}">
               <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
             </a>
           </div>
         </div>
       </nav>
 
-      <!-- Search Slide -->
-      <div class="search-slide" id="searchSlide">
+      <div
+        class="search-slide"
+        id="searchSlide"
+        title="Nhấn Enter để tìm kiếm."
+      >
         <div class="search-inner">
-          <form class="search-form">
+          <form action="#" class="search-form" title="Nhấn Enter để tìm kiếm.">
             <button type="submit" class="search-btn">
-              <img th:src="@{/img/Search_light.svg}" />
+              <img th:src="@{/img/Search_light.svg}" alt="search" />
             </button>
-            <input type="text" placeholder="Tìm kiếm" />
+
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+              title="Nhấn Enter để tìm kiếm."
+            />
           </form>
 
           <span class="close-search" onclick="toggleSearch()">✕</span>
@@ -96,101 +103,364 @@
       </div>
     </header>
 
-    <!-- Search Overlay -->
     <div
       class="search-overlay"
       id="searchOverlay"
       onclick="toggleSearch()"
     ></div>
 
-    <!-- MAIN -->
-    <main>
-      <!-- Hero -->
-      <section class="hero-wrap">
-        <div class="hero-content">
-          <h1>
-            Elegance In Simplicity,<br />
-            Earth’s Harmony
-          </h1>
-          <a href="#" class="btn-primary">Hàng Mới</a>
-        </div>
-      </section>
+    <div id="pageContent">
+      <main>
+        <section class="hero-wrap">
+          <div class="hero-content">
+            <h1>
+              Elegance In Simplicity,<br />
+              Earth’s Harmony
+            </h1>
 
-      <!-- PRODUCTS -->
-      <section class="products-menu">
-        <!-- ÁO -->
-        <div class="product-section">
-          <div class="section-header">
-            <h2>Áo</h2>
-            <a href="#" class="view-all">View All</a>
+            <a th:href="@{/products/new}" class="btn-primary">Hàng Mới</a>
+          </div>
+        </section>
+
+        <section class="products-menu">
+          <div class="product-section">
+            <div class="section-header">
+              <h2>Áo</h2>
+              <a th:href="@{/products/ao}" class="view-all">View All</a>
+            </div>
+
+            <div class="product-grid">
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/ao1.jpg}" alt="Áo Cộc tay" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Áo Cộc tay</h3>
+                      <p class="sku">25AOTT022D</p>
+                    </div>
+                    <p class="price">250.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/ao2.jpg}" alt="Áo Hoddie" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Áo Hoddie</h3>
+                      <p class="sku">25AOTC028T</p>
+                    </div>
+                    <p class="price">118.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/ao3.jpg}" alt="Áo Khoác Măng tô" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Áo Khoác Măng tô</h3>
+                      <p class="sku">25ACOE001Y</p>
+                    </div>
+                    <p class="price">200.000 VND</p>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
 
-          <div class="product-grid">
-            <div class="product-card" th:each="i : ${#numbers.sequence(1,3)}">
-              <a href="#" class="product-link">
-                <img th:src="@{'/img/ao' + i + '.jpg'}" />
-                <div class="down">
-                  <div class="left">
-                    <h3>Sản phẩm mẫu</h3>
-                    <p class="sku">SKU-DEMO</p>
+          <div class="product-section">
+            <div class="section-header">
+              <h2>Quần</h2>
+              <a th:href="@{/products/quan}" class="view-all">View All</a>
+            </div>
+
+            <div class="product-grid">
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/quan1.jpg}" alt="Quần Shorts" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Quần Shorts</h3>
+                      <p class="sku">25ASQE08D</p>
+                    </div>
+                    <p class="price">175.000 VND</p>
                   </div>
-                  <p class="price">250.000 VND</p>
-                </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/quan2.jpg}" alt="Quần Dài" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Quần Dài</h3>
+                      <p class="sku">25AQDE048D</p>
+                    </div>
+                    <p class="price">275.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/quan3.jpg}" alt="Quần Lửng" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Quần Lửng</h3>
+                      <p class="sku">25AQCO06T</p>
+                    </div>
+                    <p class="price">285.000 VND</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-section">
+            <div class="section-header">
+              <h2>Đầm</h2>
+              <a th:href="@{/products/dam}" class="view-all">View All</a>
+            </div>
+
+            <div class="product-grid">
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/dam1.jpg}" alt="Đầm Trễ Vai" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Đầm Trễ Vai</h3>
+                      <p class="sku">25SDKE146D</p>
+                    </div>
+                    <p class="price">540.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/dam2.jpg}" alt="Đầm tay dài" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Đầm tay dài, Dáng thắt eo</h3>
+                      <p class="sku">25ADKEM90</p>
+                    </div>
+                    <p class="price">480.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/dam3.jpg}" alt="Đầm tay dài" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Đầm tay dài, Dáng ôm</h3>
+                      <p class="sku">25ADKE097F</p>
+                    </div>
+                    <p class="price">520.000 VND</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-section">
+            <div class="section-header">
+              <h2>Chân Váy</h2>
+              <a th:href="@{/products/chan-vay}" class="view-all">View All</a>
+            </div>
+
+            <div class="product-grid">
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/chanvay1.jpg}" alt="Chân Váy Mini" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Chân váy Mini</h3>
+                      <p class="sku">25ACVT003B</p>
+                    </div>
+                    <p class="price">220.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/chanvay2.jpg}" alt="Chân Váy Maxi" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Chân váy Maxi</h3>
+                      <p class="sku">25ACVE062R</p>
+                    </div>
+                    <p class="price">280.000 VND</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-card">
+                <a href="#" class="product-link">
+                  <img th:src="@{/img/chanvay3.jpg}" alt="Chân Váy Midi" />
+                  <div class="down">
+                    <div class="left">
+                      <h3>Chân váy Midi</h3>
+                      <p class="sku">25ACVC019G</p>
+                    </div>
+                    <p class="price">320.000 VND</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="banner-sus">
+          <div class="sus-content">
+            <h2>
+              Thời Trang Bền Vững Lựa Chọn Thân Thiện Với Môi Trường,<br />
+              Hướng Tới Một Tương Lai Tốt Đẹp Và Bền Vững Hơn.
+            </h2>
+            <a href="#" class="btn-sus">Bền Vững</a>
+          </div>
+        </section>
+      </main>
+
+      <section class="follow-instagram">
+        <h2>Theo Dõi @Modimal</h2>
+
+        <div class="insta-grid">
+          <div class="insta-item insta-left">
+            <img th:src="@{/img/ig-big(2).png}" alt="Modimal look" />
+            <a href="#" class="insta-overlay">
+              <img
+                class="social"
+                th:src="@{/img/instagram.svg}"
+                alt="Instagram"
+              />
+            </a>
+          </div>
+
+          <div class="insta-right">
+            <div class="insta-item">
+              <img th:src="@{/img/ig-1.png}" />
+              <a href="#" class="insta-overlay">
+                <img class="social" th:src="@{/img/instagram.svg}" />
+              </a>
+            </div>
+
+            <div class="insta-item">
+              <img th:src="@{/img/ig-2.png}" />
+              <a href="#" class="insta-overlay">
+                <img
+                  class="social fb-icon"
+                  style="filter: none"
+                  th:src="@{/img/fb.svg}"
+                />
+              </a>
+            </div>
+
+            <div class="insta-item">
+              <img th:src="@{/img/ig-3.jpg}" />
+              <a href="#" class="insta-overlay">
+                <img class="social" th:src="@{/img/tiktok.svg}" />
+              </a>
+            </div>
+
+            <div class="insta-item">
+              <img th:src="@{/img/ig-4.jpg}" />
+              <a href="#" class="insta-overlay">
+                <img class="social" th:src="@{/img/pinterest.svg}" />
               </a>
             </div>
           </div>
         </div>
-
-        <!-- Các section còn lại giữ HTML y nguyên (Quần – Đầm – Chân váy) -->
       </section>
 
-      <!-- Sustainability -->
-      <section class="banner-sus">
-        <div class="sus-content">
-          <h2>
-            Thời Trang Bền Vững Lựa Chọn Thân Thiện Với Môi Trường,<br />
-            Hướng Tới Một Tương Lai Tốt Đẹp Và Bền Vững Hơn.
-          </h2>
-          <a href="#" class="btn-sus">Bền Vững</a>
-        </div>
-      </section>
-    </main>
+      <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-col">
+            <h4>Tham Gia CLB – Giảm 15% Dịp Sinh Nhật</h4>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-container">
-        <div class="footer-col">
-          <h4>Tham Gia CLB – Giảm 15% Dịp Sinh Nhật</h4>
+            <div class="footer-subscribe">
+              <input type="email" placeholder="Nhập Email Của Bạn" />
+              <span>→</span>
+            </div>
 
-          <div class="footer-subscribe">
-            <input type="email" placeholder="Nhập Email Của Bạn" />
-            <span>→</span>
+            <label class="footer-checkbox">
+              <input type="checkbox" />
+              Gửi email đồng nghĩa với việc đồng ý nhận thông tin từ Modimal
+            </label>
+
+            <div class="footer-social">
+              <img th:src="@{/img/instagram.svg}" alt="Instagram" />
+              <img th:src="@{/img/fb.svg}" alt="Facebook" />
+              <img th:src="@{/img/pinterest.svg}" alt="Pinterest" />
+              <img th:src="@{/img/tiktok.svg}" alt="TikTok" />
+            </div>
           </div>
 
-          <label class="footer-checkbox">
-            <input type="checkbox" />
-            Gửi email đồng nghĩa với việc đồng ý nhận thông tin từ Modimal
-          </label>
+          <div class="footer-col">
+            <h4>Về Modimal</h4>
+            <ul>
+              <li><a href="#">Bộ Sưu Tập</a></li>
+              <li><a href="#">Bền Vững</a></li>
+              <li><a href="#">Chính Sách Bảo Mật</a></li>
+              <li><a href="#">Hệ Thống Hỗ Trợ</a></li>
+              <li><a href="#">Điều Khoản & Điều Kiện</a></li>
+              <li><a href="#">Bản Quyền</a></li>
+            </ul>
+          </div>
 
-          <div class="footer-social">
-            <img th:src="@{/img/instagram.svg}" />
-            <img th:src="@{/img/fb.svg}" />
-            <img th:src="@{/img/pinterest.svg}" />
-            <img th:src="@{/img/tiktok.svg}" />
+          <div class="footer-col">
+            <h4>Hỗ Trợ</h4>
+            <ul>
+              <li><a href="#">Đơn & Vận Chuyển</a></li>
+              <li><a href="#">Đổi & Hoàn Tiền</a></li>
+              <li><a href="#">Câu Hỏi Thường Gặp</a></li>
+              <li><a href="#">Liên Hệ</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Tham Gia</h4>
+            <ul>
+              <li><a href="#">CLB Modimal</a></li>
+              <li><a href="#">Tuyển Dụng</a></li>
+              <li><a href="#">Cửa Hàng</a></li>
+            </ul>
           </div>
         </div>
-      </div>
 
-      <div class="footer-bottom">
-        <p>© 2023 Modimal. Đã Có Bản Quyền.</p>
+        <div class="footer-bottom">
+          <p>© 2023 Modimal. Đã Có Bản Quyền.</p>
 
-        <div class="chat-icon" onclick="toggleChat()">
-          <img th:src="@{/img/Footer Chat box.png}" />
+          <div class="chat-icon" onclick="toggleChat()">
+            <img th:src="@{/img/Footer Chat box.png}" alt="Chat" />
+          </div>
+
+          <div class="chat-modal" id="chatModal">
+            <div class="chat-header">
+              <span>Hỗ trợ Modimal</span>
+              <button onclick="toggleChat()">✕</button>
+            </div>
+
+            <div class="chat-body">
+              <div class="chat-message bot">
+                Xin chào! Modimal có thể hỗ trợ gì cho bạn?
+              </div>
+            </div>
+
+            <div class="chat-input">
+              <input type="text" placeholder="Nhập tin nhắn..." />
+              <button>➤</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
 
-    <!-- JS -->
     <script th:src="@{/js/chat.js}"></script>
     <script th:src="@{/js/searchSlide.js}"></script>
     <script th:src="@{/js/welcome-modal.js}"></script>
