@@ -28,7 +28,7 @@
 
       <nav class="navbar">
         <!-- Logo -->
-        <a th:href="@{/}" title="Trang chủ">
+        <a th:href="@{/user/homePage}" title="Trang chủ">
           <img th:src="@{/img/Logo.svg}" alt="Modimal" />
         </a>
 
@@ -75,7 +75,11 @@
         <!-- Right form -->
         <div class="register-box">
           <h2>Đăng nhập</h2>
-          <div th:if="${error}" class="alert alert-danger" style="color: red; text-align: center; margin-bottom: 10px;">
+          <div
+            th:if="${error}"
+            class="alert alert-danger"
+            style="color: red; text-align: center; margin-bottom: 10px"
+          >
             <span th:text="${error}"></span>
           </div>
           <form method="post" th:ation="@{/account/login}">
