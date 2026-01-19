@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AdminController {
@@ -35,11 +36,7 @@ public class AdminController {
     public String viewDashboard(){
         return "admin/dashboard";
     }
-    // hiển thị trang thêm sản phẩm
-    // @GetMapping("/admin/addProduct")
-    // public String viewAddProduct(){
-    //     return "admin/addProduct";
-    // }
+    
 
     @GetMapping("/admin/addProduct")
     public String viewAddProduct(Model model){ // Thêm Model vào tham số
@@ -95,9 +92,7 @@ public class AdminController {
         return "admin/manageProduct";
     }
 
-    // NHIỆM VỤ 2: API nhận dữ liệu từ nút "Lưu" (Ajax)
-    // Link này được gọi ngầm bởi Javascript khi bấm nút ✔
-    // File: AdminController.java
+    
 
     // 3. API CẬP NHẬT SKU (Sửa số lượng)
     @PostMapping("/admin/api/update-sku")
@@ -163,6 +158,42 @@ public class AdminController {
             return ResponseEntity.badRequest().body("Lỗi xóa: " + e.getMessage());
         }
     }
+
+    // Trong AdminController.java
+    // API MỚI: CẬP NHẬT SẢN PHẨM KÈM UPLOAD FILE ẢNH
+    @PostMapping("/admin/api/update-product-with-files")
+    @ResponseBody
+    public ResponseEntity<?> updateProductWithFiles(
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name,
+            @RequestParam("price") Double price,
+            @RequestParam("status") Boolean status,
+            // Nhận danh sách file upload (có thể rỗng nếu người dùng không chọn ảnh mới)
+            @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles) {
+        try {
+            // Gọi hàm Service mới để xử lý
+            productService.updateProductInfoWithFiles(id, name, price, status, imageFiles);
+            return ResponseEntity.ok("Cập nhật thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Lỗi cập nhật: " + e.getMessage());
+        }
+    }
+    
+
+    // 7. API DELETE PRODUCT (Xóa sản phẩm cha)
+    @PostMapping("/admin/api/delete-product")
+    @ResponseBody
+    public ResponseEntity<?> deleteProduct(@RequestBody Map<String, Object> payload) {
+        try {
+            Integer id = Integer.parseInt(payload.get("id").toString());
+            productService.deleteProduct(id);
+            return ResponseEntity.ok("Đã xóa");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi xóa: " + e.getMessage());
+        }
+    }
+    
     // hiển trị trang quản lý khách hàng 
     @GetMapping("/admin/manageCustomer")
     public String manageCustomer() {
