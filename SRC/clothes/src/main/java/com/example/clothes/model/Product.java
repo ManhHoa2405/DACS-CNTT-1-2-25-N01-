@@ -54,7 +54,7 @@ public class Product {
     @ToString.Exclude
     private List<ProductVariant> variants;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true)
     @ToString.Exclude
     private List<ProductImage> images;
 

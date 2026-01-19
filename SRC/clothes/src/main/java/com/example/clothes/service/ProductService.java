@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.data.domain.Sort;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.*;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -116,6 +118,9 @@ public class ProductService {
         return pattern.matcher(normalized).replaceAll("").toLowerCase().replaceAll("đ", "d");
     }
 
+
+
+    // lấy toàn bộ sản phẩm
     public List<Product> getAllProducts(String keyword) {
         if (keyword != null && !keyword.isEmpty()) {
             // Gọi hàm tối ưu có JOIN FETCH
@@ -124,6 +129,9 @@ public class ProductService {
         // Gọi hàm tối ưu có JOIN FETCH
         return productRepo.findAllWithVariants();
     }
+
+
+
 
     // Cập nhật tồn kho (Stock)
     // Hàm cập nhật số lượng tồn kho
@@ -150,7 +158,9 @@ public class ProductService {
         return variantRepo.save(variant);
     }
     
-    // 👇 NẾU THIẾU CẢ HÀM XÓA THÌ THÊM LUÔN:
+
+    
+    //  NẾU THIẾU CẢ HÀM XÓA THÌ THÊM LUÔN:
     public void deleteVariant(Integer variantId) {
         if (variantRepo.existsById(variantId)) {
             variantRepo.deleteById(variantId);
@@ -158,4 +168,98 @@ public class ProductService {
             throw new RuntimeException("Không tìm thấy SKU để xóa!");
         }
     }
+
+    // Trong ProductService.java
+    @Transactional // Quan trọng: Đảm bảo lưu DB và lưu file đồng bộ
+    public void updateProductInfoWithFiles(Integer id, String name, Double price, Boolean status, List<MultipartFile> imageFiles) throws IOException {
+        // 1. Tìm sản phẩm
+        Product p = productRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy SP"));
+
+        // 2. Cập nhật thông tin cơ bản
+        p.setName(name);
+        p.setPrice(BigDecimal.valueOf(price));
+        p.setStatus(status);
+
+        // 3. XỬ LÝ ẢNH UPLOAD (Nếu có chọn ảnh mới)
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            
+            // A. Xóa sạch ảnh cũ (orphanRemoval=true trong Model sẽ lo việc xóa trong DB)
+            if (p.getImages() != null) {
+                p.getImages().clear();
+            } else {
+                p.setImages(new ArrayList<>());
+            }
+
+            // B. Chuẩn bị thư mục lưu ảnh (dựa theo tên sản phẩm)
+            String productSlug = toSlug(p.getName());
+            Path uploadPath = Paths.get(BASE_UPLOAD_DIR + productSlug);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // C. Duyệt và lưu từng file ảnh mới
+            for (MultipartFile file : imageFiles) {
+                if (!file.isEmpty()) {
+                    String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+                    
+                    // Lưu file vật lý vào ổ cứng server
+                    try (InputStream inputStream = file.getInputStream()) {
+                        Path filePath = uploadPath.resolve(originalFilename);
+                        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                         throw new IOException("Lỗi lưu file: " + originalFilename, e);
+                    }
+
+                    // Tạo đối tượng ảnh mới và thêm vào danh sách của sản phẩm
+                    ProductImage newImg = new ProductImage();
+                    newImg.setProduct(p);
+                    // Tạo đường dẫn web để truy cập ảnh sau này
+                    newImg.setImageUrl("/images/products/" + productSlug + "/" + originalFilename);
+                    
+                    p.getImages().add(newImg);
+                }
+            }
+        }
+
+        // 4. Lưu sản phẩm (Hibernate sẽ tự động lưu các ảnh mới)
+        productRepo.save(p);
+    }
+    
+    // Hàm xóa sản phẩm
+    public void deleteProduct(Integer id) {
+        if (productRepo.existsById(id)) {
+            // Lưu ý: Nếu Database có ràng buộc (Foreign Key), bạn cần cài đặt CascadeType.ALL 
+            // trong Entity Product hoặc xóa variants bằng tay trước.
+            productRepo.deleteById(id);
+        } else {
+            throw new RuntimeException("K tim thay SP");
+        }
+    }
+
+    public List<Product> getProductsForUser(String keyword, String categoryName, String size, String sortType) {
+    // 1. Xử lý sắp xếp
+        Sort sort = Sort.unsorted(); // Mặc định không sắp xếp
+        
+        if (sortType != null) {
+            switch (sortType) {
+                case "price_asc":
+                    sort = Sort.by("price").ascending(); // Giá tăng dần
+                    break;
+                case "price_desc":
+                    sort = Sort.by("price").descending(); // Giá giảm dần
+                    break;
+                case "newest":
+                    sort = Sort.by("id").descending(); // ID lớn nhất = Mới nhất
+                    break;
+            }
+        }
+
+        // 2. Gọi Repository
+        return productRepo.filterProductsUser(keyword, categoryName, size, sort);
+    }
+    // hiển thị cho bên chi tiết sp 
+    public List<Product> getLatestProducts() {
+    return productRepo.findTop2ByOrderByIdDesc();
+}
 }

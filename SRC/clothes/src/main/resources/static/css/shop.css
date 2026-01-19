@@ -1,0 +1,229 @@
+/* --- RESET & BASIC --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Roboto', sans-serif; color: #333; background-color: #fff; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* --- HEADER --- */
+.header { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; border-bottom: 1px solid #eee; }
+.logo { font-weight: 900; font-size: 24px; letter-spacing: -1px; }
+.nav-links a { margin: 0 15px; font-size: 14px; text-transform: uppercase; font-weight: 500; }
+.header-icons i { margin-left: 20px; cursor: pointer; font-size: 18px; }
+
+/* --- HERO BANNER --- */
+.hero-banner { display: flex; height: 400px; width: 100%; overflow: hidden; }
+.banner-left, .banner-right { width: 50%; height: 100%; }
+.hero-banner img { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- LAYOUT CONTAINER --- */
+.shop-container { display: flex; padding: 50px; gap: 40px; max-width: 1440px; margin: 0 auto; }
+
+/* --- SIDEBAR (BỘ LỌC) --- */
+.sidebar { width: 250px; flex-shrink: 0; }
+.filter-title { font-size: 20px; margin-bottom: 20px; font-weight: 700; }
+
+.filter-group { margin-bottom: 10px; }
+.accordion {
+    width: 100%; background-color: #7d8c76; /* Màu xanh rêu giống ảnh */
+    color: white; cursor: pointer; padding: 12px;
+    border: none; text-align: left; outline: none; font-size: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-radius: 4px;
+}
+.accordion:hover { background-color: #6b7a65; }
+.panel {
+    padding: 15px 10px; display: none; background-color: white; overflow: hidden;
+    border: 1px solid #eee; border-top: none;
+}
+.panel.show { display: block; }
+
+/* Radio & Checkbox style */
+.panel label { display: block; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
+
+/* Size Grid */
+.size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.size-btn { border: 1px solid #ddd; background: none; padding: 5px; cursor: pointer; }
+.size-btn:hover { border-color: #333; }
+
+/* --- PRODUCT GRID --- */
+.product-area { flex-grow: 1; }
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 3 cột giống ảnh */
+    gap: 30px;
+}
+
+/* --- PRODUCT CARD --- */
+.product-card { cursor: pointer; transition: 0.3s; }
+.product-card:hover .card-image img { transform: scale(1.05); }
+
+.card-image { position: relative; width: 100%; height: 400px; overflow: hidden; margin-bottom: 15px; }
+.card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+
+.badge-new {
+    position: absolute; top: 10px; left: 10px;
+    background: white; padding: 4px 10px; font-size: 12px; font-weight: bold;
+    text-transform: uppercase; z-index: 2;
+}
+
+.card-info { display: flex; justify-content: space-between; align-items: flex-start; }
+.info-left { flex: 1; }
+.product-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.product-cat { font-size: 13px; color: #777; font-weight: 300; }
+.info-right { font-size: 14px; font-weight: 700; }
+
+/* --- LOAD MORE --- */
+.load-more { text-align: center; margin-top: 50px; }
+.btn-load {
+    padding: 10px 40px; border: 1px solid #ddd; background: none;
+    cursor: pointer; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;
+}
+.btn-load:hover { border-color: #333; }
+
+/* --- FOOTER --- */
+.footer { background: #333; color: white; padding: 50px; margin-top: 50px; font-size: 13px; }
+.newsletter input { padding: 10px; background: transparent; border: 1px solid #666; color: white; width: 70%; }
+.newsletter button { padding: 10px; background: #fff; border: none; cursor: pointer; }
+.copyright { margin-top: 40px; color: #888; text-align: center; }
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+    .shop-container { flex-direction: column; padding: 20px; }
+    .sidebar { width: 100%; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .hero-banner { height: 200px; }
+}
+/* --- HERO BANNER (SPLIT LAYOUT) --- */
+/* --- HERO BANNER (CẢI TIẾN) --- */
+.hero-banner {
+    display: flex;
+    width: 100%;
+    height: 600px; /* Chiều cao lớn cho banner */
+    margin-bottom: 50px;
+    overflow: hidden;
+    background: #f0f0f0; /* Màu nền chờ khi ảnh chưa load */
+}
+
+.banner-item {
+    width: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ảnh banner */
+.banner-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Giữ tỉ lệ ảnh chuẩn */
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Hiệu ứng zoom mượt */
+}
+
+.banner-item:hover img {
+    transform: scale(1.03); /* Zoom nhẹ khi hover */
+}
+
+/* Lớp phủ gradient để làm nổi text */
+.banner-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Gradient đen mờ dần từ dưới lên, giúp chữ trắng dễ đọc */
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+    z-index: 1;
+}
+
+/* Nội dung text và nút */
+.banner-content {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    color: #fff;
+    z-index: 2;
+    max-width: 500px;
+}
+
+/* Dòng chữ nhỏ (Subtitle) */
+.banner-content span {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+/* Tiêu đề chính */
+.banner-content h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Nút bấm */
+.banner-btn {
+    padding: 14px 32px;
+    background: #fff;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.banner-btn:hover {
+    background: #000;
+    color: #fff;
+    transform: translateY(-2px); /* Nút nảy lên nhẹ khi hover */
+}
+/* Nút Size bình thường */
+.size-btn {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    margin: 2px;
+}
+
+/* Nút Size khi ĐANG CHỌN (Sẽ đen nền, chữ trắng) */
+.size-btn.active {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}
+.footer-content{
+    display: flex;
+    width: 100%;
+    margin: auto;
+}
+.left-footer-content{
+    width: 45%;
+}
+.right-footer-content{
+    width: 45%;
+    display: flex;
+}
+/* Mobile: Xếp chồng */
+@media (max-width: 768px) {
+    .hero-banner {
+        flex-direction: column;
+        height: auto;
+    }
+    .banner-item {
+        width: 100%;
+        height: 450px;
+    }
+    .banner-content {
+        bottom: 40px;
+        left: 30px;
+    }
+    .banner-content h2 {
+        font-size: 2rem;
+    }
+}
