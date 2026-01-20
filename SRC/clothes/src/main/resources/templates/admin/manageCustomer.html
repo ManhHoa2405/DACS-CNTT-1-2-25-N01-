@@ -66,13 +66,13 @@
         <!-- STAT -->
         <div class="stat-box">
           <div class="stat-card blue">
-            <div class="stat-number" id="totalUsers">0</div>
-            <div class="stat-label">Tổng Người Dùng</div>
+              <div class="stat-number" th:text="${totalUsers}">0</div>
+              <div class="stat-label">Tổng Người Dùng</div>
           </div>
 
           <div class="stat-card green">
-            <div class="stat-number" id="buyerUsers">0</div>
-            <div class="stat-label">Người Mua</div>
+              <div class="stat-number" th:text="${buyerUsers}">0</div>
+              <div class="stat-label">Người Mua</div>
           </div>
         </div>
 
@@ -98,93 +98,71 @@
                 <th>Ngày Đăng Ký</th>
               </tr>
             </thead>
-            <tbody id="customerTable"></tbody>
+            <tbody id="customerTable">
+                <tr th:if="${customers == null or customers.empty}">
+                    <td colspan="5" style="text-align: center;">Không tìm thấy dữ liệu</td>
+                </tr>
+
+                <tr th:each="user : ${customers}">
+                    <td th:text="${user.id}"></td>
+                    <td>
+                        <div class="personal" th:text="${user.name}"></div>
+                        <div class="email" th:text="${user.email}"></div>
+                    </td>
+                    <td th:text="${user.phone}"></td>
+                    
+                    <td class="order" th:text="${user.orders != null ? user.orders.size() : 0}"></td>
+                    
+                    <td th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}"></td>
+                </tr>
+            </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- JS demo (giữ nguyên – chưa cần backend) -->
+    <!-- Lấy dữ liệu người dùng từ database -->
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const customers = [
-          {
-            id: 34,
-            name: "Nguyễn Văn A",
-            email: "NguyenV@gmail.com",
-            phone: "0925235821",
-            orders: 20,
-            date: "1/1/2026",
-          },
-          {
-            id: 35,
-            name: "Nguyễn Văn B",
-            email: "NguyenB@gmail.com",
-            phone: "0925225821",
-            orders: 22,
-            date: "2/1/2026",
-          },
-          {
-            id: 36,
-            name: "Nguyễn Văn C",
-            email: "NguyenC@gmail.com",
-            phone: "0925235221",
-            orders: 10,
-            date: "3/1/2026",
-          },
-          {
-            id: 37,
-            name: "Nguyễn Văn D",
-            email: "NguyenD@gmail.com",
-            phone: "0925235825",
-            orders: 15,
-            date: "4/1/2026",
-          },
-        ];
+    document.addEventListener("DOMContentLoaded", () => {
+    const btnSearch = document.getElementById("btnSearch");
+    const searchInput = document.getElementById("searchInput");
 
-        const tableBody = document.getElementById("customerTable");
-        const searchInput = document.getElementById("searchInput");
-
-        function renderTable(data) {
-          tableBody.innerHTML = "";
-          data.forEach((c) => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${c.id}</td>
-              <td>
-                <div class="personal">${c.name}</div>
-                <div class="email">${c.email}</div>
-              </td>
-              <td>${c.phone}</td>
-              <td class="order">${c.orders}</td>
-              <td>${c.date}</td>
-            `;
-            tableBody.appendChild(tr);
-          });
-        }
-
-        function renderStat() {
-          document.getElementById("totalUsers").innerText = customers.length;
-          document.getElementById("buyerUsers").innerText = customers.filter(
-            (c) => c.orders > 0
-          ).length;
-        }
-
-        document.getElementById("btnSearch").addEventListener("click", () => {
-          const keyword = searchInput.value.toLowerCase();
-          const result = customers.filter(
-            (c) =>
-              c.name.toLowerCase().includes(keyword) ||
-              c.email.toLowerCase().includes(keyword) ||
-              c.phone.includes(keyword)
-          );
-          renderTable(result);
-        });
-
-        renderStat();
-        renderTable(customers);
+    // Xử lý sự kiện click nút Tìm kiếm
+    if (btnSearch && searchInput) {
+      btnSearch.addEventListener("click", () => {
+        const keyword = searchInput.value.trim();
+        // Chuyển hướng trang web, gửi từ khóa lên URL để Server xử lý
+        // Ví dụ: /admin/manageCustomer?keyword=Nguyen
+        window.location.href = `/admin/manageCustomer?keyword=${encodeURIComponent(keyword)}`;
       });
-    </script>
+      
+      // (Tùy chọn) Cho phép nhấn Enter để tìm
+      searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+           btnSearch.click();
+        }
+      });
+    }
+  });
+</script>
+<tbody id="customerTable">
+    <tr th:if="${customers == null or customers.empty}">
+        <td colspan="5" style="text-align: center;">Không tìm thấy dữ liệu</td>
+    </tr>
+
+    <tr th:each="user : ${customers}">
+        <td th:text="${user.id}"></td>
+        <td>
+            <div class="personal" th:text="${user.name}"></div>
+            <div class="email" th:text="${user.email}"></div>
+        </td>
+        <td th:text="${user.phone}"></td>
+        
+        <td class="order" th:text="${user.orders != null ? user.orders.size() : 0}"></td>
+        
+        <td th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}"></td>
+    </tr>
+</tbody>
 
     <!-- Sidebar JS -->
     <script th:src="@{/js/sidebar-active.js}"></script>
