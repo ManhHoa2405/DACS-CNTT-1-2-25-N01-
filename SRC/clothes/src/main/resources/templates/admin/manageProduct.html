@@ -131,33 +131,73 @@
                 <tbody>
                 <th:block th:each="p : ${products}">
 
-                    <tr class="product-row" th:id="'product-row-' + ${p.id}" style="border-bottom: 1px solid #ddd;">
-                        <td th:text="${p.id}" style="padding: 10px;"></td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <img th:src="${p.mainImage}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
-                                <div>
-                                    <div th:text="${p.name}" style="font-weight: bold;"></div>
-                                    <div style="font-size: 0.9em; color: #666;">
-                                        <span th:each="v, iter : ${p.variants}" th:text="${v.size} + ${!iter.last ? ', ' : ''}"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-                        
-                        <td class="qty" th:id="'total-stock-' + ${p.id}" th:text="${p.totalStock}" style="font-weight: bold;"></td>
+                    <tr class="product-row" th:id="'product-row-' + ${p.id}" th:data-id="${p.id}" style="border-bottom: 1px solid #ddd;">
+    
+                      <td th:text="${p.id}" style="padding: 10px; font-size: 20px;"></td>
 
-                        <td>
-                            <span th:text="${p.status} ? 'Đang Bán' : 'Ngừng Bán'"
-                                  th:style="${p.status} ? 'color: green; background: #e6fffa; padding: 4px 8px; border-radius: 4px;' : 'color: red;'">
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn-detail" style="cursor: pointer; padding: 5px 10px;">▼ Chi tiết</button>
-                        </td>
+                      <td>
+                          <div class="display-mode" style="display: flex; align-items: center; gap: 10px;">
+                              <img th:src="${p.mainImage}" 
+                                  class="p-img" 
+                                  style="width: 150px; height: 180px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;" 
+                                  onerror="this.src='/img/no-image.png'" /> 
+                              
+                              <div>
+                                  <div th:text="${p.name}" class="p-name" style="font-weight: bold;font-size: 20px;"></div>
+                                  <div style="font-size: 0.9em; color: #666;font-size: 20px;">
+                                      <span th:each="v, iter : ${p.variants}" th:text="${v.size} + ${!iter.last ? ', ' : ''}" style="font-size: 20px;"></span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="edit-mode" style="display: none; flex-direction: column; gap: 5px;">
+                              
+                              <input type="text" class="edit-name" th:value="${p.name}" placeholder="Tên sản phẩm" 
+                                    style="width: 100%; padding: 5px; border: 1px solid #007bff; border-radius: 3px;">
+                              
+                              <input type="file" 
+                                  class="edit-img-file" 
+                                  multiple 
+                                  accept="image/*"
+                                  style="width: 100%; padding: 5px; border: 1px solid #ddd; font-size: 0.8em; border-radius: 3px;">
+                            <small style="color: #666; font-size: 0.7em;">*Chọn ảnh mới để thay thế (Giữ Ctrl để chọn nhiều ảnh)</small>
+                          </div>
+                      </td>
+
+                      <td>
+                          <span class="display-mode" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                          <input type="number" class="edit-mode edit-price" th:value="${p.price}" min="0" 
+                                style="display: none; width: 100px; padding: 5px; border: 1px solid #007bff;">
+                      </td>
+
+                      <td class="qty" th:id="'total-stock-' + ${p.id}" th:text="${p.totalStock}" style="font-weight: bold; font-size: 25px;"></td>
+
+                      <td>
+                          <span class="display-mode" 
+                                style="font-size: 25px;"
+                                th:text="${p.status} ? 'Đang Bán' : 'Ngừng Bán'"
+                                th:style="${p.status} ? 'color: green;' : 'color: red;'">
+                          </span>
+                          
+                          <select class="edit-mode edit-status" style="display: none; padding: 5px; border: 1px solid #007bff;">
+                              <option value="true" th:selected="${p.status == true}">Đang Bán</option>
+                              <option value="false" th:selected="${p.status == false}">Ngừng Bán</option>
+                          </select>
+                      </td>
+
+                      <td>
+                          <div class="action-group-view">
+                              <button class="btn-detail" style="cursor: pointer; padding: 5px 10px; border: 1px solid #ddd; font-size: 20px;"><i class="fa-solid fa-chevron-down"></i> Chi tiết</button>
+                              <button class="btn-edit-product" title="Sửa SP" style="cursor: pointer; border: none; background: none; color: blue; font-size: 1.2em; margin-left: 5px;"><i class="fa-solid fa-pen" style="font-size: 18px;"></i></button>
+                              <button class="btn-delete-product" title="Xóa SP" style="cursor: pointer; border: none; background: none; color: red; font-size: 1.2em;"><i class="fa-solid fa-trash" style="font-size: 18px;"></i></button>
+                          </div>
+
+                          <div class="action-group-edit" style="display: none;">
+                              <button class="btn-save-product" style="cursor: pointer; border: none; background: none; color: green; font-size: 1.4em;"><i class="fa-solid fa-check"></i></button>
+                              <button class="btn-cancel-product" style="cursor: pointer; border: none; background: none; color: red; font-size: 1.4em;"><i class="fa-solid fa-xmark"></i></button>
+                          </div>
+                      </td>
                     </tr>
-
                     <tr class="sku-row" th:data-parent-id="${p.id}">
                         <td colspan="6" style="padding: 0;">
                             <div class="sku-box">

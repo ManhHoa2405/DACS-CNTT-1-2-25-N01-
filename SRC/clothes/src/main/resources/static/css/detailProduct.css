@@ -1,0 +1,161 @@
+.product-detail {
+  padding: 40px 120px 48px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 1.3rem;
+  color: #888;
+  margin-bottom: 30px;
+}
+
+.breadcrumb a {
+  color: #888;
+  margin-right: 15px;
+}
+
+.breadcrumb span {
+  margin: 0 15px;
+}
+
+.breadcrumb .active {
+  color: #5a6d57;
+  font-weight: 600;
+}
+
+/* Layout */
+.product-wrapper {
+  display: flex;
+  gap: 110px;
+  align-items: flex-start;
+}
+
+/* Gallery */
+.product-gallery {
+  display: flex;
+  max-width: 100%;
+  gap: 20px;
+}
+
+.product-gallery .thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-gallery .thumbs img {
+  width: 99px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.product-gallery .thumbs img:hover {
+  opacity: 1;
+}
+
+.product-gallery .main-image img {
+  width: 420px;
+}
+
+/* Info */
+.product-info {
+  max-width: 100%;
+}
+
+.product-info h1 {
+  font-size: 2.8rem;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.product-info .price {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+.product-info .status {
+  font-size: 1.4rem;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.product-info .status span {
+  color: #5a6d57;
+  font-weight: 600;
+}
+
+/* Quantity */
+.quantity {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.quantity button {
+  width: 50px;
+  height: 32px;
+  border: 1px solid #ccc;
+  background: none;
+  cursor: pointer;
+  background-color: #d1d9cf;
+}
+
+.quantity input {
+  width: 80px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
+  background-color: #d1d9cf;
+}
+
+/* Size */
+.size-select {
+  width: 260%;
+  height: 42px;
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+  text-align-last: center;
+}
+
+.size-select option {
+  text-align: center;
+}
+
+/* Add cart */
+.add-cart {
+  width: 260%;
+  height: 46px;
+  background: #5a6d57;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 50px;
+}
+
+.add-cart:hover {
+  background: #4a5d47;
+}
+
+/* Policy */
+.policy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 260%;
+  gap: 10px;
+  font-size: 1.3rem;
+  color: #555;
+}
+
+.qty-btn {
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.qty-btn:hover {
+  background: #f2f2f2;
+}

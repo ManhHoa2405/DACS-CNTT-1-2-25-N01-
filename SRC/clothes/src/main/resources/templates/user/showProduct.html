@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tất cả sản phẩm - Medimal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/shop.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <a th:href="@{/user/showProduct}" style="text-decoration: none; color: inherit;">medimal.</a>
+        </div>
+        
+        <nav class="nav-links">
+            <a th:href="@{/user/showProduct(categoryName='Áo')}">Áo</a>
+            <a th:href="@{/user/showProduct(categoryName='Quần')}">Quần</a>
+            <a th:href="@{/user/showProduct(categoryName='Đầm')}">Đầm</a>
+            <a th:href="@{/user/showProduct(categoryName='Chân váy')}">Chân váy</a>
+            <a th:href="@{/user/showProduct(categoryName='Phụ kiện')}">Phụ kiện</a>
+        </nav>
+        
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-regular fa-user"></i>
+            <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+    </header>
+
+    <section class="hero-banner" th:if="${latestProducts != null and latestProducts.size() >= 2}">
+    
+        <div class="banner-item">
+            <a th:href="@{/product/detail/{id}(id=${latestProducts[0].id})}">
+                <div class="banner-overlay"></div>
+                <img th:src="${latestProducts[0].mainImage}" alt="New Arrival 1">
+                
+                <div class="banner-content">
+                    <span>BỘ SƯU TẬP MỚI</span>
+                    <h2 th:text="${latestProducts[0].name}">Tên sản phẩm</h2>
+                    <button style="padding: 10px 20px; background: #fff; color: #000; border: none; cursor: pointer; font-weight: bold;">
+                        MUA NGAY
+                    </button>
+                </div>
+            </a>
+        </div>
+
+        <div class="banner-item">
+            <a th:href="@{/product/detail/{id}(id=${latestProducts[1].id})}">
+                <div class="banner-overlay"></div>
+                <img th:src="${latestProducts[1].mainImage}" alt="New Arrival 2">
+                
+                <div class="banner-content">
+                    <span>XU HƯỚNG</span>
+                    <h2 th:text="${latestProducts[1].name}">Tên sản phẩm</h2>
+                    <button style="padding: 10px 20px; background: #fff; color: #000; border: none; cursor: pointer; font-weight: bold;">
+                        KHÁM PHÁ
+                    </button>
+                </div>
+            </a>
+        </div>
+
+    </section>
+
+    <main class="shop-container">
+        
+        <aside class="sidebar">
+            <h3 class="filter-title">Bộ Lọc</h3>
+            
+            <div class="filter-group">
+                <button class="accordion">Sắp xếp <i class="fa-solid fa-plus"></i></button>
+                <div class="panel" style="display: block;">
+                    <label>
+                        <input type="radio" name="sort" value="newest" onchange="applyFilter()" 
+                            th:checked="${currentSort == 'newest' or currentSort == null}"> 
+                        Mới nhất
+                    </label>
+                    <label>
+                        <input type="radio" name="sort" value="price_asc" onchange="applyFilter()" 
+                            th:checked="${currentSort == 'price_asc'}"> 
+                        Giá tăng dần
+                    </label>
+                    <label>
+                        <input type="radio" name="sort" value="price_desc" onchange="applyFilter()" 
+                            th:checked="${currentSort == 'price_desc'}"> 
+                        Giá giảm dần
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <button class="accordion">Kích Thước <i class="fa-solid fa-plus"></i></button>
+                <div class="panel" style="display: block;">
+                    <div class="size-grid">
+                        <button class="size-btn" onclick="filterSize('S')" 
+                                th:classappend="${currentSize == 'S'} ? 'active' : ''">S</button>
+                        <button class="size-btn" onclick="filterSize('M')" 
+                                th:classappend="${currentSize == 'M'} ? 'active' : ''">M</button>
+                        <button class="size-btn" onclick="filterSize('L')" 
+                                th:classappend="${currentSize == 'L'} ? 'active' : ''">L</button>
+                        <button class="size-btn" onclick="filterSize('XL')" 
+                                th:classappend="${currentSize == 'XL'} ? 'active' : ''">XL</button>
+                    </div>
+                    
+                    <input type="hidden" id="hiddenSize" name="size" th:value="${currentSize}">
+                </div>
+            </div>
+
+        </aside>
+
+        <section class="product-area">
+            <div class="product-grid">
+
+                <th:block th:each="p : ${products}">
+                    <div class="product-card">
+                        <div class="card-image">
+                            <span class="badge-new">New</span>
+                            <a th:href="@{'/product/' + ${p.id}}">
+                                <img th:src="${p.mainImage}" alt="Product Image">
+                            </a>
+                        </div>
+                        <div class="card-info">
+                            <div class="info-left">
+                                <h4 class="product-name">
+                                    <a th:href="@{'/product/' + ${p.id}}" th:text="${p.name}">Tên SP</a>
+                                </h4>
+                                <p class="product-cat" th:text="${p.category.name}">Danh mục</p>
+                            </div>
+                            <div class="info-right">
+                                <span class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'">0 VND</span>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+                </div>
+
+            <div class="load-more">
+                <button class="btn-load">Tải Thêm</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="left-footer-content">
+                <div class="footer-col">
+                    <h4>Tham Gia CLB - Giảm 15% Dịp Sinh Nhật</h4>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Địa chỉ Email">
+                        <button>→</button>
+                    </div>
+                </div>
+            </div>
+            <div class="right-footer-content">
+                <div class="footer-coL">
+                    <h4>Về Modimal</h4>
+                    <ul style="list-style: none;">
+                        <li>Bộ Sưu Tập</li>
+                        <li>Bền Vững</li>
+                        <li>Chính Sách Bảo Mật</li>
+                        <li>Hệ Thống Hỗ Trợ</li>
+                        <li>Điều Khoản & Điều Kiện</li>
+                        <li>Bản Quyền</li>
+                    </ul>
+                </div>
+                <div class="footer-coL">
+                    <h4>Hỗ Trợ</h4>
+                    <ul style="list-style: none;">
+                        <li>Đơn & Vận Chuyển</li>
+                        <li>Đổi & Hoàn Tiền</li>
+                        <li>Câu Hỏi Thường Gặp</li>
+                        <li>Liên Hệ</li>
+                    </ul>
+                </div>
+                <div class="footer-coL">
+                    <h4>Tham Gia</h4>
+                    <ul style="list-style: none;">
+                        <li>CLB Modimal</li>
+                        <li>Tuyển Dụng</li>
+                        <li>Cửa Hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">© 2024 Medimal. All rights reserved.</div>
+    </footer>
+
+    <script th:src="@{/js/shop.js}"></script>
+</body>
+</html>

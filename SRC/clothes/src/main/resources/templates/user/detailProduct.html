@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết sản phẩm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abel&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/static/css/reset.css" />
+    <link rel="stylesheet" href="/static/css/user.css" />
+    <link rel="stylesheet" href="/static/css/detailProduct.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="banner">
+        <p>Miễn phí vận chuyển cho mọi đơn hàng</p>
+      </div>
+      <nav class="navbar">
+        <!-- logo -->
+        <a href="/templates/user/homePage.html" title="Trang chủ"
+          ><img src="/static/img/Logo.svg" alt="Modimal"
+        /></a>
+
+        <!-- Navigation -->
+
+        <ul class="nav-products">
+          <li title="Áo"><a href="#">Áo</a></li>
+          <li title="Quần"><a href="#">Quần</a></li>
+          <li title="Đầm"><a href="#">Đầm</a></li>
+          <li title="Chân váy"><a href="#">Chân váy</a></li>
+          <li title="Phụ kiện"><a href="#">Phụ kiện</a></li>
+        </ul>
+
+        <!-- Action -->
+        <div class="actions">
+          <div class="search-box">
+            <a href="javascript:void(0)" onclick="toggleSearch()">
+              <img src="/static/img/Search_light.svg" alt="Search-icon" />
+            </a>
+          </div>
+
+          <div class="account">
+            <a href="/templates/account/login.html"
+              ><img src="/static/img/Header profile icon.svg" alt="Account"
+            /></a>
+          </div>
+          <div class="cart">
+            <a href="#">
+              <img src="/static/img/Header bag icon.svg" alt="Cart"
+            /></a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SEARCH BAR SLIDE DOWN -->
+      <div
+        class="search-slide"
+        id="searchSlide"
+        title="Nhấn Enter để tìm kiếm."
+      >
+        <div class="search-inner">
+          <form action="#" class="search-form" title="Nhấn Enter để tìm kiếm.">
+            <button type="submit" class="search-btn">
+              <img src="/static/img/Search_light.svg" alt="search" />
+            </button>
+
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+              title="Nhấn Enter để tìm kiếm."
+            />
+          </form>
+
+          <span class="close-search" onclick="toggleSearch()">✕</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Chi tiet san pham -->
+    <main class="product-detail">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="#">Trang Chủ</a>
+        <span>/</span>
+        <a href="#">Chi Tiết Sản Phẩm</a>
+        <span>/</span>
+        <strong class="active">Áo Ba Lỗ</strong>
+      </div>
+
+      <div class="product-wrapper">
+        <!-- Gallery -->
+        <div class="product-gallery">
+          <div class="thumbs">
+            <img src="/static/img/ao1.jpg" class="thumb active" />
+            <img src="/static/img/ao2.jpg" class="thumb" />
+            <img src="/static/img/ao3.jpg" class="thumb" />
+            <img src="/static/img/dam1.jpg" class="thumb" />
+          </div>
+
+          <div class="main-image">
+            <img src="/static/img/ao1.jpg" id="mainProductImage" />
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="product-info">
+          <h1>Áo Ba Lỗ</h1>
+
+          <p class="price">Giá: <strong>250.000 VND</strong></p>
+
+          <p class="status">Trạng Thái: <span>Còn Hàng</span></p>
+
+          <!-- Quantity -->
+          <div class="quantity">
+            <button type="button" class="qty-btn minus">-</button>
+            <input type="number" class="qty-input" value="1" min="1" />
+            <button type="button" class="qty-btn plus">+</button>
+          </div>
+
+          <!-- Size -->
+          <select class="size-select">
+            <option disabled selected>Kích Thước</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+          </select>
+
+          <!-- Add cart -->
+          <button class="add-cart">Thêm Vào Giỏ Hàng</button>
+
+          <div class="policy">
+            <img src="/static/img/local_shipping.svg" />
+            <span>Dễ Dàng Hoàn Trả</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <!-- Column 1 -->
+        <div class="footer-col">
+          <h4>Tham Gia CLB – Giảm 15% Dịp Sinh Nhật</h4>
+
+          <div class="footer-subscribe">
+            <input type="email" placeholder="Nhập Email Của Bạn" />
+            <span>→</span>
+          </div>
+
+          <label class="footer-checkbox">
+            <input type="checkbox" />
+            Gửi email đồng nghĩa với việc đồng ý nhận thông tin từ Modimal
+          </label>
+
+          <div class="footer-social">
+            <img src="/static/img/instagram.svg" alt="Instagram" />
+            <img src="/static/img/fb.svg" alt="Facebook" />
+            <img src="/static/img/pinterest.svg" alt="Pinterest" />
+            <img src="/static/img/tiktok.svg" alt="TikTok" />
+          </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="footer-col">
+          <h4>Về Modimal</h4>
+          <ul>
+            <li><a href="#">Bộ Sưu Tập</a></li>
+            <li><a href="#">Bền Vững</a></li>
+            <li><a href="#">Chính Sách Bảo Mật</a></li>
+            <li><a href="#">Hệ Thống Hỗ Trợ</a></li>
+            <li><a href="#">Điều Khoản & Điều Kiện</a></li>
+            <li><a href="#">Bản Quyền</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="footer-col">
+          <h4>Hỗ Trợ</h4>
+          <ul>
+            <li><a href="#">Đơn & Vận Chuyển</a></li>
+            <li><a href="#">Đổi & Hoàn Tiền</a></li>
+            <li><a href="#">Câu Hỏi Thường Gặp</a></li>
+            <li><a href="#">Liên Hệ</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4 -->
+        <div class="footer-col">
+          <h4>Tham Gia</h4>
+          <ul>
+            <li><a href="#">CLB Modimal</a></li>
+            <li><a href="#">Tuyển Dụng</a></li>
+            <li><a href="#">Cửa Hàng</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2023 Modimal. Đã Có Bản Quyền.</p>
+
+        <!-- Chat icon -->
+        <div class="chat-icon" onclick="toggleChat()">
+          <img src="/static/img/Footer Chat box.png" alt="Chat" />
+        </div>
+
+        <!-- Chat modal -->
+        <div class="chat-modal" id="chatModal">
+          <div class="chat-header">
+            <span>Hỗ trợ Modimal</span>
+            <button onclick="toggleChat()">✕</button>
+          </div>
+
+          <div class="chat-body">
+            <div class="chat-message bot">
+              Xin chào! Modimal có thể hỗ trợ gì cho bạn?
+            </div>
+          </div>
+
+          <div class="chat-input">
+            <input type="text" placeholder="Nhập tin nhắn..." />
+            <button>➤</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const thumbs = document.querySelectorAll(".thumb");
+      const mainImage = document.getElementById("mainProductImage");
+
+      thumbs.forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+          // đổi ảnh lớn
+          mainImage.src = thumb.src;
+
+          // bỏ active cũ
+          thumbs.forEach((t) => t.classList.remove("active"));
+
+          // thêm active mới
+          thumb.classList.add("active");
+        });
+      });
+    </script>
+
+    <script src="/static/js/quantity.js"></script>
+  </body>
+</html>

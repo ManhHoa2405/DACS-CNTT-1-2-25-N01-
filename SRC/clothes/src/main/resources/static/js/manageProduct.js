@@ -12,7 +12,7 @@
             }
         }
 
-        // --- 2. KHI BẤM SỬA (✏️) ---
+        // --- 2. KHI BẤM SỬA () ---
         if (e.target.closest(".btn-edit")) {
             const row = e.target.closest("tr");
             const span = row.querySelector(".stock-display");
@@ -27,7 +27,7 @@
             toggleButtons(row, true);
         }
 
-        // --- 3. KHI BẤM HỦY (✖) ---
+        // --- 3. KHI BẤM HỦY () ---
         if (e.target.closest(".btn-cancel")) {
             const row = e.target.closest("tr");
             const span = row.querySelector(".stock-display");
@@ -40,7 +40,7 @@
             toggleButtons(row, false);
         }
 
-        // --- 4. KHI BẤM LƯU (✔) ---
+        // --- 4. KHI BẤM LƯU () ---
         if (e.target.closest(".btn-save")) {
             const row = e.target.closest("tr");
             const span = row.querySelector(".stock-display");
@@ -65,7 +65,7 @@
                     
                     toggleButtons(row, false);
                     updateParentTotal(row);
-                    alert("Cập nhật thành công!");
+                    alert("Cập nhật thành công");
                 } else {
                     alert("Lỗi server!");
                 }
@@ -106,7 +106,7 @@
             const stockInp = addForm.querySelector(".new-stock");
 
             if (!sizeInp.value || !stockInp.value) { 
-                alert("Vui lòng nhập Size và Số lượng!"); 
+                alert("Vui lòng nhập Size và Số lượng"); 
                 sizeInp.focus();
                 return; 
             }
@@ -130,12 +130,12 @@
                             <input type="number" class="stock-input" value="${stockInp.value}" min="0" 
                                    style="display: none; width: 80px; text-align: center; border: 1px solid #007bff;">
                         </td>
-                        <td style="vertical-align: middle;"><span>-</span></td>
+                        
                         <td style="vertical-align: middle;">
-                             <button class="btn-edit" style="cursor: pointer; border: none; background: none; font-size: 1.2em;">✏️</button>
-                             <button class="btn-save" style="display: none; cursor: pointer; border: none; background: none; color: green; font-size: 1.2em;">✔</button>
-                             <button class="btn-cancel" style="display: none; cursor: pointer; border: none; background: none; color: red; font-size: 1.2em;">✖</button>
-                             <button class="btn-delete" style="cursor: pointer; border: none; background: none; color: red; font-size: 1.2em; margin-left: 10px;">🗑️</button>
+                             <button class="btn-edit" style="cursor: pointer; border: none; background: none; font-size: 1.2em; color:black;"><i class="fa-solid fa-pen"></i></button>
+                             <button class="btn-save" style="display: none; cursor: pointer; border: none; background: none; color: green; font-size: 1.2em;"><i class="fa-solid fa-check"></i></button>
+                             <button class="btn-cancel" style="display: none; cursor: pointer; border: none; background: none; color: red; font-size: 1.2em;"><i class="fa-solid fa-xmark"></i></button>
+                             <button class="btn-delete" style="cursor: pointer; border: none; background: none; color: red; font-size: 1.2em; margin-left: 10px;"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     `;
                     
@@ -182,3 +182,98 @@
             }
         }
     }
+
+    // --- LOGIC QUẢN LÝ SẢN PHẨM CHA (PRODUCT) ---
+
+// 1. BẤM NÚT SỬA SẢN PHẨM
+document.addEventListener("click", function(e) {
+    if (e.target.closest(".btn-edit-product")) {
+        const row = e.target.closest("tr.product-row");
+        
+        // Ẩn view, Hiện edit
+        row.querySelectorAll(".display-mode, .action-group-view").forEach(el => el.style.display = "none");
+        row.querySelectorAll(".edit-mode").forEach(el => el.style.display = "flex"); // Flex cho ô tên/ảnh
+        row.querySelector(".edit-price").style.display = "block";
+        row.querySelector(".edit-status").style.display = "block";
+        row.querySelector(".action-group-edit").style.display = "block";
+    }
+
+    // 2. BẤM HỦY
+    if (e.target.closest(".btn-cancel-product")) {
+        const row = e.target.closest("tr.product-row");
+        // Reset lại giao diện
+        row.querySelectorAll(".display-mode").forEach(el => el.style.display = (el.tagName === "DIV" ? "flex" : "inline"));
+        row.querySelector(".action-group-view").style.display = "block";
+        
+        row.querySelectorAll(".edit-mode, .action-group-edit").forEach(el => el.style.display = "none");
+    }
+
+    // 3. BẤM LƯU (CẬP NHẬT SẢN PHẨM KÈM ẢNH)
+if (e.target.closest(".btn-save-product")) {
+    const row = e.target.closest("tr.product-row");
+    const id = row.getAttribute("data-id");
+    
+    // Lấy dữ liệu text
+    const name = row.querySelector(".edit-name").value;
+    const price = row.querySelector(".edit-price").value;
+    const status = row.querySelector(".edit-status").value;
+
+    //  QUAN TRỌNG: Lấy danh sách các file đã chọn
+    const imageFiles = row.querySelector(".edit-img-file").files;
+
+    if (!name || !price) { alert("Tên và giá không được để trống!"); return; }
+
+    //  Dùng FormData để đóng gói dữ liệu + file
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('status', status);
+
+    // Duyệt và thêm từng file ảnh vào FormData
+    for (let i = 0; i < imageFiles.length; i++) {
+        formData.append('imageFiles', imageFiles[i]);
+    }
+
+    // Gửi AJAX request (Lưu ý: Không set 'Content-Type' thủ công)
+    fetch('/admin/api/update-product-with-files', { //  Đổi đường dẫn API mới
+        method: 'POST',
+        body: formData
+    })
+    .then(res => {
+        if (res.ok) {
+            alert("Đã cập nhật sản phẩm và ảnh thành công");
+            location.reload(); // Load lại trang để thấy ảnh mới
+        } else {
+            res.text().then(text => alert("Lỗi server: " + text));
+        }
+    })
+    .catch(err => alert("Lỗi kết nối: " + err));
+}
+
+    // 4. BẤM XÓA SẢN PHẨM
+    if (e.target.closest(".btn-delete-product")) {
+        if (!confirm("CẢNH BÁO: Xóa sản phẩm này sẽ xóa toàn bộ SKU và Lịch sử đơn hàng liên quan!\nBạn có chắc chắn không?")) return;
+        
+        const row = e.target.closest("tr.product-row");
+        const id = row.getAttribute("data-id");
+
+        fetch('/admin/api/delete-product', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id })
+        })
+        .then(res => {
+            if (res.ok) {
+                row.remove(); // Xóa dòng cha
+                // Xóa luôn dòng SKU con (nằm ngay bên dưới)
+                const skuRow = document.querySelector(`.sku-row[data-parent-id="${id}"]`);
+                if (skuRow) skuRow.remove();
+                
+                alert("Đã xóa sản phẩm!");
+            } else {
+                alert("Không thể xóa (Có thể do ràng buộc dữ liệu)!");
+            }
+        });
+    }
+});
