@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giỏ hàng Modimal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/cart.css}" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="navbar">
+        <a th:href="@{/home}">
+          <img th:src="@{/img/Logo.svg}" alt="Modimal" width="150" />
+        </a>
+      </nav>
+    </header>
+
+    <main class="cart-page">
+      <div class="cart-nav">
+        <div class="left-nav">
+          <a th:href="@{/home}" class="back-link">Trở Lại</a>
+          <h1 class="cart-title">Giỏ Hàng Của Bạn</h1>
+        </div>
+        <a th:href="@{/home}" class="continue-link">Tiếp Tục Mua Sắm</a>
+      </div>
+
+      <div class="cart-layout">
+        <div class="cart-left-section">
+          <div class="section-head">
+            <span>Chọn Sản Phẩm</span>
+          </div>
+
+          <div class="item-row-left">
+            <div class="checkbox-wrapper">
+              <input type="checkbox" class="product-checkbox" />
+            </div>
+            <div class="cart-product">
+              <img th:src="@{/img/ao1.jpg}" alt="Wrap Top" />
+              <div class="product-info">
+                <h4>Wrap Top</h4>
+                <p>Size: S</p>
+                <p>Color: White</p>
+                <p class="mobile-price">200.000 VND</p>
+              </div>
+            </div>
+            <span class="remove-item">✕</span>
+          </div>
+
+          <div class="item-row-left">
+            <div class="checkbox-wrapper">
+              <input type="checkbox" class="product-checkbox" />
+            </div>
+            <div class="cart-product">
+              <img th:src="@{/img/quan1.jpg}" alt="Casual Wild Leg" />
+              <div class="product-info">
+                <h4>Casual Wild Leg</h4>
+                <p>Size: S</p>
+                <p>Color: Dark Blue</p>
+                <p class="mobile-price">150.000 VND</p>
+              </div>
+            </div>
+            <span class="remove-item">✕</span>
+          </div>
+
+          <div class="item-row-left">
+            <div class="checkbox-wrapper">
+              <input type="checkbox" class="product-checkbox" />
+            </div>
+            <div class="cart-product">
+              <img th:src="@{/img/vay1.jpg}" alt="Essential Dress" />
+              <div class="product-info">
+                <h4>Essential Dress</h4>
+                <p>Size: 2X</p>
+                <p>Color: Black</p>
+                <p class="mobile-price">150.000 VND</p>
+              </div>
+            </div>
+            <span class="remove-item">✕</span>
+          </div>
+        </div>
+
+        <div class="cart-right-section">
+          <div class="section-head right-head">
+            <span>Sản phẩm chọn</span> <span>Giá</span>
+            <span>SL</span>
+            <span>Tổng</span>
+          </div>
+
+          <div class="item-row-right" data-price="200000">
+            <div class="cart-name">Wrap Top</div>
+            <div class="cart-price">200.000</div>
+            <div class="cart-qty">
+              <button class="minus">-</button>
+              <span class="qty-val">1</span>
+              <button class="plus">+</button>
+            </div>
+            <div class="cart-total">200.000</div>
+          </div>
+
+          <div class="item-row-right" data-price="150000">
+            <div class="cart-name">Casual Wild Leg</div>
+            <div class="cart-price">150.000</div>
+            <div class="cart-qty">
+              <button class="minus">-</button>
+              <span class="qty-val">1</span>
+              <button class="plus">+</button>
+            </div>
+            <div class="cart-total">150.000</div>
+          </div>
+
+          <div class="item-row-right" data-price="150000">
+            <div class="cart-name">Essential Dress</div>
+            <div class="cart-price">150.000</div>
+            <div class="cart-qty">
+              <button class="minus">-</button>
+              <span class="qty-val">1</span>
+              <button class="plus">+</button>
+            </div>
+            <div class="cart-total">150.000</div>
+          </div>
+
+          <div class="summary-box">
+            <div class="summary-divider"></div>
+            <div class="summary-row">
+              <span>Tổng tiền hàng</span>
+              <span id="subtotal">0 VND</span>
+            </div>
+            <div class="summary-row">
+              <span>Phí Vận Chuyển</span>
+              <span>Miễn Phí</span>
+            </div>
+            <div class="summary-row total">
+              <span>Tổng Thanh Toán</span>
+              <span id="final-total">0 VND</span>
+            </div>
+            <div class="tax-note">
+              Vui lòng chọn sản phẩm bên trái để xem chi tiết hóa đơn.
+            </div>
+            <a
+              th:href="@{/checkout}"
+              style="text-decoration: none; display: block"
+            >
+              <button class="checkout-btn">Thanh Toán</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // === 1. KHAI BÁO BIẾN ===
+        const checkboxes = document.querySelectorAll(".product-checkbox");
+        const leftRows = document.querySelectorAll(".item-row-left");
+        const rightRows = document.querySelectorAll(".item-row-right");
+        const subtotalEl = document.getElementById("subtotal");
+        const finalTotalEl = document.getElementById("final-total");
+        const removeBtns = document.querySelectorAll(".remove-item");
+
+        // === 2. HÀM UPDATE TỔNG TIỀN ===
+        function updateSummary() {
+          let totalBill = 0;
+
+          rightRows.forEach((row, index) => {
+            // Tính tiền nếu dòng đó đang hiển thị (được tick)
+            // VÀ dòng bên trái tương ứng chưa bị xóa (display != none)
+            if (row.style.display === "grid") {
+              const price = parseInt(row.dataset.price);
+              const qty = parseInt(row.querySelector(".qty-val").innerText);
+
+              const rowTotal = price * qty;
+              totalBill += rowTotal;
+
+              row.querySelector(".cart-total").innerText =
+                rowTotal.toLocaleString("vi-VN") + " VND";
+            }
+          });
+
+          subtotalEl.innerText = totalBill.toLocaleString("vi-VN") + " VND";
+          finalTotalEl.innerText = totalBill.toLocaleString("vi-VN") + " VND";
+        }
+
+        // === 3. XỬ LÝ CHECKBOX (TICK CHỌN) ===
+        checkboxes.forEach((cb, index) => {
+          cb.addEventListener("change", () => {
+            if (cb.checked) {
+              rightRows[index].style.display = "grid";
+            } else {
+              rightRows[index].style.display = "none";
+            }
+            updateSummary();
+          });
+        });
+
+        // === 4. XỬ LÝ TĂNG GIẢM SỐ LƯỢNG ===
+        document.querySelectorAll(".cart-qty").forEach((qtyGroup, index) => {
+          const minusBtn = qtyGroup.querySelector(".minus");
+          const plusBtn = qtyGroup.querySelector(".plus");
+          const qtyVal = qtyGroup.querySelector(".qty-val");
+
+          minusBtn.onclick = () => {
+            let v = parseInt(qtyVal.innerText);
+            if (v > 1) {
+              qtyVal.innerText = v - 1;
+              updateSummary();
+            }
+          };
+
+          plusBtn.onclick = () => {
+            let v = parseInt(qtyVal.innerText);
+            qtyVal.innerText = v + 1;
+            updateSummary();
+          };
+        });
+
+        // === 5. XỬ LÝ NÚT XÓA ===
+        removeBtns.forEach((btn, index) => {
+          btn.onclick = () => {
+            // B1: Bỏ tick
+            checkboxes[index].checked = false;
+            // B2: Ẩn dòng phải
+            rightRows[index].style.display = "none";
+            // B3: Ẩn dòng trái
+            leftRows[index].style.display = "none";
+            // B4: Cập nhật
+            updateSummary();
+          };
+        });
+
+        // Khởi tạo lần đầu
+        updateSummary();
+      });
+    </script>
+  </body>
+</html>
