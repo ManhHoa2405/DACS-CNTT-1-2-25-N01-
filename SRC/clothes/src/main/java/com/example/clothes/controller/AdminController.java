@@ -1,21 +1,13 @@
 package com.example.clothes.controller;
-import com.example.clothes.service.ProductService;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.example.clothes.DTO.ProductDTO; // Nhớ import DTO
-import com.example.clothes.model.Product;
-import com.example.clothes.model.ProductVariant;
-import com.example.clothes.repository.ProductRepository;
-
-import org.springframework.ui.Model;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.List; // Nhớ import DTO
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.example.clothes.DTO.ProductDTO;
+import com.example.clothes.model.Product;
+import com.example.clothes.model.ProductVariant;
+import com.example.clothes.repository.ProductRepository;
+import com.example.clothes.service.ProductService;
 @Controller
 public class AdminController {
     // hiển thị dashboard
@@ -195,15 +193,15 @@ public class AdminController {
     }
     
     // hiển trị trang quản lý khách hàng 
-    @GetMapping("/admin/manageCustomer")
-    public String manageCustomer() {
-        return "admin/manageCustomer";
-    }
+    //@GetMapping("/admin/manageCustomer")
+    //public String manageCustomer() {
+      //  return "admin/manageCustomer";
+    //}
     // hiển trị trang quản lý đơn hàng
     @GetMapping("/admin/manageOrder")
     public String viewManageOrder(){
         return "admin/manageOrder";
     }
-
+    
     
 }
