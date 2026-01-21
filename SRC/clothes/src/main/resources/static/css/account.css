@@ -41,8 +41,8 @@
 }
 
 .password-field input {
-  width: 100%;
-  padding: 12px 40px 12px 14px; /* chừa chỗ icon */
+  width: 93%;
+  padding: 12px 13px 12px 14px; /* chừa chỗ icon */
   border: 1px solid #ccc;
   font-size: 14px;
 }

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán - Modimal</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/payment.css}" />
+  </head>
+
+  <body>
+    <!-- LEFT -->
+    <section class="payment-left">
+      <div class="content-wrapper-left">
+        <header class="payment-header">
+          <a th:href="@{/}">
+            <img th:src="@{/img/Logo.svg}" alt="Modimal" width="150" />
+          </a>
+        </header>
+
+        <nav class="breadcrumb">Cart / Shipping / <strong>Payment</strong></nav>
+
+        <!-- Address -->
+        <div class="payment-section">
+          <div class="section-header">
+            <h3>Địa Chỉ Nhận Hàng</h3>
+            <a href="#" class="edit-link">Thay Đổi</a>
+          </div>
+
+          <div class="address-card">
+            <p class="user-name">Nguyễn Đình Đạt 0987227713</p>
+            <p class="address-detail">
+              222 Đường 565, Xóm Cá, Xã Chương Mỹ, Huyện Hoài Đức, Hà Nội
+            </p>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="payment-section">
+          <h3>Phương Thức Thanh Toán</h3>
+
+          <div class="shipping-info">
+            <span>Phí Vận Chuyển</span>
+            <span class="free-text">Miễn Phí</span>
+          </div>
+
+          <div class="method-selector">
+            <p class="selector-label">Chọn Phương Thức</p>
+            <label class="radio-option">
+              <input type="radio" name="pay-method" checked />
+              <span class="custom-radio"></span>
+              Thanh Toán Tiền Mặt
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a th:href="@{/cart}" class="btn-back">❮ Quay Trở Lại</a>
+          <button type="submit" class="btn-order">Đặt Hàng</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <aside class="payment-right">
+      <div class="content-wrapper-right">
+        <h3 class="sidebar-title">Your Cart</h3>
+
+        <div class="cart-items-list">
+          <div class="cart-item">
+            <div class="item-thumb">
+              <img th:src="@{/img/ao1.jpg}" alt="Wrap Top" />
+            </div>
+            <div class="item-info">
+              <h4>Wrap Top</h4>
+              <p>Size: S</p>
+              <p>Color: White</p>
+              <div class="item-qty-box">1</div>
+            </div>
+            <div class="item-price">250.000 VND</div>
+          </div>
+
+          <div class="cart-item">
+            <div class="item-thumb">
+              <img th:src="@{/img/quan1.jpg}" alt="Casual Wild Leg" />
+            </div>
+            <div class="item-info">
+              <h4>Casual Wild Leg</h4>
+              <p>Size: S</p>
+              <p>Color: Dark Blue</p>
+              <div class="item-qty-box">1</div>
+            </div>
+            <div class="item-price">150.000 VND</div>
+          </div>
+
+          <div class="cart-item">
+            <div class="item-thumb">
+              <img th:src="@{/img/vay1.jpg}" alt="Essential Dress" />
+            </div>
+            <div class="item-info">
+              <h4>Essential Dress</h4>
+              <p>Size: 2X</p>
+              <p>Color: Black</p>
+              <div class="item-qty-box">1</div>
+            </div>
+            <div class="item-price">300.000 VND</div>
+          </div>
+        </div>
+
+        <div class="bill-summary">
+          <div class="summary-row">
+            <span>Tổng</span>
+            <span>700.000 VND</span>
+          </div>
+          <div class="summary-row">
+            <span>Phí Vận Chuyển</span>
+            <span>Miễn Phí</span>
+          </div>
+          <div class="summary-row grand-total">
+            <span>Tổng Hóa Đơn:</span>
+            <span>700.000 VND</span>
+          </div>
+        </div>
+
+        <p class="policy-note">
+          Tổng số tiền bạn thanh toán đã bao gồm đầy đủ các loại thuế và phí hải
+          quan (nếu có). Chúng tôi cam kết không phát sinh thêm chi phí khi giao
+          hàng.
+        </p>
+      </div>
+    </aside>
+
+    <!-- MODAL -->
+    <div class="modal" id="addressModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Địa Chỉ Của Tôi</h2>
+          <span class="close-modal">&times;</span>
+        </div>
+
+        <div class="modal-body">
+          <div id="addressListView">
+            <div class="address-item active">
+              <label class="address-label">
+                <input type="radio" name="selected-address" checked />
+                <span class="custom-radio"></span>
+                <div class="address-text">
+                  <div class="address-user">
+                    Nguyễn Đình Đạt <span>(+84) 865 806 415</span>
+                  </div>
+                  <p>Số 3 - Tổ 7, Phường Đồng Mai, Quận Hà Đông, Hà Nội</p>
+                  <span class="default-badge">Mặc định</span>
+                </div>
+              </label>
+            </div>
+            <button class="btn-add-address" onclick="showAddAddressForm()">
+              + Thêm Địa Chỉ Mới
+            </button>
+          </div>
+
+          <div id="addAddressForm" style="display: none">
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="Họ và tên"
+                id="newName"
+                class="form-input"
+              />
+              <input
+                type="text"
+                placeholder="Số điện thoại"
+                id="newPhone"
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group-select">
+              <select id="province" class="address-select">
+                <option value="">Tỉnh/Thành phố</option>
+              </select>
+              <select id="district" class="address-select" disabled>
+                <option value="">Quận/Huyện</option>
+              </select>
+              <select id="ward" class="address-select" disabled>
+                <option value="">Phường/Xã</option>
+              </select>
+            </div>
+
+            <input
+              type="text"
+              id="detail-address"
+              placeholder="Địa chỉ cụ thể (Số nhà, tên đường...)"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            class="btn-cancel"
+            id="backBtn"
+            onclick="backToListView()"
+            style="display: none"
+          >
+            Quay lại
+          </button>
+          <button class="btn-cancel" id="closeBtn">Hủy</button>
+          <button class="btn-confirm" id="confirmBtn">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+      const modal = document.getElementById("addressModal");
+      const editLink = document.querySelector(".edit-link");
+      const closeBtn = document.querySelector(".close-modal");
+      const cancelBtn = document.getElementById("closeBtn");
+
+      editLink.onclick = (e) => {
+        e.preventDefault();
+        modal.style.display = "flex";
+      };
+
+      closeBtn.onclick = () => (modal.style.display = "none");
+      cancelBtn.onclick = () => (modal.style.display = "none");
+
+      window.onclick = (e) => {
+        if (e.target === modal) modal.style.display = "none";
+      };
+    </script>
+
+    <script th:src="@{/js/apiAddress.js}"></script>
+  </body>
+</html>
