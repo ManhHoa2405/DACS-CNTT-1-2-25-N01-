@@ -33,7 +33,7 @@
     <section class="hero-banner" th:if="${latestProducts != null and latestProducts.size() >= 2}">
     
         <div class="banner-item">
-            <a th:href="@{/product/detail/{id}(id=${latestProducts[0].id})}">
+            <a th:href="@{/user/detailProduct/{id}(id=${latestProducts[0].id})}">
                 <div class="banner-overlay"></div>
                 <img th:src="${latestProducts[0].mainImage}" alt="New Arrival 1">
                 
@@ -48,7 +48,7 @@
         </div>
 
         <div class="banner-item">
-            <a th:href="@{/product/detail/{id}(id=${latestProducts[1].id})}">
+            <a th:href="@{/user/detailProduct/{id}(id=${latestProducts[1].id})}">
                 <div class="banner-overlay"></div>
                 <img th:src="${latestProducts[1].mainImage}" alt="New Arrival 2">
                 
@@ -117,14 +117,14 @@
                     <div class="product-card">
                         <div class="card-image">
                             <span class="badge-new">New</span>
-                            <a th:href="@{'/product/' + ${p.id}}">
+                            <a th:href="@{'/user/detailProduct/' + ${p.id}}">
                                 <img th:src="${p.mainImage}" alt="Product Image">
                             </a>
                         </div>
                         <div class="card-info">
                             <div class="info-left">
                                 <h4 class="product-name">
-                                    <a th:href="@{'/product/' + ${p.id}}" th:text="${p.name}">Tên SP</a>
+                                    <a th:href="@{'/user/detailProduct/' + ${p.id}}" th:text="${p.name}">Tên SP</a>
                                 </h4>
                                 <p class="product-cat" th:text="${p.category.name}">Danh mục</p>
                             </div>

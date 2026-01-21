@@ -261,5 +261,23 @@ public class ProductService {
     // hiển thị cho bên chi tiết sp 
     public List<Product> getLatestProducts() {
     return productRepo.findTop2ByOrderByIdDesc();
-}
+    }
+    
+
+    public Product getProductById(Integer id) {
+        // return productRepo.findProductWithDetails(id);
+        Product p = productRepo.findProductWithDetails(id);
+        
+        // Kích hoạt tải dữ liệu (chỉ tốn thêm 2 câu lệnh SQL siêu nhẹ)
+        if(p != null) {
+            p.getVariants().size();
+            p.getImages().size();
+        }
+        return p;
+    }
+
+    public List<Product> getRelatedProducts(Integer categoryId, Integer currentProductId) {
+        return productRepo.findByCategoryIdAndIdNot(categoryId, currentProductId)
+                          .stream().limit(4).toList();
+    }
 }

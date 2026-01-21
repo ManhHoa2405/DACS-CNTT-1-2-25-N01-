@@ -48,4 +48,15 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                                  @Param("status") Boolean status);
     Product findByid(Integer id);
     List<Product> findTop2ByOrderByIdDesc();
+
+//    @Query("SELECT p FROM Product p " +
+//            "LEFT JOIN  p.variants " + 
+//            "LEFT JOIN p.images " + // <--- BỎ CHỮ 'FETCH' Ở ĐÂY
+//            "WHERE p.id = :id")
+//     Product findProductWithDetails(@Param("id") Integer id);
+
+       @Query("SELECT p FROM Product p WHERE p.id = :id")
+       Product findProductWithDetails(@Param("id") Integer id);
+
+    List<Product> findByCategoryIdAndIdNot(Integer categoryId, Integer id);
 }

@@ -17,9 +17,9 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="/static/css/reset.css" />
-    <link rel="stylesheet" href="/static/css/user.css" />
-    <link rel="stylesheet" href="/static/css/detailProduct.css" />
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/detailProduct.css}" />
   </head>
   <body>
     <!-- Header -->
@@ -29,37 +29,37 @@
       </div>
       <nav class="navbar">
         <!-- logo -->
-        <a href="/templates/user/homePage.html" title="Trang chủ"
-          ><img src="/static/img/Logo.svg" alt="Modimal"
+        <a th:href="@{/user/homePage}" title="Trang chủ"
+          ><img th:src="@{/img/Logo.svg}" alt="Modimal"
         /></a>
 
         <!-- Navigation -->
 
         <ul class="nav-products">
-          <li title="Áo"><a href="#">Áo</a></li>
-          <li title="Quần"><a href="#">Quần</a></li>
-          <li title="Đầm"><a href="#">Đầm</a></li>
-          <li title="Chân váy"><a href="#">Chân váy</a></li>
-          <li title="Phụ kiện"><a href="#">Phụ kiện</a></li>
+          <li title="Áo"><a th:href="@{/user/showProduct(categoryName='Áo')}">Áo</a></li>
+          <li title="Quần"><a th:href="@{/user/showProduct(categoryName='Quần')}">Quần</a></li>
+          <li title="Đầm"><a th:href="@{/user/showProduct(categoryName='Đầm')}">Đầm</a></li>
+          <li title="Chân váy"><a th:href="@{/user/showProduct(categoryName='Chân váy')}">Chân váy</a></li>
+          <li title="Phụ kiện"><a th:href="@{/user/showProduct(categoryName='Phụ kiện')}">Phụ kiện</a></li>
         </ul>
 
         <!-- Action -->
         <div class="actions">
           <div class="search-box">
             <a href="javascript:void(0)" onclick="toggleSearch()">
-              <img src="/static/img/Search_light.svg" alt="Search-icon" />
+              <img th:src="@{/img/Search_light.svg}" alt="Search-icon" />
             </a>
           </div>
 
           <div class="account">
-            <a href="/templates/account/login.html"
-              ><img src="/static/img/Header profile icon.svg" alt="Account"
-            /></a>
+            <a th:href="@{/account/login}">
+              <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
+            </a>
           </div>
           <div class="cart">
-            <a href="#">
-              <img src="/static/img/Header bag icon.svg" alt="Cart"
-            /></a>
+            <a th:href="@{/user/cart}">
+              <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
+            </a>
           </div>
         </div>
       </nav>
@@ -92,60 +92,80 @@
     <main class="product-detail">
       <!-- Breadcrumb -->
       <div class="breadcrumb">
-        <a href="#">Trang Chủ</a>
+        <a th:href="@{/user/homePage}">Trang Chủ</a>
         <span>/</span>
-        <a href="#">Chi Tiết Sản Phẩm</a>
+        <th:block th:if="${p.category != null}">
+          <a th:href="@{/user/showProduct(categoryName=${p.category.name})}"
+             th:text="${p.category.name}"   
+          >Chi Tiết Sản Phẩm</a>
+        </th:block>
         <span>/</span>
-        <strong class="active">Áo Ba Lỗ</strong>
+        <strong class="active" th:text="${p.name}" ></strong>
       </div>
 
       <div class="product-wrapper">
         <!-- Gallery -->
         <div class="product-gallery">
+    
           <div class="thumbs">
-            <img src="/static/img/ao1.jpg" class="thumb active" />
-            <img src="/static/img/ao2.jpg" class="thumb" />
-            <img src="/static/img/ao3.jpg" class="thumb" />
-            <img src="/static/img/dam1.jpg" class="thumb" />
+              <th:block th:if="${not #lists.isEmpty(p.images)}">
+                  <img th:each="img, iter : ${p.images}" 
+                      th:src="${img.imageUrl}" 
+                      class="thumb" 
+                      th:classappend="${iter.index == 0 ? 'active' : ''}"
+                      onclick="changeImage(this)"
+                      style="cursor: pointer; object-fit: cover;">
+              </th:block>
+
+              <img th:if="${#lists.isEmpty(p.images)}" 
+                  src="/img/no-image.png" class="thumb active">
           </div>
 
           <div class="main-image">
-            <img src="/static/img/ao1.jpg" id="mainProductImage" />
+              <img id="mainProductImage"
+                  th:src="${not #lists.isEmpty(p.images) ? p.images[0].imageUrl : '/img/no-image.png'}" 
+                  style="width: 100%; height: auto; object-fit: contain;" />
           </div>
         </div>
 
         <!-- Info -->
-        <div class="product-info">
-          <h1>Áo Ba Lỗ</h1>
-
-          <p class="price">Giá: <strong>250.000 VND</strong></p>
-
-          <p class="status">Trạng Thái: <span>Còn Hàng</span></p>
-
-          <!-- Quantity -->
-          <div class="quantity">
-            <button type="button" class="qty-btn minus">-</button>
-            <input type="number" class="qty-input" value="1" min="1" />
-            <button type="button" class="qty-btn plus">+</button>
+        
+          <div class="product-info">
+            <form th:action="@{/user/cart}" method="post"></form>
+              <h1 th:text="${p.name}"></h1>
+    
+              <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT',0 , 'POINT')} + 'VNĐ'">giá</p>
+    
+              <p class="status" th:text="${(p.status == true) ? 'Còn Hàng' : 'Hết Hàng'}">Trạng Thái: </p>
+    
+              <!-- Quantity -->
+              <div class="quantity">
+                <button type="button" class="qty-btn minus">-</button>
+                <input type="number" class="qty-input"  name="quantity" value="1" min="1" readonly />
+                <button type="button" class="qty-btn plus" >+</button>
+              </div>
+    
+              <!-- Size -->
+              <select class="size-select" name="size" required>
+                <option value="" disabled selected>Kích Thước</option>
+                <th:block th:each="v :${p.variants}">
+                  <option 
+                          th:text ="${v.size}"
+                          th:if="${v.stock > 0}"
+                  ></option>
+                </th:block>
+              </select>
+    
+              <!-- Add cart -->
+              <button class="add-cart" type="submit">Thêm Vào Giỏ Hàng</button>
+    
+              <!-- <div class="policy">
+                <img th:src="@{/img/local_shipping.svg}" />
+                <span>Dễ Dàng Hoàn Trả</span>
+              </div> -->
+            </form>
           </div>
-
-          <!-- Size -->
-          <select class="size-select">
-            <option disabled selected>Kích Thước</option>
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-          </select>
-
-          <!-- Add cart -->
-          <button class="add-cart">Thêm Vào Giỏ Hàng</button>
-
-          <div class="policy">
-            <img src="/static/img/local_shipping.svg" />
-            <span>Dễ Dàng Hoàn Trả</span>
-          </div>
-        </div>
+        
       </div>
     </main>
 
@@ -167,10 +187,10 @@
           </label>
 
           <div class="footer-social">
-            <img src="/static/img/instagram.svg" alt="Instagram" />
-            <img src="/static/img/fb.svg" alt="Facebook" />
-            <img src="/static/img/pinterest.svg" alt="Pinterest" />
-            <img src="/static/img/tiktok.svg" alt="TikTok" />
+            <img th:src=@{/img/instagram.svg/} alt="Instagram" />
+            <img th:src=@{/img/fb.svg} alt="Facebook" />
+            <img th:src=@{/img/pinterest.svg} alt="Pinterest" />
+            <img th:src=@{/img/tiktok.svg} alt="TikTok" />
           </div>
         </div>
 
@@ -256,6 +276,6 @@
       });
     </script>
 
-    <script src="/static/js/quantity.js"></script>
+    <script th:src="@{/js/quantity.js}"></script>
   </body>
 </html>

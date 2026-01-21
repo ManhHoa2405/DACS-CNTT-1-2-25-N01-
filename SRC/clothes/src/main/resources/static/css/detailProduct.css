@@ -33,7 +33,7 @@
 /* Gallery */
 .product-gallery {
   display: flex;
-  max-width: 100%;
+  max-width: 50%;
   gap: 20px;
 }
 
