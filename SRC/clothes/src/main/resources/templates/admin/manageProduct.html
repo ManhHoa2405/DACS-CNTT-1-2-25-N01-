@@ -165,7 +165,7 @@
                       </td>
 
                       <td>
-                          <span class="display-mode" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                          <span class="display-mode" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')}"></span>
                           <input type="number" class="edit-mode edit-price" th:value="${p.price}" min="0" 
                                 style="display: none; width: 100px; padding: 5px; border: 1px solid #007bff;">
                       </td>

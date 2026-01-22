@@ -62,3 +62,57 @@ document.addEventListener("DOMContentLoaded", function() {
         // Ví dụ: /user/showProduct?categoryName=Áo&size=L&sort=price_asc
         window.location.href = window.location.pathname + "?" + params.toString();
     }
+
+    // viết cho nut bấm tải thêm
+    // Cấu hình: Muốn hiện bao nhiêu cái ban đầu
+    const itemsPerPage = 6; 
+    
+    // Lấy danh sách tất cả sản phẩm
+    // Lưu ý: '.product-grid .product-card' nghĩa là tìm thẻ card nằm trong grid
+    let cards = document.querySelectorAll('.product-grid .product-card');
+
+    // --- HÀM 1: KHỞI TẠO (Chạy ngay khi vào trang) ---
+    function init() {
+        // Vòng for duyệt qua tất cả sản phẩm
+        for (let i = 0; i < cards.length; i++) {
+            // Logic: Nếu số thứ tự (i) nhỏ hơn 6 -> Hiện, ngược lại -> Ẩn
+            if (i < itemsPerPage) {
+                cards[i].style.display = ''; // Để rỗng là nó tự ăn theo CSS của Grid
+            } else {
+                cards[i].style.display = 'none'; // Ẩn đi
+            }
+        }
+        
+        // Nếu tổng sản phẩm nhỏ hơn 6 thì ẩn luôn nút Load More
+        if (cards.length <= itemsPerPage) {
+            document.getElementById('loadMoreBtn').style.display = 'none';
+        }
+    }
+
+    // --- HÀM 2: XỬ LÝ KHI BẤM NÚT TẢI THÊM ---
+    function loadMore() {
+        let count = 0; // Đếm xem đã hiện thêm được bao nhiêu cái rồi
+        
+        // Lại duyệt qua danh sách để tìm những cái đang bị ẩn
+        for (let i = 0; i < cards.length; i++) {
+            // Nếu tìm thấy cái nào đang ẩn (display == 'none')
+            if (cards[i].style.display === 'none') {
+                cards[i].style.display = ''; // Hiện nó ra
+                count++; // Tăng biến đếm
+                
+                // Nếu đã hiện đủ 6 cái của đợt này rồi thì dừng lại, không mở thêm nữa
+                if (count >= itemsPerPage) {
+                    break; 
+                }
+            }
+        }
+
+        // Kiểm tra xem còn cái nào ẩn không? Nếu hiện hết rồi thì ẩn nút đi
+        let hiddenItems = Array.from(cards).filter(c => c.style.display === 'none');
+        if (hiddenItems.length === 0) {
+            document.getElementById('loadMoreBtn').style.display = 'none';
+        }
+    }
+
+    // Kích hoạt hàm khởi tạo ngay
+    init();
