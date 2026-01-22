@@ -28,20 +28,16 @@
         <p>Miễn phí vận chuyển cho mọi đơn hàng</p>
       </div>
       <nav class="navbar">
-        <a th:href="@{/home}" title="Trang chủ">
+        <a th:href="@{/user/homePage}" title="Trang chủ">
           <img th:src="@{/img/Logo.svg}" alt="Modimal" />
         </a>
 
         <ul class="nav-products">
-          <li title="Áo"><a th:href="@{/products/ao}">Áo</a></li>
-          <li title="Quần"><a th:href="@{/products/quan}">Quần</a></li>
-          <li title="Đầm"><a th:href="@{/products/dam}">Đầm</a></li>
-          <li title="Chân váy">
-            <a th:href="@{/products/chan-vay}">Chân váy</a>
-          </li>
-          <li title="Phụ kiện">
-            <a th:href="@{/products/phu-kien}">Phụ kiện</a>
-          </li>
+          <li title="Áo"><a th:href="@{/user/showProduct(categoryName='Áo')}">Áo</a></li>
+          <li title="Quần"><a th:href="@{/user/showProduct(categoryName='Quần')}">Quần</a></li>
+          <li title="Đầm"><a th:href="@{/user/showProduct(categoryName='Đầm')}">Đầm</a></li>
+          <li title="Chân váy"><a th:href="@{/user/showProduct(categoryName='Chân váy')}">Chân váy</a></li>
+          <li title="Phụ kiện"><a th:href="@{/user/showProduct(categoryName='Phụ kiện')}">Phụ kiện</a></li>
         </ul>
 
         <div class="actions">

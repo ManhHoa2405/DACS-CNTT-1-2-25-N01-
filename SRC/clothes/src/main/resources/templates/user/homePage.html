@@ -49,15 +49,11 @@
         </a>
 
         <ul class="nav-products">
-          <li title="Áo"><a th:href="@{/products/ao}">Áo</a></li>
-          <li title="Quần"><a th:href="@{/products/quan}">Quần</a></li>
-          <li title="Đầm"><a th:href="@{/products/dam}">Đầm</a></li>
-          <li title="Chân váy">
-            <a th:href="@{/products/chan-vay}">Chân váy</a>
-          </li>
-          <li title="Phụ kiện">
-            <a th:href="@{/products/phu-kien}">Phụ kiện</a>
-          </li>
+          <li title="Áo"><a th:href="@{/user/showProduct(categoryName='Áo')}">Áo</a></li>
+          <li title="Quần"><a th:href="@{/user/showProduct(categoryName='Quần')}">Quần</a></li>
+          <li title="Đầm"><a th:href="@{/user/showProduct(categoryName='Đầm')}">Đầm</a></li>
+          <li title="Chân váy"><a th:href="@{/user/showProduct(categoryName='Chân váy')}">Chân váy</a></li>
+          <li title="Phụ kiện"><a th:href="@{/user/showProduct(categoryName='Phụ kiện')}">Phụ kiện</a></li>
         </ul>
 
         <div class="actions">
@@ -68,12 +64,23 @@
           </div>
 
           <div class="account">
-            <a th:href="@{/login}">
+            <a th:href="@{/account/login}" class="account_icon">
               <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
             </a>
+            <th:block th:if="${session.currentUser != null}">
+              <div class="account_infor">
+                <span th:text="${session.currentUser.name}" ></span>
+                <span>
+                   <a th:href="@{/user/purchase}">Đơn Mua</a>
+                </span>
+                <span>
+                    <a th:href="@{/account/logout}">Đăng Xuất</a>
+                </span>
+              </div>
+            </th:block>
           </div>
           <div class="cart">
-            <a th:href="@{/cart}">
+            <a th:href="@{/user/cart}">
               <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
             </a>
           </div>
@@ -126,141 +133,63 @@
           <div class="product-section">
             <div class="section-header">
               <h2>Áo</h2>
-              <a th:href="@{/products/ao}" class="view-all">View All</a>
+              <li title="Áo" style="list-style: none;"><a th:href="@{/user/showProduct(categoryName='Áo')}">View all</a></li>
             </div>
 
             <div class="product-grid">
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/ao1.jpg}" alt="Áo Cộc tay" />
+              <div class="product-card" th:each="p :${listAo}">
+                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                  <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
-                      <h3>Áo Cộc tay</h3>
-                      <p class="sku">25AOTT022D</p>
+                      <h3 th:text="${p.name}"></h3>
+                      <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price">250.000 VND</p>
+                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</p>
                   </div>
                 </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/ao2.jpg}" alt="Áo Hoddie" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Áo Hoddie</h3>
-                      <p class="sku">25AOTC028T</p>
-                    </div>
-                    <p class="price">118.000 VND</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/ao3.jpg}" alt="Áo Khoác Măng tô" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Áo Khoác Măng tô</h3>
-                      <p class="sku">25ACOE001Y</p>
-                    </div>
-                    <p class="price">200.000 VND</p>
-                  </div>
-                </a>
-              </div>
-            </div>
+              </div>             
+            </div> 
           </div>
 
           <div class="product-section">
             <div class="section-header">
               <h2>Quần</h2>
-              <a th:href="@{/products/quan}" class="view-all">View All</a>
+              <li title="Quần" style="list-style: none;"><a th:href="@{/user/showProduct(categoryName='Quần')}">View All</a></li>
             </div>
 
             <div class="product-grid">
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/quan1.jpg}" alt="Quần Shorts" />
+              <div class="product-card" th:each="p :${listQuan}">
+                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                  <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
-                      <h3>Quần Shorts</h3>
-                      <p class="sku">25ASQE08D</p>
+                      <h3 th:text="${p.name}"></h3>
+                      <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price">175.000 VND</p>
+                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</p>
                   </div>
                 </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/quan2.jpg}" alt="Quần Dài" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Quần Dài</h3>
-                      <p class="sku">25AQDE048D</p>
-                    </div>
-                    <p class="price">275.000 VND</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/quan3.jpg}" alt="Quần Lửng" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Quần Lửng</h3>
-                      <p class="sku">25AQCO06T</p>
-                    </div>
-                    <p class="price">285.000 VND</p>
-                  </div>
-                </a>
-              </div>
-            </div>
+              </div>             
+            </div> 
           </div>
 
           <div class="product-section">
             <div class="section-header">
               <h2>Đầm</h2>
-              <a th:href="@{/products/dam}" class="view-all">View All</a>
+              <li style="list-style: none;"><a th:href="@{/user/showProduct(categoryName ='Đầm')}">View All</a></li>
             </div>
 
             <div class="product-grid">
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/dam1.jpg}" alt="Đầm Trễ Vai" />
+              <div class="product-card" th:each="p :${listDam}">
+                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                  <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
-                      <h3>Đầm Trễ Vai</h3>
-                      <p class="sku">25SDKE146D</p>
+                      <h3 th:text="${p.name}"></h3>
+                      <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price">540.000 VND</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/dam2.jpg}" alt="Đầm tay dài" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Đầm tay dài, Dáng thắt eo</h3>
-                      <p class="sku">25ADKEM90</p>
-                    </div>
-                    <p class="price">480.000 VND</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/dam3.jpg}" alt="Đầm tay dài" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Đầm tay dài, Dáng ôm</h3>
-                      <p class="sku">25ADKE097F</p>
-                    </div>
-                    <p class="price">520.000 VND</p>
+                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</p>
                   </div>
                 </a>
               </div>
@@ -270,45 +199,19 @@
           <div class="product-section">
             <div class="section-header">
               <h2>Chân Váy</h2>
-              <a th:href="@{/products/chan-vay}" class="view-all">View All</a>
+              <li style="list-style: none;"><a th:href="@{/user/showProduct(categoryName='Chân Váy')}">View All</a></li>
             </div>
 
             <div class="product-grid">
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/chanvay1.jpg}" alt="Chân Váy Mini" />
+              <div class="product-card" th:each="p :${listChanVay}">
+                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                  <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
-                      <h3>Chân váy Mini</h3>
-                      <p class="sku">25ACVT003B</p>
+                      <h3 th:text="${p.name}"></h3>
+                      <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price">220.000 VND</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/chanvay2.jpg}" alt="Chân Váy Maxi" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Chân váy Maxi</h3>
-                      <p class="sku">25ACVE062R</p>
-                    </div>
-                    <p class="price">280.000 VND</p>
-                  </div>
-                </a>
-              </div>
-
-              <div class="product-card">
-                <a href="#" class="product-link">
-                  <img th:src="@{/img/chanvay3.jpg}" alt="Chân Váy Midi" />
-                  <div class="down">
-                    <div class="left">
-                      <h3>Chân váy Midi</h3>
-                      <p class="sku">25ACVC019G</p>
-                    </div>
-                    <p class="price">320.000 VND</p>
+                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</p>
                   </div>
                 </a>
               </div>
@@ -317,6 +220,7 @@
         </section>
 
         <section class="banner-sus">
+          <img th:src="@{/img/Sustainability.png}" alt="">
           <div class="sus-content">
             <h2>
               Thời Trang Bền Vững Lựa Chọn Thân Thiện Với Môi Trường,<br />

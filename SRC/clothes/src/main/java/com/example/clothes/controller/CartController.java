@@ -12,8 +12,5 @@ public class CartController {
         public String getMethodName() {
             return "/user/cart";
         }
-        @GetMapping("/user/payment")
-        public String getPaymentPage() {
-            return "/user/payment";
-        }
+       
 }

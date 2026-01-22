@@ -70,16 +70,7 @@ public class UserController {
     }
     
     // Hứng đường dẫn localhost:8080/user/homePage
-    @GetMapping("/user/homePage")
-    public String showHomePage(HttpSession session, Model model) {
-        // Kiểm tra xem đã đăng nhập chưa (nếu cần bảo mật)
-        if (session.getAttribute("currentUser") == null) {
-            return "redirect:/account/login"; // Chưa đăng nhập thì đá về login
-        }
-        
-        // Trả về file templates/user/homePage.html
-        return "user/homePage"; 
-    }
+    
     // Đăng xuất
     @GetMapping("/account/logout")
     public String logout(HttpSession session) {

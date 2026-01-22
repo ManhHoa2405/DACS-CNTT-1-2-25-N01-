@@ -69,14 +69,28 @@
 }
 
 .product-info .price {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-weight: bold;
+  display: flex;
+}
+
+.product-info .price p{
+  padding-left: 5px;
+}
+
+.product-info .status p{
   font-size: 1.8rem;
   margin-bottom: 30px;
+  font-weight: 500;
+  padding-left: 5px;
 }
 
 .product-info .status {
-  font-size: 1.4rem;
+  font-size: 2rem;
   margin-bottom: 30px;
   font-weight: bold;
+  display: flex;
 }
 
 .product-info .status span {

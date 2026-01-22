@@ -134,9 +134,9 @@
             <form th:action="@{/user/cart}" method="post"></form>
               <h1 th:text="${p.name}"></h1>
     
-              <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT',0 , 'POINT')} + 'VNĐ'">giá</p>
-    
-              <p class="status" th:text="${(p.status == true) ? 'Còn Hàng' : 'Hết Hàng'}">Trạng Thái: </p>
+              
+              
+              <div class="price">Giá:<p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT',0 , 'POINT')} + 'VNĐ'"></p></div>
     
               <!-- Quantity -->
               <div class="quantity">
@@ -145,6 +145,8 @@
                 <button type="button" class="qty-btn plus" >+</button>
               </div>
     
+              <div class="status">Trạng Thái:<p  th:text="${(p.status == true) ? 'Còn Hàng' : 'Hết Hàng'}"> </p></div>          
+
               <!-- Size -->
               <select class="size-select" name="size" required>
                 <option value="" disabled selected>Kích Thước</option>

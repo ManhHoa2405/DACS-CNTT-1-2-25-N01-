@@ -134,31 +134,42 @@
 /* SUSTAINABILITY BANNER */
 .banner-sus {
   width: 100%;
-  height: 700px;
+  height: 100%;
 
-  background: url("/img/Sustainability.png") center / cover no-repeat;
-
+  /* background: url("/img/Sustainability.png") center / cover no-repeat; */
+/* 
   background-color: #e8e6e1;
   background-repeat: no-repeat;
   background-size: cover; /* 🔥 QUAN TRỌNG */
-  background-position: bottom center; /* canh giữa ảnh */
+  /* background-position: bottom center; canh giữa ảnh */ 
 
   /* CẤU HÌNH VỊ TRÍ: Góc dưới bên phải */
   display: flex;
+  position: relative;
   justify-content: flex-end; /* Đẩy nội dung sang phải */
   align-items: flex-end; /* Đẩy nội dung xuống dưới */
 
   /* Tạo khoảng cách so với mép màn hình */
-  padding-right: 120px; /* Cách lề phải (bằng với lề của phần Products) */
-  padding-bottom: 60px; /* Cách lề dưới */
+  /* padding-right: 120px; Cách lề phải (bằng với lề của phần Products) */
+  /* padding-bottom: 60px; Cách lề dưới */
   margin-bottom: 120px;
 }
 
+.banner-sus img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: contain;   cover | contain */
+  object-position: center bottom;
+  image-rendering: auto; 
+}
 .sus-content {
   text-align: right;
   max-width: 700px;
 
   display: flex;
+  position: absolute;
+  right: 170px;
+  bottom: 80px;
   flex-direction: column;
   align-items: flex-end;
 }
@@ -284,4 +295,32 @@
 
 .insta-item:hover .insta-overlay {
   opacity: 1;
+}
+.account::after{
+  content: "";
+  position: absolute;
+  right: 140px;
+  top: 70px;
+
+  width: 60px;
+  height: 45px;
+}
+.account:hover .account_infor{
+  display: flex;
+}
+
+.account_infor{
+  /* display: flex; */
+  display: none;
+  flex-direction: column;  
+  position: absolute;
+  border: 1px solid;
+  padding: 10px;
+  top: 100px;
+  right: 90px;
+  gap: 8px; 
+  z-index: 999;
+}
+.account_infor span a{
+  color: #2f2f2f
 }
