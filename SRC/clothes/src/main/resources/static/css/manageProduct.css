@@ -23,7 +23,7 @@
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 100px;
+  gap: 60px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
@@ -274,4 +274,42 @@ td {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+.nav-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 5px;
+}
+
+.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    /* border: 1px solid #ddd; */
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+}
+
+.pagination li.active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination li.disabled a {
+    color: #ccc;
+    pointer-events: none; /* Không cho bấm */
+    background-color: #f9f9f9;
+}
+
+.pagination li a:hover:not(.active) {
+    background-color: #eee;
 }

@@ -6,6 +6,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
    // Thêm: LEFT JOIN FETCH p.category
@@ -36,16 +38,26 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                                      Sort sort);
 
     // Kiểm tra luôn hàm ADMIN, nếu có 2 cái FETCH thì cũng sửa tương tự:
-    @Query("SELECT DISTINCT p FROM Product p " +
-           "LEFT JOIN FETCH p.variants " +   // ✅ Giữ FETCH Variants
-           "LEFT JOIN p.images " +           // ❌ BỎ FETCH Images
-           "LEFT JOIN FETCH p.category " +
+//     @Query("SELECT DISTINCT p FROM Product p " +
+//            "LEFT JOIN FETCH p.variants " +   
+//            "LEFT JOIN p.images " +           
+//            "LEFT JOIN FETCH p.category " +
+//            "WHERE (:keyword IS NULL OR p.name LIKE %:keyword%) " +
+//            "AND (:categoryName IS NULL OR p.category.name LIKE %:categoryName%) " +
+//            "AND (:status IS NULL OR p.status = :status)")
+//     List<Product> filterProducts(@Param("keyword") String keyword, 
+//                                  @Param("categoryName") String categoryName,
+//                                  @Param("status") Boolean status);
+       @Query("SELECT p FROM Product p " +
+           "LEFT JOIN FETCH p.category " + // ✅ Giữ FETCH Category (Quan hệ To-One an toàn)
+           // ❌ BỎ variants và images để tránh lỗi 'Memory Pagination'
            "WHERE (:keyword IS NULL OR p.name LIKE %:keyword%) " +
            "AND (:categoryName IS NULL OR p.category.name LIKE %:categoryName%) " +
            "AND (:status IS NULL OR p.status = :status)")
-    List<Product> filterProducts(@Param("keyword") String keyword, 
+            Page<Product> filterProducts(@Param("keyword") String keyword, 
                                  @Param("categoryName") String categoryName,
-                                 @Param("status") Boolean status);
+                                 @Param("status") Boolean status,
+                                 Pageable pageable);
     Product findByid(Integer id);
     List<Product> findTop2ByOrderByIdDesc();
 

@@ -5,6 +5,8 @@ import java.util.List; // Nhớ import DTO
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.data.domain.Pageable;
 import com.example.clothes.DTO.ProductDTO;
 import com.example.clothes.model.Product;
 import com.example.clothes.model.ProductVariant;
@@ -64,28 +67,23 @@ public class AdminController {
     // quản lý trang sản phẩm
     @GetMapping("/admin/manageProduct")
     public String viewManageProduct(
-        @RequestParam(required = false) String keyword,
+                                @RequestParam(required = false) String keyword,
                                 @RequestParam(required = false) String categoryName,
                                 @RequestParam(required = false) Boolean status,
+                                @RequestParam(defaultValue = "0") int page,
                                 Model model
     ){
-        // // 1. Gọi Service lấy danh sách (có tìm kiếm hoặc không)
-        // List<Product> products = productService.getAllProducts(keyword);
-        
-        // // 2. Gửi danh sách sang HTML
-        // model.addAttribute("products", products);
-        
-        // // 3. Trả về file HTML: templates/admin/manageProduct.html
-        // return "admin/manageProduct";
-
         // Xử lý chuỗi rỗng (nếu người dùng chọn "Tất cả" thì giá trị là chuỗi rỗng "")
         if (keyword != null && keyword.trim().isEmpty()) keyword = null;
         if (categoryName != null && categoryName.trim().isEmpty()) categoryName = null;
         
+        int pageSize = 5; 
+        Pageable pageable = PageRequest.of(page, pageSize);
+
         // Gọi hàm lọc ở Repository
-        List<Product> list = productRepo.filterProducts(keyword, categoryName, status);
+        Page<Product> productPage = productRepo.filterProducts(keyword, categoryName, status,pageable);
         
-        model.addAttribute("products", list);
+        model.addAttribute("productPage", productPage);
         
         return "admin/manageProduct";
     }
