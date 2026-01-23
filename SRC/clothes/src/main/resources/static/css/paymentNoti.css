@@ -1,0 +1,70 @@
+.payment-noti {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.payment-success,
+.payment-error {
+  max-width: 600px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon.success {
+  color: #2e7d32;
+  border: 2px solid #2e7d32;
+}
+
+.icon.error {
+  color: #c62828;
+  border: 2px solid #c62828;
+}
+
+.title.success {
+  color: #2e7d32;
+}
+
+.title.error {
+  color: #c62828;
+}
+
+.desc {
+  margin: 12px 0;
+  color: #555;
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 12px 24px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.btn.primary {
+  background: #5a6d57;
+  color: white;
+}
+
+.btn.secondary {
+  border: 1px solid #aaa;
+  color: #333;
+}
