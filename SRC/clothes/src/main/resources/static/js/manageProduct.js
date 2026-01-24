@@ -8,7 +8,10 @@
             const skuRow = tr.nextElementSibling;
             if (skuRow && skuRow.classList.contains("sku-row")) {
                 skuRow.classList.toggle("show");
-                btn.textContent = skuRow.classList.contains("show") ? "▲ Thu gọn" : "▼ Chi tiết";
+                // btn.textContent = skuRow.classList.contains("show") ? "▲ Thu gọn" : "▼ Chi tiết";
+                 btn.innerHTML = skuRow.classList.contains("show")
+                ? '<i class="fa-solid fa-chevron-up"></i> Thu gọn'
+                : '<i class="fa-solid fa-chevron-down"></i> Chi tiết';
             }
         }
 

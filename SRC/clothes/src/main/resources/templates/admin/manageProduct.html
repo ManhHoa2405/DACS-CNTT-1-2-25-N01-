@@ -106,14 +106,16 @@
             </select>
 
             <button type="submit" class="btn-search">Tìm Kiếm</button>
-            <a th:href="@{/admin/manageProduct}" 
-              th:if="${!#strings.isEmpty(param.keyword) or !#strings.isEmpty(param.categoryName) or !#strings.isEmpty(param.status)}"
-              style="margin-left: 10px; color: #dc3545; text-decoration: none; font-size: 0.9em; display: flex; align-items: center; cursor: pointer; font-weight: bold;">
-              <span style="font-size: 20px;">
-                <i class="fa-solid fa-xmark" style="font-size: 30px;"></i>
-              </span>
-               Xóa lọc
-            </a>
+            <div>
+              <a th:href="@{/admin/manageProduct}" 
+                th:if="${!#strings.isEmpty(param.keyword) or !#strings.isEmpty(param.categoryName) or !#strings.isEmpty(param.status)}"
+                style="margin-left: 10px; color: #dc3545; text-decoration: none; font-size: 0.9em; display: flex; align-items: center; cursor: pointer; font-weight: bold;">
+                <span style="font-size: 20px;">
+                  <i class="fa-solid fa-xmark" style="font-size: 30px;"></i>
+                </span>
+                 Xóa lọc
+              </a>
+            </div>
           </form>
 
             <table style="width: 100%; border-collapse: collapse;">
@@ -129,7 +131,7 @@
                 </thead>
 
                 <tbody>
-                <th:block th:each="p : ${products}">
+                <th:block th:each="p : ${productPage.content}">
 
                     <tr class="product-row" th:id="'product-row-' + ${p.id}" th:data-id="${p.id}" style="border-bottom: 1px solid #ddd;">
     
@@ -201,7 +203,7 @@
                     <tr class="sku-row" th:data-parent-id="${p.id}">
                         <td colspan="6" style="padding: 0;">
                             <div class="sku-box">
-                                <div style="margin-bottom: 10px; font-weight: bold;">Danh sách SKU</div>
+                                <div style="margin-bottom: 10px; font-weight: bold;">Danh sách Size</div>
 
                                 <table class="sku-table">
                                     <thead>
@@ -244,7 +246,7 @@
                                       </tbody>
                                 </table>
                                 <div class="add-form" style="margin-top: 15px; padding: 15px; background: #f1f8ff; border: 1px dashed #007bff; border-radius: 5px; display: flex; align-items: center; gap: 10px;">
-                                    <strong style="white-space: nowrap;">+ Thêm SKU mới:</strong>
+                                    <strong style="white-space: nowrap;">+ Thêm Size mới:</strong>
                                     
                                     <input type="text" class="new-size" placeholder="Nhập Size (VD: XXL)" 
                                           style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 150px;">
@@ -263,6 +265,31 @@
                 </th:block>
                 </tbody>
             </table>
+
+            <div class="nav-pagination" th:if="${productPage.totalPages > 0}">
+              <ul class="pagination">
+                  
+                  <li th:class="${productPage.first ? 'disabled' : ''}">
+                      <a th:href="@{/admin/manageProduct(page=${productPage.number - 1}, keyword=${keyword}, categoryName=${categoryName}, status=${status})}">
+                          <i class="fa-solid fa-chevron-left"></i>
+                      </a>
+                  </li>
+
+                  <li th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                      th:class="${productPage.number == i ? 'active' : ''}">
+                      
+                      <a th:href="@{/admin/manageProduct(page=${i}, keyword=${keyword}, categoryName=${categoryName}, status=${status})}"
+                        th:text="${i + 1}">1</a>
+                  </li>
+
+                  <li th:class="${productPage.last ? 'disabled' : ''}">
+                      <a th:href="@{/admin/manageProduct(page=${productPage.number + 1}, keyword=${keyword}, categoryName=${categoryName}, status=${status})}">
+                         <i class="fa-solid fa-chevron-right"></i>
+                      </a>
+                  </li>
+                  
+              </ul>
+            </div>
         </div>
     </div>
 </div>
