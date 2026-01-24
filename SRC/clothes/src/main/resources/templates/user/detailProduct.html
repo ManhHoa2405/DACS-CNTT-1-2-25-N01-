@@ -44,17 +44,28 @@
         </ul>
 
         <!-- Action -->
-        <div class="actions">
+       <div class="actions">
           <div class="search-box">
             <a href="javascript:void(0)" onclick="toggleSearch()">
               <img th:src="@{/img/Search_light.svg}" alt="Search-icon" />
             </a>
           </div>
 
-          <div class="account">
-            <a th:href="@{/account/login}">
+         <div class="account"> 
+            <a th:href="@{/account/login}" class="account_icon">
               <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
             </a>
+            <th:block th:if="${session.currentUser != null}">
+              <div class="account_infor">
+                <span th:text="${session.currentUser.name}"></span>
+                <span>
+                  <a th:href="@{/user/purchase}">Đơn Mua</a>
+                </span>
+                <span>
+                  <a th:href="@{/account/logout}">Đăng Xuất</a>
+                </span>
+              </div>
+            </th:block>
           </div>
           <div class="cart">
             <a th:href="@{/user/cart}">
@@ -131,7 +142,7 @@
         <!-- Info -->
         
           <div class="product-info">
-            <form th:action="@{/user/cart}" method="post"></form>
+            <form th:action="@{/user/cart/add}" method="POST">
               <h1 th:text="${p.name}"></h1>
     
               
@@ -148,13 +159,14 @@
               <div class="status">Trạng Thái:<p  th:text="${(p.status == true) ? 'Còn Hàng' : 'Hết Hàng'}"> </p></div>          
 
               <!-- Size -->
-              <select class="size-select" name="size" required>
+              <select class="size-select" name="variantId" required>
                 <option value="" disabled selected>Kích Thước</option>
                 <th:block th:each="v :${p.variants}">
-                  <option 
-                          th:text ="${v.size}"
-                          th:if="${v.stock > 0}"
-                  ></option>
+                  <option th:value="${v.id}"
+                          th:text="${v.size}"
+                          th:if="${v.stock > 0}">
+                  </option>
+
                 </th:block>
               </select>
     
@@ -236,7 +248,7 @@
 
         <!-- Chat icon -->
         <div class="chat-icon" onclick="toggleChat()">
-          <img src="/static/img/Footer Chat box.png" alt="Chat" />
+          <img th:src="@{/img/Footer Chat box.png}" alt="Chat" />
         </div>
 
         <!-- Chat modal -->

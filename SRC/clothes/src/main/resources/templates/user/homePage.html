@@ -49,11 +49,25 @@
         </a>
 
         <ul class="nav-products">
-          <li title="Áo"><a th:href="@{/user/showProduct(categoryName='Áo')}">Áo</a></li>
-          <li title="Quần"><a th:href="@{/user/showProduct(categoryName='Quần')}">Quần</a></li>
-          <li title="Đầm"><a th:href="@{/user/showProduct(categoryName='Đầm')}">Đầm</a></li>
-          <li title="Chân váy"><a th:href="@{/user/showProduct(categoryName='Chân váy')}">Chân váy</a></li>
-          <li title="Phụ kiện"><a th:href="@{/user/showProduct(categoryName='Phụ kiện')}">Phụ kiện</a></li>
+          <li title="Áo">
+            <a th:href="@{/user/showProduct(categoryName='Áo')}">Áo</a>
+          </li>
+          <li title="Quần">
+            <a th:href="@{/user/showProduct(categoryName='Quần')}">Quần</a>
+          </li>
+          <li title="Đầm">
+            <a th:href="@{/user/showProduct(categoryName='Đầm')}">Đầm</a>
+          </li>
+          <li title="Chân váy">
+            <a th:href="@{/user/showProduct(categoryName='Chân váy')}"
+              >Chân váy</a
+            >
+          </li>
+          <li title="Phụ kiện">
+            <a th:href="@{/user/showProduct(categoryName='Phụ kiện')}"
+              >Phụ kiện</a
+            >
+          </li>
         </ul>
 
         <div class="actions">
@@ -69,12 +83,12 @@
             </a>
             <th:block th:if="${session.currentUser != null}">
               <div class="account_infor">
-                <span th:text="${session.currentUser.name}" ></span>
+                <span th:text="${session.currentUser.name}"></span>
                 <span>
-                   <a th:href="@{/user/purchase}">Đơn Mua</a>
+                  <a th:href="@{/user/purchase}">Đơn Mua</a>
                 </span>
                 <span>
-                    <a th:href="@{/account/logout}">Đăng Xuất</a>
+                  <a th:href="@{/account/logout}">Đăng Xuất</a>
                 </span>
               </div>
             </th:block>
@@ -133,63 +147,99 @@
           <div class="product-section">
             <div class="section-header">
               <h2>Áo</h2>
-              <li title="Áo" style="list-style: none;"><a th:href="@{/user/showProduct(categoryName='Áo')}">View all</a></li>
+              <li title="Áo" style="list-style: none">
+                <a th:href="@{/user/showProduct(categoryName='Áo')}"
+                  >View all</a
+                >
+              </li>
             </div>
 
             <div class="product-grid">
               <div class="product-card" th:each="p :${listAo}">
-                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                <a
+                  th:href="@{'/user/detailProduct/' +${p.id}}"
+                  class="product-link"
+                >
                   <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
                       <h3 th:text="${p.name}"></h3>
                       <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'">0 VND</p>
+                    <p
+                      class="price"
+                      th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                    >
+                      0 VND
+                    </p>
                   </div>
                 </a>
-              </div>             
-            </div> 
+              </div>
+            </div>
           </div>
 
           <div class="product-section">
             <div class="section-header">
               <h2>Quần</h2>
-              <li title="Quần" style="list-style: none;"><a th:href="@{/user/showProduct(categoryName='Quần')}">View All</a></li>
+              <li title="Quần" style="list-style: none">
+                <a th:href="@{/user/showProduct(categoryName='Quần')}"
+                  >View All</a
+                >
+              </li>
             </div>
 
             <div class="product-grid">
               <div class="product-card" th:each="p :${listQuan}">
-                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                <a
+                  th:href="@{'/user/detailProduct/' +${p.id}}"
+                  class="product-link"
+                >
                   <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
                       <h3 th:text="${p.name}"></h3>
                       <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'">0 VND</p>
+                    <p
+                      class="price"
+                      th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                    >
+                      0 VND
+                    </p>
                   </div>
                 </a>
-              </div>             
-            </div> 
+              </div>
+            </div>
           </div>
 
           <div class="product-section">
             <div class="section-header">
               <h2>Đầm</h2>
-              <li style="list-style: none;"><a th:href="@{/user/showProduct(categoryName ='Đầm')}">View All</a></li>
+              <li style="list-style: none">
+                <a th:href="@{/user/showProduct(categoryName ='Đầm')}"
+                  >View All</a
+                >
+              </li>
             </div>
 
             <div class="product-grid">
               <div class="product-card" th:each="p :${listDam}">
-                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                <a
+                  th:href="@{'/user/detailProduct/' +${p.id}}"
+                  class="product-link"
+                >
                   <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
                       <h3 th:text="${p.name}"></h3>
                       <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'">0 VND</p>
+                    <p
+                      class="price"
+                      th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                    >
+                      0 VND
+                    </p>
                   </div>
                 </a>
               </div>
@@ -199,19 +249,31 @@
           <div class="product-section">
             <div class="section-header">
               <h2>Chân Váy</h2>
-              <li style="list-style: none;"><a th:href="@{/user/showProduct(categoryName='Chân Váy')}">View All</a></li>
+              <li style="list-style: none">
+                <a th:href="@{/user/showProduct(categoryName='Chân Váy')}"
+                  >View All</a
+                >
+              </li>
             </div>
 
             <div class="product-grid">
               <div class="product-card" th:each="p :${listChanVay}">
-                <a th:href="@{'/user/detailProduct/' +${p.id}}" class="product-link">
+                <a
+                  th:href="@{'/user/detailProduct/' +${p.id}}"
+                  class="product-link"
+                >
                   <img th:src="${p.mainImage}" alt="Áo Cộc tay" />
                   <div class="down">
                     <div class="left">
                       <h3 th:text="${p.name}"></h3>
                       <p th:text="${p.category.name}"></p>
                     </div>
-                    <p class="price" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'">0 VND</p>
+                    <p
+                      class="price"
+                      th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                    >
+                      0 VND
+                    </p>
                   </div>
                 </a>
               </div>
@@ -220,7 +282,7 @@
         </section>
 
         <section class="banner-sus">
-          <img th:src="@{/img/Sustainability.png}" alt="">
+          <img th:src="@{/img/Sustainability.png}" alt="" />
           <div class="sus-content">
             <h2>
               Thời Trang Bền Vững Lựa Chọn Thân Thiện Với Môi Trường,<br />

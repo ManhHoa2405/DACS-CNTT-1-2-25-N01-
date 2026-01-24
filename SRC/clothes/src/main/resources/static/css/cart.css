@@ -286,3 +286,29 @@ body {
     display: block;
   }
 }
+
+/* Sửa lỗi nút Thanh Toán bị bé */
+a.checkout-btn {
+  display: block; /* Bắt buộc: Biến thẻ a thành khối để nhận width */
+  text-align: center; /* Căn giữa chữ */
+  text-decoration: none; /* Bỏ gạch chân */
+  box-sizing: border-box; /* Đảm bảo padding không làm vỡ khung */
+}
+
+/* Sửa lỗi nút Xóa có viền xấu */
+button.remove-item {
+  background: transparent; /* Nền trong suốt */
+  border: none; /* Bỏ viền nút */
+  padding: 0; /* Bỏ đệm mặc định */
+  font-family: inherit; /* Giữ font chữ đẹp */
+  font-size: 1.2rem; /* Kích thước như cũ */
+  cursor: pointer;
+}
+button.remove-item:hover {
+  color: #ff4d4f; /* Giữ hiệu ứng hover đỏ */
+}
+
+/* Đảm bảo form không phá vỡ layout */
+form[style*="display: contents"] {
+  display: contents !important;
+}

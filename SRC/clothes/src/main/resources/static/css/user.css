@@ -465,3 +465,32 @@ a {
   color: white;
   cursor: pointer;
 }
+
+.account::after {
+  content: "";
+  position: absolute;
+  right: 140px;
+  top: 70px;
+
+  width: 60px;
+  height: 45px;
+}
+.account:hover .account_infor {
+  display: flex;
+}
+
+.account_infor {
+  /* display: flex; */
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  border: 1px solid;
+  padding: 10px;
+  top: 100px;
+  right: 90px;
+  gap: 8px;
+  z-index: 999;
+}
+.account_infor span a {
+  color: #2f2f2f;
+}

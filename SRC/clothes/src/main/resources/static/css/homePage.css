@@ -54,12 +54,12 @@
   margin-bottom: 40px;
 }
 
-.section-header .view-all {
+.section-header li a {
   font-size: 1.3rem;
   color: #888;
 }
 
-.section-header .view-all:hover {
+.section-header li a:hover {
   text-decoration: underline;
 }
 
@@ -137,11 +137,11 @@
   height: 100%;
 
   /* background: url("/img/Sustainability.png") center / cover no-repeat; */
-/* 
+  /* 
   background-color: #e8e6e1;
   background-repeat: no-repeat;
   background-size: cover; /* 🔥 QUAN TRỌNG */
-  /* background-position: bottom center; canh giữa ảnh */ 
+  /* background-position: bottom center; canh giữa ảnh */
 
   /* CẤU HÌNH VỊ TRÍ: Góc dưới bên phải */
   display: flex;
@@ -160,7 +160,7 @@
   height: 100%;
   /* object-fit: contain;   cover | contain */
   object-position: center bottom;
-  image-rendering: auto; 
+  image-rendering: auto;
 }
 .sus-content {
   text-align: right;
@@ -296,7 +296,7 @@
 .insta-item:hover .insta-overlay {
   opacity: 1;
 }
-.account::after{
+.account::after {
   content: "";
   position: absolute;
   right: 140px;
@@ -305,22 +305,22 @@
   width: 60px;
   height: 45px;
 }
-.account:hover .account_infor{
+.account:hover .account_infor {
   display: flex;
 }
 
-.account_infor{
+.account_infor {
   /* display: flex; */
   display: none;
-  flex-direction: column;  
+  flex-direction: column;
   position: absolute;
   border: 1px solid;
   padding: 10px;
   top: 100px;
   right: 90px;
-  gap: 8px; 
+  gap: 8px;
   z-index: 999;
 }
-.account_infor span a{
-  color: #2f2f2f
+.account_infor span a {
+  color: #2f2f2f;
 }

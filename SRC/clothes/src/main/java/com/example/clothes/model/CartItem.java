@@ -31,8 +31,9 @@ public class CartItem {
    @ManyToOne
    @JoinColumn(name = "product_variant_id", nullable = false)
    private ProductVariant productVariant;
-   @Column(name = "quantity", nullable = false) 
-   private BigDecimal quantity;
+  @Column(nullable = false)
+private Integer quantity;
+
 
    @Column(name = "is_selected")
    private Boolean isSelected;

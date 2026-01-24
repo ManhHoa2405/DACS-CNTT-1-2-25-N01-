@@ -16,7 +16,7 @@
   <body>
     <header class="header">
       <nav class="navbar">
-        <a th:href="@{/home}">
+        <a th:href="@{/user/homePage}">
           <img th:src="@{/img/Logo.svg}" alt="Modimal" width="150" />
         </a>
       </nav>
@@ -25,10 +25,12 @@
     <main class="cart-page">
       <div class="cart-nav">
         <div class="left-nav">
-          <a th:href="@{/home}" class="back-link">Trở Lại</a>
+          <a th:href="${backLink}" class="back-link">Trở Lại</a>
           <h1 class="cart-title">Giỏ Hàng Của Bạn</h1>
         </div>
-        <a th:href="@{/home}" class="continue-link">Tiếp Tục Mua Sắm</a>
+        <a th:href="@{/user/homePage}" class="continue-link"
+          >Tiếp Tục Mua Sắm</a
+        >
       </div>
 
       <div class="cart-layout">
@@ -36,8 +38,8 @@
           <div class="section-head">
             <span>Chọn Sản Phẩm</span>
           </div>
-
-          <div class="item-row-left">
+          <!-- Dữ liệu giả để test giao diện -->
+          <!-- <div class="item-row-left">
             <div class="checkbox-wrapper">
               <input type="checkbox" class="product-checkbox" />
             </div>
@@ -83,6 +85,61 @@
               </div>
             </div>
             <span class="remove-item">✕</span>
+          </div> -->
+
+          <!-- Xử lý hiển thị sảnn phẩm từ DB dữ liệu thật -->
+          <div
+            th:each="item : ${items}"
+            class="item-row-left"
+            th:id="'left-row-' + ${item.id}"
+          >
+            <!-- Checkbox chọn sản phẩm -->
+            <form th:action="@{/user/cart/select}" method="post">
+              <input type="hidden" th:value="${item.id}" name="cartItemId" />
+              <div class="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  class="product-checkbox"
+                  name="selected"
+                  th:checked="${item.isSelected}"
+                  th:data-id="${item.id}"
+                  onchange="handleSelect(this)"
+                />
+              </div>
+            </form>
+
+            <!-- Thông tin sản phẩm -->
+            <div class="cart-product">
+              <img
+                th:src="@{${item.productVariant.product.images[0].imageUrl}}"
+              />
+
+              <div class="product-info">
+                <h4 th:text="${item.productVariant.product.name}"></h4>
+                <p>Size: <span th:text="${item.productVariant.size}"></span></p>
+                <p>
+                  Giá:
+                  <span
+                    th:text="${#numbers.formatDecimal(item.productVariant.product.price,0,'COMMA',0,'POINT')}"
+                  ></span>
+                  VND
+                </p>
+              </div>
+            </div>
+
+            <!-- Xóa -->
+            <form
+              th:action="@{/user/cart/update}"
+              method="post"
+              class="delete-form"
+              th:data-id="${item.id}"
+              onsubmit="handleDelete(event, this)"
+              style="display: contents"
+            >
+              <input type="hidden" name="cartItemId" th:value="${item.id}" />
+              <input type="hidden" name="quantity" value="0" />
+              <button type="submit" class="remove-item">✕</button>
+            </form>
           </div>
         </div>
 
@@ -93,7 +150,7 @@
             <span>Tổng</span>
           </div>
 
-          <div class="item-row-right" data-price="200000">
+          <!-- <div class="item-row-right" data-price="200000">
             <div class="cart-name">Wrap Top</div>
             <div class="cart-price">200.000</div>
             <div class="cart-qty">
@@ -107,11 +164,32 @@
           <div class="item-row-right" data-price="150000">
             <div class="cart-name">Casual Wild Leg</div>
             <div class="cart-price">150.000</div>
-            <div class="cart-qty">
-              <button class="minus">-</button>
-              <span class="qty-val">1</span>
-              <button class="plus">+</button>
-            </div>
+            <form
+              th:action="@{/user/cart/update}"
+              method="post"
+              class="cart-qty"
+            >
+              <input type="hidden" name="cartItemId" th:value="${item.id}" />
+
+              <button
+                type="submit"
+                name="quantity"
+                th:value="${item.quantity - 1}"
+              >
+                -
+              </button>
+
+              <span th:text="${item.quantity}"></span>
+
+              <button
+                type="submit"
+                name="quantity"
+                th:value="${item.quantity + 1}"
+              >
+                +
+              </button>
+            </form>
+
             <div class="cart-total">150.000</div>
           </div>
 
@@ -124,8 +202,58 @@
               <button class="plus">+</button>
             </div>
             <div class="cart-total">150.000</div>
-          </div>
+          </div> -->
 
+          <div
+            th:each="item : ${items}"
+            class="item-row-right"
+            th:id="'right-row-' + ${item.id}"
+            th:data-price="${item.productVariant.product.price}"
+            th:style="${item.isSelected} ? 'display: grid' : 'display: none'"
+          >
+            <div
+              class="cart-name"
+              th:text="${item.productVariant.product.name}"
+            ></div>
+
+            <div
+              class="cart-price"
+              th:text="${#numbers.formatDecimal(item.productVariant.product.price,0,'COMMA',0,'POINT')}"
+            ></div>
+
+            <form
+              th:action="@{/user/cart/update}"
+              method="post"
+              class="cart-qty"
+            >
+              <input type="hidden" name="cartItemId" th:value="${item.id}" />
+
+              <button
+                type="submit"
+                name="quantity"
+                th:value="${item.quantity - 1}"
+                class="minus"
+              >
+                -
+              </button>
+
+              <span class="qty-val" th:text="${item.quantity}"></span>
+
+              <button
+                type="submit"
+                name="quantity"
+                th:value="${item.quantity + 1}"
+                class="plus"
+              >
+                +
+              </button>
+            </form>
+
+            <div
+              class="cart-total"
+              th:text="${#numbers.formatDecimal(item.productVariant.product.price * item.quantity,0,'COMMA',0,'POINT')}"
+            ></div>
+          </div>
           <div class="summary-box">
             <div class="summary-divider"></div>
             <div class="summary-row">
@@ -138,105 +266,312 @@
             </div>
             <div class="summary-row total">
               <span>Tổng Thanh Toán</span>
-              <span id="final-total">0 VND</span>
+              <span
+                id="final-total"
+                th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' VND'"
+              ></span>
             </div>
+
             <div class="tax-note">
               Vui lòng chọn sản phẩm bên trái để xem chi tiết hóa đơn.
             </div>
-            <a
+            <!-- <a
               th:href="@{/checkout}"
               style="text-decoration: none; display: block"
             >
               <button class="checkout-btn">Thanh Toán</button>
+            </a> -->
+            <a
+              th:href="@{/user/payment}"
+              class="checkout-btn"
+              th:classappend="${total == 0} ? 'disabled' : ''"
+              th:onclick="${total == 0} ? 'return false;' : null"
+            >
+              Thanh Toán
             </a>
           </div>
         </div>
       </div>
     </main>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // === 1. KHAI BÁO BIẾN ===
-        const checkboxes = document.querySelectorAll(".product-checkbox");
-        const leftRows = document.querySelectorAll(".item-row-left");
-        const rightRows = document.querySelectorAll(".item-row-right");
+    <!-- <script>
+      // =================================================
+      // 1. XỬ LÝ XÓA SẢN PHẨM (NÚT X) - AJAX
+      // =================================================
+      function handleDelete(event, form) {
+        event.preventDefault(); // Chặn load lại trang
+
+        const itemId = form.getAttribute("data-id");
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            // Dù controller trả về redirect hay ok, fetch đều coi là thành công
+            if (response.ok) {
+              removeRowFromUI(itemId);
+            } else {
+              alert("Lỗi kết nối tới Server!");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // =================================================
+      // 2. XỬ LÝ CHECKBOX (TICK CHỌN) - AJAX
+      // =================================================
+      function handleSelect(checkbox) {
+        // Tìm form cha gần nhất (nếu có) hoặc tự tạo FormData
+        const itemId = checkbox.getAttribute("data-id");
+        const isChecked = checkbox.checked;
+
+        // Tạo dữ liệu gửi đi
+        const formData = new FormData();
+        formData.append("cartItemId", itemId);
+        formData.append("selected", isChecked);
+
+        // Gửi về Controller (/user/cart/select)
+        // Lưu ý: Hardcode đường dẫn hoặc lấy từ form action nếu có
+        fetch("/user/cart/select", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              // Thành công -> Ẩn/Hiện dòng bên phải
+              toggleRightRow(itemId, isChecked);
+              // Tính lại tiền
+              updateSummaryDynamic();
+            } else {
+              console.error("Lỗi cập nhật trạng thái");
+              // Nếu lỗi thì tick ngược lại để báo người dùng
+              checkbox.checked = !isChecked;
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            checkbox.checked = !isChecked;
+          });
+      }
+
+      // =================================================
+      // 3. CÁC HÀM HỖ TRỢ GIAO DIỆN
+      // =================================================
+
+      // Hàm xóa dòng HTML hoàn toàn (Dùng cho nút X)
+      function removeRowFromUI(itemId) {
+        const leftRow = document.getElementById("left-row-" + itemId);
+        const rightRow = document.getElementById("right-row-" + itemId);
+
+        if (leftRow) leftRow.remove();
+        if (rightRow) rightRow.remove();
+
+        updateSummaryDynamic();
+      }
+
+      // Hàm ẩn/hiện dòng bên phải (Dùng cho Checkbox)
+      function toggleRightRow(itemId, isChecked) {
+        const rightRow = document.getElementById("right-row-" + itemId);
+        if (rightRow) {
+          if (isChecked) {
+            rightRow.style.display = "grid"; // Hoặc 'flex' tùy CSS của bạn
+          } else {
+            rightRow.style.display = "none";
+          }
+        }
+      }
+
+      // Hàm tính tổng tiền (Dùng chung)
+      function updateSummaryDynamic() {
+        const rightRowsNow = document.querySelectorAll(".item-row-right");
         const subtotalEl = document.getElementById("subtotal");
         const finalTotalEl = document.getElementById("final-total");
-        const removeBtns = document.querySelectorAll(".remove-item");
+        const checkoutBtn = document.querySelector(".checkout-btn");
 
-        // === 2. HÀM UPDATE TỔNG TIỀN ===
-        function updateSummary() {
-          let totalBill = 0;
+        let totalBill = 0;
 
-          rightRows.forEach((row, index) => {
-            // Tính tiền nếu dòng đó đang hiển thị (được tick)
-            // VÀ dòng bên trái tương ứng chưa bị xóa (display != none)
-            if (row.style.display === "grid") {
-              const price = parseInt(row.dataset.price);
-              const qty = parseInt(row.querySelector(".qty-val").innerText);
+        rightRowsNow.forEach((row) => {
+          // Chỉ cộng tiền nếu dòng đó đang hiển thị (display != none)
+          // window.getComputedStyle giúp lấy chính xác trạng thái hiển thị
+          if (window.getComputedStyle(row).display !== "none") {
+            // Lấy giá và làm sạch dữ liệu (chỉ lấy số)
+            let rawPrice = row.getAttribute("data-price");
+            let price =
+              parseFloat(String(rawPrice).replace(/[^0-9.]/g, "")) || 0;
 
-              const rowTotal = price * qty;
-              totalBill += rowTotal;
+            const qtyVal = row.querySelector(".qty-val");
+            const qty = qtyVal ? parseInt(qtyVal.innerText) : 0;
 
-              row.querySelector(".cart-total").innerText =
-                rowTotal.toLocaleString("vi-VN") + " VND";
-            }
-          });
+            totalBill += price * qty;
+          }
+        });
 
-          subtotalEl.innerText = totalBill.toLocaleString("vi-VN") + " VND";
-          finalTotalEl.innerText = totalBill.toLocaleString("vi-VN") + " VND";
+        // Format tiền tệ
+        const formattedMoney = totalBill.toLocaleString("vi-VN") + " VND";
+
+        if (subtotalEl) subtotalEl.innerText = formattedMoney;
+        if (finalTotalEl) finalTotalEl.innerText = formattedMoney;
+
+        // Xử lý nút thanh toán
+        if (checkoutBtn) {
+          if (totalBill === 0) {
+            checkoutBtn.classList.add("disabled");
+            checkoutBtn.style.pointerEvents = "none";
+            checkoutBtn.style.opacity = "0.5";
+          } else {
+            checkoutBtn.classList.remove("disabled");
+            checkoutBtn.style.pointerEvents = "auto";
+            checkoutBtn.style.opacity = "1";
+          }
         }
+      }
+    </script> -->
+    <script>
+      // =================================================
+      // 1. XỬ LÝ XÓA SẢN PHẨM (NÚT X) - OPTIMISTIC UI
+      // =================================================
+      function handleDelete(event, form) {
+        event.preventDefault(); // Chặn reload trang
 
-        // === 3. XỬ LÝ CHECKBOX (TICK CHỌN) ===
-        checkboxes.forEach((cb, index) => {
-          cb.addEventListener("change", () => {
-            if (cb.checked) {
-              rightRows[index].style.display = "grid";
+        const itemId = form.getAttribute("data-id");
+        const formData = new FormData(form);
+
+        // --- BƯỚC 1: CẬP NHẬT GIAO DIỆN NGAY LẬP TỨC (Không chờ Server) ---
+        const leftRow = document.getElementById("left-row-" + itemId);
+        const rightRow = document.getElementById("right-row-" + itemId);
+
+        // Ẩn tạm thời (chưa xóa hẳn để phòng trường hợp lỗi thì hiện lại)
+        if (leftRow) leftRow.style.display = "none";
+        if (rightRow) rightRow.style.display = "none";
+
+        // Tính lại tiền ngay lập tức
+        updateSummaryDynamic();
+
+        // --- BƯỚC 2: GỬI DỮ LIỆU NGẦM ---
+        fetch(form.action, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              // Server xóa thành công -> Xóa hẳn khỏi DOM
+              if (leftRow) leftRow.remove();
+              if (rightRow) rightRow.remove();
             } else {
-              rightRows[index].style.display = "none";
+              // Server báo lỗi -> Hoàn tác lại giao diện cũ
+              alert("Lỗi kết nối! Không thể xóa sản phẩm.");
+              if (leftRow) leftRow.style.display = "flex"; // Hoặc display gốc của bạn
+              if (rightRow) rightRow.style.display = "grid"; // Hoặc display gốc
+              updateSummaryDynamic(); // Tính lại tiền cũ
             }
-            updateSummary();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Lỗi mạng -> Hoàn tác
+            if (leftRow) leftRow.style.display = "flex";
+            if (rightRow) rightRow.style.display = "grid";
+            updateSummaryDynamic();
           });
-        });
+      }
 
-        // === 4. XỬ LÝ TĂNG GIẢM SỐ LƯỢNG ===
-        document.querySelectorAll(".cart-qty").forEach((qtyGroup, index) => {
-          const minusBtn = qtyGroup.querySelector(".minus");
-          const plusBtn = qtyGroup.querySelector(".plus");
-          const qtyVal = qtyGroup.querySelector(".qty-val");
+      // =================================================
+      // 2. XỬ LÝ CHECKBOX (TICK CHỌN) - OPTIMISTIC UI
+      // =================================================
+      function handleSelect(checkbox) {
+        const itemId = checkbox.getAttribute("data-id");
+        const isChecked = checkbox.checked;
 
-          minusBtn.onclick = () => {
-            let v = parseInt(qtyVal.innerText);
-            if (v > 1) {
-              qtyVal.innerText = v - 1;
-              updateSummary();
+        // --- BƯỚC 1: CẬP NHẬT GIAO DIỆN NGAY LẬP TỨC ---
+        toggleRightRow(itemId, isChecked);
+        updateSummaryDynamic();
+
+        // --- BƯỚC 2: GỬI DỮ LIỆU NGẦM ---
+        const formData = new FormData();
+        formData.append("cartItemId", itemId);
+        formData.append("selected", isChecked);
+
+        fetch("/user/cart/select", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              // Nếu lỗi -> Hoàn tác lại checkbox và giao diện
+              throw new Error("Server update failed");
             }
-          };
+            // Nếu thành công thì không cần làm gì nữa vì giao diện đã đổi từ Bước 1 rồi
+          })
+          .catch((error) => {
+            console.error("Lỗi đồng bộ:", error);
+            // Hoàn tác lại trạng thái cũ nếu lỗi
+            checkbox.checked = !isChecked;
+            toggleRightRow(itemId, !isChecked);
+            updateSummaryDynamic();
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+          });
+      }
 
-          plusBtn.onclick = () => {
-            let v = parseInt(qtyVal.innerText);
-            qtyVal.innerText = v + 1;
-            updateSummary();
-          };
+      // =================================================
+      // 3. CÁC HÀM HỖ TRỢ (GIỮ NGUYÊN)
+      // =================================================
+
+      function toggleRightRow(itemId, isChecked) {
+        const rightRow = document.getElementById("right-row-" + itemId);
+        if (rightRow) {
+          rightRow.style.display = isChecked ? "grid" : "none";
+        }
+      }
+
+      function updateSummaryDynamic() {
+        const rightRowsNow = document.querySelectorAll(".item-row-right");
+        const subtotalEl = document.getElementById("subtotal");
+        const finalTotalEl = document.getElementById("final-total"); // Đã có ID này
+        const checkoutBtn = document.querySelector(".checkout-btn");
+
+        let totalBill = 0;
+
+        rightRowsNow.forEach((row) => {
+          // Chỉ tính những dòng đang hiển thị thực sự
+          if (row.style.display !== "none" && row.style.display !== "") {
+            let rawPrice = row.getAttribute("data-price");
+            let price =
+              parseFloat(String(rawPrice).replace(/[^0-9.]/g, "")) || 0;
+
+            const qtyVal = row.querySelector(".qty-val");
+            const qty = qtyVal ? parseInt(qtyVal.innerText) : 0;
+
+            totalBill += price * qty;
+          }
+          // Fix trường hợp style chưa set (mặc định grid nếu được chọn từ đầu)
+          else if (window.getComputedStyle(row).display !== "none") {
+            let rawPrice = row.getAttribute("data-price");
+            let price =
+              parseFloat(String(rawPrice).replace(/[^0-9.]/g, "")) || 0;
+            const qtyVal = row.querySelector(".qty-val");
+            const qty = qtyVal ? parseInt(qtyVal.innerText) : 0;
+            totalBill += price * qty;
+          }
         });
 
-        // === 5. XỬ LÝ NÚT XÓA ===
-        removeBtns.forEach((btn, index) => {
-          btn.onclick = () => {
-            // B1: Bỏ tick
-            checkboxes[index].checked = false;
-            // B2: Ẩn dòng phải
-            rightRows[index].style.display = "none";
-            // B3: Ẩn dòng trái
-            leftRows[index].style.display = "none";
-            // B4: Cập nhật
-            updateSummary();
-          };
-        });
+        const formattedMoney = totalBill.toLocaleString("vi-VN") + " VND";
 
-        // Khởi tạo lần đầu
-        updateSummary();
-      });
+        if (subtotalEl) subtotalEl.innerText = formattedMoney;
+        if (finalTotalEl) finalTotalEl.innerText = formattedMoney;
+
+        if (checkoutBtn) {
+          if (totalBill === 0) {
+            checkoutBtn.classList.add("disabled");
+            checkoutBtn.style.pointerEvents = "none";
+            checkoutBtn.style.opacity = "0.5";
+          } else {
+            checkoutBtn.classList.remove("disabled");
+            checkoutBtn.style.pointerEvents = "auto";
+            checkoutBtn.style.opacity = "1";
+          }
+        }
+      }
     </script>
   </body>
 </html>
