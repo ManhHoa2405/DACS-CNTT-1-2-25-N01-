@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thanh toán - Modimal</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,233 +12,657 @@
       rel="stylesheet"
     />
 
-    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/reset.css}" />
     <link rel="stylesheet" th:href="@{/css/payment.css}" />
+
+    <style>
+      /* --- STYLE CHUNG --- */
+      .no-address {
+        padding: 20px;
+        border: 1px dashed #ccc;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        color: #666;
+      }
+      .btn-add-new {
+        background-color: #333;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .btn-add-new:hover {
+        background-color: #555;
+      }
+
+      /* --- STYLE MODAL & FORM (LÀM TO HƠN) --- */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        margin: auto;
+        padding: 30px; /* Tăng padding */
+        border-radius: 12px; /* Bo tròn mềm mại hơn */
+        width: 650px; /* Tăng chiều rộng modal */
+        max-width: 95%;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: slideDown 0.3s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+      }
+      .modal-header h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+      }
+      .close-modal {
+        font-size: 28px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .close-modal:hover {
+        color: #000;
+      }
+
+      /* Danh sách địa chỉ */
+      .address-item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: 0.2s;
+      }
+      .address-item-row:hover {
+        border-color: #bbb;
+        background-color: #fafafa;
+      }
+      .address-info-radio {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+        cursor: pointer;
+        flex: 1;
+      }
+      .address-info-radio input[type="radio"] {
+        transform: scale(1.2);
+        margin-top: 5px;
+        cursor: pointer;
+      }
+      .address-actions {
+        margin-left: 15px;
+      }
+      .btn-delete-addr {
+        color: #d9534f;
+        background: rgba(217, 83, 79, 0.1);
+        border: none;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: 0.2s;
+      }
+      .btn-delete-addr:hover {
+        background: #d9534f;
+        color: white;
+      }
+
+      .btn-switch-mode {
+        width: 100%;
+        padding: 15px;
+        background: #f0f0f0;
+        border: 1px dashed #999;
+        color: #333;
+        margin-top: 15px;
+        cursor: pointer;
+        font-weight: 600;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+      .btn-switch-mode:hover {
+        background: #e0e0e0;
+        border-color: #666;
+      }
+
+      /* Form nhập liệu (To và rõ ràng) */
+      .form-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .form-col {
+        flex: 1;
+      }
+
+      .form-input,
+      .address-select {
+        width: 100%;
+        padding: 12px 15px; /* Input cao hơn */
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+        box-sizing: border-box; /* Quan trọng để không bị vỡ layout */
+      }
+      .form-input:focus,
+      .address-select:focus {
+        border-color: #333;
+      }
+
+      .modal-footer {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+      }
+      .btn-cancel,
+      .btn-confirm {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .btn-cancel {
+        background-color: #f5f5f5;
+        color: #666;
+      }
+      .btn-cancel:hover {
+        background-color: #e0e0e0;
+      }
+      .btn-confirm {
+        background-color: #333;
+        color: white;
+      }
+      .btn-confirm:hover {
+        background-color: #000;
+      }
+
+      /* Style Modal Thành Công */
+      .success-modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+      }
+      .success-content {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        width: 450px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .success-icon {
+        font-size: 60px;
+        color: #4caf50;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .success-content h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .success-content p {
+        color: #666;
+        margin-bottom: 5px;
+      }
+      @keyframes popUp {
+        from {
+          transform: scale(0.7);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <!-- LEFT -->
     <section class="payment-left">
       <div class="content-wrapper-left">
         <header class="payment-header">
-          <a th:href="@{/}">
-            <img th:src="@{/img/Logo.svg}" alt="Modimal" width="150" />
-          </a>
+          <a th:href="@{/user/homePage}"
+            ><img th:src="@{/img/Logo.svg}" alt="Modimal" width="150"
+          /></a>
         </header>
-
         <nav class="breadcrumb">Cart / Shipping / <strong>Payment</strong></nav>
 
-        <!-- Address -->
         <div class="payment-section">
           <div class="section-header">
             <h3>Địa Chỉ Nhận Hàng</h3>
-            <a href="#" class="edit-link">Thay Đổi</a>
+            <a
+              href="#"
+              class="edit-link"
+              th:if="${hasAddress}"
+              onclick="openAddressModal('LIST')"
+              >Thay Đổi</a
+            >
           </div>
 
-          <div class="address-card">
-            <p class="user-name">Nguyễn Đình Đạt 0987227713</p>
-            <p class="address-detail">
-              222 Đường 565, Xóm Cá, Xã Chương Mỹ, Huyện Hoài Đức, Hà Nội
+          <div class="address-card" th:if="${hasAddress}">
+            <p
+              class="user-name"
+              th:text="${address.receiveName + ' ' + address.receivePhone}"
+            >
+              Nguyễn Văn A
+            </p>
+            <p
+              class="address-detail"
+              th:text="${address.addressDetail + ', ' + address.ward + ', ' + address.district + ', ' + address.province}"
+            >
+              Địa chỉ...
             </p>
           </div>
-        </div>
 
-        <!-- Payment Method -->
-        <div class="payment-section">
-          <h3>Phương Thức Thanh Toán</h3>
-
-          <div class="shipping-info">
-            <span>Phí Vận Chuyển</span>
-            <span class="free-text">Miễn Phí</span>
-          </div>
-
-          <div class="method-selector">
-            <p class="selector-label">Chọn Phương Thức</p>
-            <label class="radio-option">
-              <input type="radio" name="pay-method" checked />
-              <span class="custom-radio"></span>
-              Thanh Toán Tiền Mặt
-            </label>
+          <div class="no-address" th:unless="${hasAddress}">
+            <p>Bạn chưa có địa chỉ nhận hàng.</p>
+            <button
+              type="button"
+              class="btn-add-new"
+              onclick="openAddressModal('FORM')"
+            >
+              + Thêm Địa Chỉ Mới
+            </button>
           </div>
         </div>
 
-        <div class="form-actions">
-          <a th:href="@{/cart}" class="btn-back">❮ Quay Trở Lại</a>
-          <button type="submit" class="btn-order">Đặt Hàng</button>
-        </div>
+        <form
+          id="paymentForm"
+          th:action="@{/user/payment/checkout}"
+          method="post"
+        >
+          <div class="payment-section">
+            <h3>Phương Thức Thanh Toán</h3>
+            <div class="shipping-info">
+              <span>Phí Vận Chuyển</span><span class="free-text">Miễn Phí</span>
+            </div>
+
+            <div class="method-selector">
+              <p class="selector-label">Chọn Phương Thức</p>
+              <label class="radio-option">
+                <input type="radio" name="paymentMethod" value="CASH" checked />
+                <span class="custom-radio"></span> Thanh Toán Tiền Mặt (COD)
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="paymentMethod" value="MOMO" />
+                <span class="custom-radio"></span> Ví MoMo
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="paymentMethod" value="ZALOPAY" />
+                <span class="custom-radio"></span> Ví ZaloPay
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a th:href="@{/user/cart}" class="btn-back">❮ Quay Trở Lại</a>
+            <button
+              type="submit"
+              class="btn-order"
+              th:disabled="${!hasAddress}"
+            >
+              Đặt Hàng
+            </button>
+          </div>
+        </form>
       </div>
     </section>
 
-    <!-- RIGHT -->
     <aside class="payment-right">
       <div class="content-wrapper-right">
         <h3 class="sidebar-title">Your Cart</h3>
-
         <div class="cart-items-list">
-          <div class="cart-item">
+          <div class="cart-item" th:each="item : ${items}">
             <div class="item-thumb">
-              <img th:src="@{/img/ao1.jpg}" alt="Wrap Top" />
+              <img
+                th:if="${item.productVariant.product.images != null and !item.productVariant.product.images.isEmpty()}"
+                th:src="@{${item.productVariant.product.images[0].imageUrl}}"
+                alt="Product Image"
+              />
             </div>
             <div class="item-info">
-              <h4>Wrap Top</h4>
-              <p>Size: S</p>
-              <p>Color: White</p>
-              <div class="item-qty-box">1</div>
+              <h4 th:text="${item.productVariant.product.name}">Tên SP</h4>
+              <p>Size: <span th:text="${item.productVariant.size}"></span></p>
+              <div class="item-qty-box" th:text="${item.quantity}">1</div>
             </div>
-            <div class="item-price">250.000 VND</div>
-          </div>
-
-          <div class="cart-item">
-            <div class="item-thumb">
-              <img th:src="@{/img/quan1.jpg}" alt="Casual Wild Leg" />
-            </div>
-            <div class="item-info">
-              <h4>Casual Wild Leg</h4>
-              <p>Size: S</p>
-              <p>Color: Dark Blue</p>
-              <div class="item-qty-box">1</div>
-            </div>
-            <div class="item-price">150.000 VND</div>
-          </div>
-
-          <div class="cart-item">
-            <div class="item-thumb">
-              <img th:src="@{/img/vay1.jpg}" alt="Essential Dress" />
-            </div>
-            <div class="item-info">
-              <h4>Essential Dress</h4>
-              <p>Size: 2X</p>
-              <p>Color: Black</p>
-              <div class="item-qty-box">1</div>
-            </div>
-            <div class="item-price">300.000 VND</div>
+            <div
+              class="item-price"
+              th:text="${#numbers.formatDecimal(item.productVariant.product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+            ></div>
           </div>
         </div>
-
         <div class="bill-summary">
           <div class="summary-row">
-            <span>Tổng</span>
-            <span>700.000 VND</span>
+            <span>Tổng</span
+            ><span
+              th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+            ></span>
           </div>
           <div class="summary-row">
-            <span>Phí Vận Chuyển</span>
-            <span>Miễn Phí</span>
+            <span>Phí Vận Chuyển</span><span>Miễn Phí</span>
           </div>
           <div class="summary-row grand-total">
-            <span>Tổng Hóa Đơn:</span>
-            <span>700.000 VND</span>
+            <span>Tổng Hóa Đơn:</span
+            ><span
+              th:text="${#numbers.formatDecimal(grandTotal, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+            ></span>
           </div>
         </div>
-
-        <p class="policy-note">
-          Tổng số tiền bạn thanh toán đã bao gồm đầy đủ các loại thuế và phí hải
-          quan (nếu có). Chúng tôi cam kết không phát sinh thêm chi phí khi giao
-          hàng.
-        </p>
       </div>
     </aside>
 
-    <!-- MODAL -->
     <div class="modal" id="addressModal">
       <div class="modal-content">
         <div class="modal-header">
           <h2 id="modalTitle">Địa Chỉ Của Tôi</h2>
-          <span class="close-modal">&times;</span>
+          <span class="close-modal" onclick="closeAddressModal()">&times;</span>
         </div>
 
         <div class="modal-body">
-          <div id="addressListView">
-            <div class="address-item active">
-              <label class="address-label">
-                <input type="radio" name="selected-address" checked />
-                <span class="custom-radio"></span>
-                <div class="address-text">
-                  <div class="address-user">
-                    Nguyễn Đình Đạt <span>(+84) 865 806 415</span>
-                  </div>
-                  <p>Số 3 - Tổ 7, Phường Đồng Mai, Quận Hà Đông, Hà Nội</p>
-                  <span class="default-badge">Mặc định</span>
+          <div id="view-list" style="display: none">
+            <div
+              th:each="addr : ${userAddresses}"
+              class="address-item-row"
+              th:id="'addr-row-' + ${addr.id}"
+            >
+              <label class="address-info-radio">
+                <input
+                  type="radio"
+                  name="addr-select"
+                  th:checked="${addr.isDefault}"
+                  th:onclick="'setDefault(' + ${addr.id} + ')'"
+                />
+                <div>
+                  <strong
+                    th:text="${addr.receiveName + ' - ' + addr.receivePhone}"
+                    style="font-size: 16px"
+                  ></strong>
+                  <p
+                    style="font-size: 14px; color: #666; margin-top: 4px"
+                    th:text="${addr.addressDetail + ', ' + addr.ward + ', ' + addr.district + ', ' + addr.province}"
+                  ></p>
                 </div>
               </label>
+              <div class="address-actions">
+                <button
+                  type="button"
+                  class="btn-delete-addr"
+                  th:onclick="'deleteAddress(' + ${addr.id} + ')'"
+                >
+                  Xóa
+                </button>
+              </div>
             </div>
-            <button class="btn-add-address" onclick="showAddAddressForm()">
+            <button class="btn-switch-mode" onclick="switchView('FORM')">
               + Thêm Địa Chỉ Mới
             </button>
           </div>
 
-          <div id="addAddressForm" style="display: none">
-            <div class="form-group">
+          <div id="view-form" style="display: none">
+            <div class="form-row">
+              <div class="form-col">
+                <input
+                  type="text"
+                  placeholder="Họ và tên"
+                  id="newName"
+                  class="form-input"
+                />
+              </div>
+              <div class="form-col">
+                <input
+                  type="text"
+                  placeholder="Số điện thoại"
+                  id="newPhone"
+                  class="form-input"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <select id="province" class="address-select">
+                  <option value="">Tỉnh/Thành phố</option>
+                </select>
+              </div>
+              <div class="form-col">
+                <select id="district" class="address-select" disabled>
+                  <option value="">Quận/Huyện</option>
+                </select>
+              </div>
+              <div class="form-col">
+                <select id="ward" class="address-select" disabled>
+                  <option value="">Phường/Xã</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
               <input
                 type="text"
-                placeholder="Họ và tên"
-                id="newName"
-                class="form-input"
-              />
-              <input
-                type="text"
-                placeholder="Số điện thoại"
-                id="newPhone"
+                id="detail-address"
+                placeholder="Địa chỉ cụ thể (Số nhà, tên đường...)"
                 class="form-input"
               />
             </div>
 
-            <div class="form-group-select">
-              <select id="province" class="address-select">
-                <option value="">Tỉnh/Thành phố</option>
-              </select>
-              <select id="district" class="address-select" disabled>
-                <option value="">Quận/Huyện</option>
-              </select>
-              <select id="ward" class="address-select" disabled>
-                <option value="">Phường/Xã</option>
-              </select>
+            <div class="modal-footer">
+              <button class="btn-cancel" onclick="switchView('LIST')">
+                Quay lại
+              </button>
+              <button class="btn-confirm" id="btnSaveAddress">
+                Lưu Địa Chỉ
+              </button>
             </div>
-
-            <input
-              type="text"
-              id="detail-address"
-              placeholder="Địa chỉ cụ thể (Số nhà, tên đường...)"
-              class="form-input"
-            />
           </div>
-        </div>
-
-        <div class="modal-footer">
-          <button
-            class="btn-cancel"
-            id="backBtn"
-            onclick="backToListView()"
-            style="display: none"
-          >
-            Quay lại
-          </button>
-          <button class="btn-cancel" id="closeBtn">Hủy</button>
-          <button class="btn-confirm" id="confirmBtn">Xác nhận</button>
         </div>
       </div>
     </div>
 
-    <!-- JS -->
-    <script>
-      const modal = document.getElementById("addressModal");
-      const editLink = document.querySelector(".edit-link");
-      const closeBtn = document.querySelector(".close-modal");
-      const cancelBtn = document.getElementById("closeBtn");
-
-      editLink.onclick = (e) => {
-        e.preventDefault();
-        modal.style.display = "flex";
-      };
-
-      closeBtn.onclick = () => (modal.style.display = "none");
-      cancelBtn.onclick = () => (modal.style.display = "none");
-
-      window.onclick = (e) => {
-        if (e.target === modal) modal.style.display = "none";
-      };
-    </script>
+    <div id="successModal" class="success-modal">
+      <div class="success-content">
+        <span class="success-icon">✔</span>
+        <h2>Đặt Hàng Thành Công!</h2>
+        <p>Cảm ơn bạn đã mua sắm tại Modimal.</p>
+        <p>Chúng tôi sẽ liên hệ sớm nhất để xác nhận.</p>
+        <button
+          class="btn-confirm"
+          onclick="window.location.href = '/user/homePage'"
+          style="margin-top: 25px; width: 100%"
+        >
+          Về Trang Chủ
+        </button>
+      </div>
+    </div>
 
     <script th:src="@{/js/apiAddress.js}"></script>
+    <script th:src="@{/js/apiAddress.js}"></script>
+    <script>
+      const modal = document.getElementById("addressModal");
+      const successModal = document.getElementById("successModal");
+
+      // --- LOGIC MODAL ---
+      function openAddressModal(mode) {
+        modal.style.display = "flex";
+        switchView(mode);
+      }
+      function closeAddressModal() {
+        modal.style.display = "none";
+      }
+      function switchView(mode) {
+        document.getElementById("view-list").style.display =
+          mode === "LIST" ? "block" : "none";
+        document.getElementById("view-form").style.display =
+          mode === "FORM" ? "block" : "none";
+        document.getElementById("modalTitle").innerText =
+          mode === "LIST" ? "Danh Sách Địa Chỉ" : "Thêm Địa Chỉ Mới";
+      }
+      window.onclick = function (e) {
+        if (e.target === modal) closeAddressModal();
+      };
+
+      // --- 1. CHỌN ĐỊA CHỈ (NHANH - KHÔNG RELOAD) ---
+      function setDefault(addressId) {
+        // Cập nhật giao diện ngay lập tức
+        const row = document.getElementById("addr-row-" + addressId);
+        if (row) {
+          const namePhone = row.querySelector("strong").innerText;
+          const addressDetail = row.querySelector("p").innerText;
+
+          // Update Card bên ngoài
+          const mainCard = document.querySelector(".address-card");
+          if (mainCard) {
+            mainCard.querySelector(".user-name").innerText = namePhone;
+            mainCard.querySelector(".address-detail").innerText = addressDetail;
+          }
+          closeAddressModal();
+        }
+        // Gửi request ngầm
+        fetch("/user/address/set-default?addressId=" + addressId, {
+          method: "POST",
+        });
+      }
+
+      // --- 2. XÓA ĐỊA CHỈ (NHANH - KHÔNG RELOAD) ---
+      function deleteAddress(addressId) {
+        if (!confirm("Bạn có chắc muốn xóa địa chỉ này?")) return;
+
+        const row = document.getElementById("addr-row-" + addressId);
+        if (row) row.remove(); // Xóa ngay trên màn hình
+
+        fetch("/user/address/delete?addressId=" + addressId, {
+          method: "POST",
+        }).then((res) => {
+          if (!res.ok) {
+            alert("Lỗi: Không thể xóa địa chỉ này.");
+            window.location.reload();
+          }
+        });
+      }
+
+      // --- 3. LƯU ĐỊA CHỈ MỚI ---
+      document.getElementById("btnSaveAddress").onclick = function () {
+        const name = document.getElementById("newName").value;
+        const phone = document.getElementById("newPhone").value;
+        const detail = document.getElementById("detail-address").value;
+        const province =
+          document.getElementById("province").options[
+            document.getElementById("province").selectedIndex
+          ]?.text;
+        const district =
+          document.getElementById("district").options[
+            document.getElementById("district").selectedIndex
+          ]?.text;
+        const ward =
+          document.getElementById("ward").options[
+            document.getElementById("ward").selectedIndex
+          ]?.text;
+
+        if (!name || !phone || !detail || !province || !district || !ward) {
+          alert("Vui lòng điền đầy đủ thông tin");
+          return;
+        }
+
+        const data = {
+          receiveName: name,
+          receivePhone: phone,
+          province: province,
+          district: district,
+          ward: ward,
+          addressDetail: detail,
+          isDefault: true,
+        };
+
+        fetch("/user/address/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }).then((res) => {
+          if (res.ok) window.location.reload();
+          else alert("Lỗi khi thêm địa chỉ");
+        });
+      };
+
+      // --- 4. XỬ LÝ THANH TOÁN ---
+      document.getElementById("paymentForm").onsubmit = function (e) {
+        const paymentMethod = document.querySelector(
+          'input[name="paymentMethod"]:checked',
+        ).value;
+
+        if (paymentMethod === "CASH") {
+          e.preventDefault(); // Chặn chuyển trang nếu là Tiền mặt
+
+          const formData = new FormData(this);
+          fetch(this.action, { method: "POST", body: formData })
+            .then((response) => {
+              // Nếu Server trả về redirect thành công (có status=true)
+              if (response.redirected && response.url.includes("status=true")) {
+                successModal.style.display = "flex"; // HIỆN MODAL THÀNH CÔNG
+              } else {
+                alert("Đặt hàng thất bại! Vui lòng kiểm tra lại.");
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              alert("Lỗi kết nối.");
+            });
+        }
+        // Nếu là MOMO/ZALOPAY -> Form tự submit -> Server redirect sang trang QR
+      };
+    </script>
   </body>
 </html>

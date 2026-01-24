@@ -12,6 +12,14 @@
     />
     <link rel="stylesheet" th:href="@{/css/reset.css}" />
     <link rel="stylesheet" th:href="@{/css/cart.css}" />
+
+    <style>
+      .checkout-btn.disabled {
+        background-color: #ccc !important;
+        cursor: not-allowed;
+        pointer-events: none; /* Chặn click bằng CSS */
+      }
+    </style>
   </head>
   <body>
     <header class="header">
@@ -23,6 +31,7 @@
     </header>
 
     <main class="cart-page">
+      <div id="toast"></div>
       <div class="cart-nav">
         <div class="left-nav">
           <a th:href="${backLink}" class="back-link">Trở Lại</a>
@@ -38,62 +47,12 @@
           <div class="section-head">
             <span>Chọn Sản Phẩm</span>
           </div>
-          <!-- Dữ liệu giả để test giao diện -->
-          <!-- <div class="item-row-left">
-            <div class="checkbox-wrapper">
-              <input type="checkbox" class="product-checkbox" />
-            </div>
-            <div class="cart-product">
-              <img th:src="@{/img/ao1.jpg}" alt="Wrap Top" />
-              <div class="product-info">
-                <h4>Wrap Top</h4>
-                <p>Size: S</p>
-                <p>Color: White</p>
-                <p class="mobile-price">200.000 VND</p>
-              </div>
-            </div>
-            <span class="remove-item">✕</span>
-          </div>
 
-          <div class="item-row-left">
-            <div class="checkbox-wrapper">
-              <input type="checkbox" class="product-checkbox" />
-            </div>
-            <div class="cart-product">
-              <img th:src="@{/img/quan1.jpg}" alt="Casual Wild Leg" />
-              <div class="product-info">
-                <h4>Casual Wild Leg</h4>
-                <p>Size: S</p>
-                <p>Color: Dark Blue</p>
-                <p class="mobile-price">150.000 VND</p>
-              </div>
-            </div>
-            <span class="remove-item">✕</span>
-          </div>
-
-          <div class="item-row-left">
-            <div class="checkbox-wrapper">
-              <input type="checkbox" class="product-checkbox" />
-            </div>
-            <div class="cart-product">
-              <img th:src="@{/img/vay1.jpg}" alt="Essential Dress" />
-              <div class="product-info">
-                <h4>Essential Dress</h4>
-                <p>Size: 2X</p>
-                <p>Color: Black</p>
-                <p class="mobile-price">150.000 VND</p>
-              </div>
-            </div>
-            <span class="remove-item">✕</span>
-          </div> -->
-
-          <!-- Xử lý hiển thị sảnn phẩm từ DB dữ liệu thật -->
           <div
             th:each="item : ${items}"
             class="item-row-left"
             th:id="'left-row-' + ${item.id}"
           >
-            <!-- Checkbox chọn sản phẩm -->
             <form th:action="@{/user/cart/select}" method="post">
               <input type="hidden" th:value="${item.id}" name="cartItemId" />
               <div class="checkbox-wrapper">
@@ -108,12 +67,10 @@
               </div>
             </form>
 
-            <!-- Thông tin sản phẩm -->
             <div class="cart-product">
               <img
                 th:src="@{${item.productVariant.product.images[0].imageUrl}}"
               />
-
               <div class="product-info">
                 <h4 th:text="${item.productVariant.product.name}"></h4>
                 <p>Size: <span th:text="${item.productVariant.size}"></span></p>
@@ -127,7 +84,6 @@
               </div>
             </div>
 
-            <!-- Xóa -->
             <form
               th:action="@{/user/cart/update}"
               method="post"
@@ -150,60 +106,6 @@
             <span>Tổng</span>
           </div>
 
-          <!-- <div class="item-row-right" data-price="200000">
-            <div class="cart-name">Wrap Top</div>
-            <div class="cart-price">200.000</div>
-            <div class="cart-qty">
-              <button class="minus">-</button>
-              <span class="qty-val">1</span>
-              <button class="plus">+</button>
-            </div>
-            <div class="cart-total">200.000</div>
-          </div>
-
-          <div class="item-row-right" data-price="150000">
-            <div class="cart-name">Casual Wild Leg</div>
-            <div class="cart-price">150.000</div>
-            <form
-              th:action="@{/user/cart/update}"
-              method="post"
-              class="cart-qty"
-            >
-              <input type="hidden" name="cartItemId" th:value="${item.id}" />
-
-              <button
-                type="submit"
-                name="quantity"
-                th:value="${item.quantity - 1}"
-              >
-                -
-              </button>
-
-              <span th:text="${item.quantity}"></span>
-
-              <button
-                type="submit"
-                name="quantity"
-                th:value="${item.quantity + 1}"
-              >
-                +
-              </button>
-            </form>
-
-            <div class="cart-total">150.000</div>
-          </div>
-
-          <div class="item-row-right" data-price="150000">
-            <div class="cart-name">Essential Dress</div>
-            <div class="cart-price">150.000</div>
-            <div class="cart-qty">
-              <button class="minus">-</button>
-              <span class="qty-val">1</span>
-              <button class="plus">+</button>
-            </div>
-            <div class="cart-total">150.000</div>
-          </div> -->
-
           <div
             th:each="item : ${items}"
             class="item-row-right"
@@ -215,7 +117,6 @@
               class="cart-name"
               th:text="${item.productVariant.product.name}"
             ></div>
-
             <div
               class="cart-price"
               th:text="${#numbers.formatDecimal(item.productVariant.product.price,0,'COMMA',0,'POINT')}"
@@ -227,7 +128,6 @@
               class="cart-qty"
             >
               <input type="hidden" name="cartItemId" th:value="${item.id}" />
-
               <button
                 type="submit"
                 name="quantity"
@@ -236,9 +136,7 @@
               >
                 -
               </button>
-
               <span class="qty-val" th:text="${item.quantity}"></span>
-
               <button
                 type="submit"
                 name="quantity"
@@ -254,6 +152,7 @@
               th:text="${#numbers.formatDecimal(item.productVariant.product.price * item.quantity,0,'COMMA',0,'POINT')}"
             ></div>
           </div>
+
           <div class="summary-box">
             <div class="summary-divider"></div>
             <div class="summary-row">
@@ -275,115 +174,84 @@
             <div class="tax-note">
               Vui lòng chọn sản phẩm bên trái để xem chi tiết hóa đơn.
             </div>
-            <!-- <a
-              th:href="@{/checkout}"
-              style="text-decoration: none; display: block"
-            >
-              <button class="checkout-btn">Thanh Toán</button>
-            </a> -->
-            <a
-              th:href="@{/user/payment}"
-              class="checkout-btn"
-              th:classappend="${total == 0} ? 'disabled' : ''"
-              th:onclick="${total == 0} ? 'return false;' : null"
-            >
-              Thanh Toán
-            </a>
+
+            <a th:href="@{/user/payment}" class="checkout-btn"> Thanh Toán </a>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- <script>
+    <script>
       // =================================================
-      // 1. XỬ LÝ XÓA SẢN PHẨM (NÚT X) - AJAX
+      // 1. XỬ LÝ XÓA SẢN PHẨM (OPTIMISTIC UI)
       // =================================================
       function handleDelete(event, form) {
-        event.preventDefault(); // Chặn load lại trang
-
+        event.preventDefault();
         const itemId = form.getAttribute("data-id");
         const formData = new FormData(form);
 
-        fetch(form.action, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            // Dù controller trả về redirect hay ok, fetch đều coi là thành công
-            if (response.ok) {
-              removeRowFromUI(itemId);
-            } else {
-              alert("Lỗi kết nối tới Server!");
-            }
-          })
-          .catch((error) => console.error("Error:", error));
-      }
+        // Ẩn ngay
+        const leftRow = document.getElementById("left-row-" + itemId);
+        const rightRow = document.getElementById("right-row-" + itemId);
+        if (leftRow) leftRow.style.display = "none";
+        if (rightRow) rightRow.style.display = "none"; // Ẩn dòng bên phải để tính tổng tiền đúng
 
-      // =================================================
-      // 2. XỬ LÝ CHECKBOX (TICK CHỌN) - AJAX
-      // =================================================
-      function handleSelect(checkbox) {
-        // Tìm form cha gần nhất (nếu có) hoặc tự tạo FormData
-        const itemId = checkbox.getAttribute("data-id");
-        const isChecked = checkbox.checked;
+        updateSummaryDynamic(); // Tính lại tiền
 
-        // Tạo dữ liệu gửi đi
-        const formData = new FormData();
-        formData.append("cartItemId", itemId);
-        formData.append("selected", isChecked);
-
-        // Gửi về Controller (/user/cart/select)
-        // Lưu ý: Hardcode đường dẫn hoặc lấy từ form action nếu có
-        fetch("/user/cart/select", {
-          method: "POST",
-          body: formData,
-        })
+        fetch(form.action, { method: "POST", body: formData })
           .then((response) => {
             if (response.ok) {
-              // Thành công -> Ẩn/Hiện dòng bên phải
-              toggleRightRow(itemId, isChecked);
-              // Tính lại tiền
-              updateSummaryDynamic();
+              if (leftRow) leftRow.remove();
+              if (rightRow) rightRow.remove();
             } else {
-              console.error("Lỗi cập nhật trạng thái");
-              // Nếu lỗi thì tick ngược lại để báo người dùng
-              checkbox.checked = !isChecked;
+              alert("Lỗi kết nối! Không thể xóa sản phẩm.");
+              window.location.reload();
             }
           })
           .catch((error) => {
             console.error("Error:", error);
-            checkbox.checked = !isChecked;
+            window.location.reload();
           });
       }
 
       // =================================================
-      // 3. CÁC HÀM HỖ TRỢ GIAO DIỆN
+      // 2. XỬ LÝ CHECKBOX
       // =================================================
+      function handleSelect(checkbox) {
+        const itemId = checkbox.getAttribute("data-id");
+        const isChecked = checkbox.checked;
 
-      // Hàm xóa dòng HTML hoàn toàn (Dùng cho nút X)
-      function removeRowFromUI(itemId) {
-        const leftRow = document.getElementById("left-row-" + itemId);
-        const rightRow = document.getElementById("right-row-" + itemId);
-
-        if (leftRow) leftRow.remove();
-        if (rightRow) rightRow.remove();
-
+        toggleRightRow(itemId, isChecked);
         updateSummaryDynamic();
+
+        const formData = new FormData();
+        formData.append("cartItemId", itemId);
+        formData.append("selected", isChecked);
+
+        fetch("/user/cart/select", { method: "POST", body: formData })
+          .then((response) => {
+            if (!response.ok) throw new Error("Server update failed");
+          })
+          .catch((error) => {
+            console.error("Lỗi đồng bộ:", error);
+            checkbox.checked = !isChecked;
+            toggleRightRow(itemId, !isChecked);
+            updateSummaryDynamic();
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+          });
       }
 
-      // Hàm ẩn/hiện dòng bên phải (Dùng cho Checkbox)
+      // =================================================
+      // 3. HỖ TRỢ
+      // =================================================
       function toggleRightRow(itemId, isChecked) {
         const rightRow = document.getElementById("right-row-" + itemId);
         if (rightRow) {
-          if (isChecked) {
-            rightRow.style.display = "grid"; // Hoặc 'flex' tùy CSS của bạn
-          } else {
-            rightRow.style.display = "none";
-          }
+          // Khi checkbox thay đổi, ta gán style trực tiếp
+          rightRow.style.display = isChecked ? "grid" : "none";
         }
       }
 
-      // Hàm tính tổng tiền (Dùng chung)
       function updateSummaryDynamic() {
         const rightRowsNow = document.querySelectorAll(".item-row-right");
         const subtotalEl = document.getElementById("subtotal");
@@ -393,160 +261,11 @@
         let totalBill = 0;
 
         rightRowsNow.forEach((row) => {
-          // Chỉ cộng tiền nếu dòng đó đang hiển thị (display != none)
+          // Chỉ cộng tiền nếu dòng đó đang hiển thị
           // window.getComputedStyle giúp lấy chính xác trạng thái hiển thị
           if (window.getComputedStyle(row).display !== "none") {
-            // Lấy giá và làm sạch dữ liệu (chỉ lấy số)
             let rawPrice = row.getAttribute("data-price");
-            let price =
-              parseFloat(String(rawPrice).replace(/[^0-9.]/g, "")) || 0;
-
-            const qtyVal = row.querySelector(".qty-val");
-            const qty = qtyVal ? parseInt(qtyVal.innerText) : 0;
-
-            totalBill += price * qty;
-          }
-        });
-
-        // Format tiền tệ
-        const formattedMoney = totalBill.toLocaleString("vi-VN") + " VND";
-
-        if (subtotalEl) subtotalEl.innerText = formattedMoney;
-        if (finalTotalEl) finalTotalEl.innerText = formattedMoney;
-
-        // Xử lý nút thanh toán
-        if (checkoutBtn) {
-          if (totalBill === 0) {
-            checkoutBtn.classList.add("disabled");
-            checkoutBtn.style.pointerEvents = "none";
-            checkoutBtn.style.opacity = "0.5";
-          } else {
-            checkoutBtn.classList.remove("disabled");
-            checkoutBtn.style.pointerEvents = "auto";
-            checkoutBtn.style.opacity = "1";
-          }
-        }
-      }
-    </script> -->
-    <script>
-      // =================================================
-      // 1. XỬ LÝ XÓA SẢN PHẨM (NÚT X) - OPTIMISTIC UI
-      // =================================================
-      function handleDelete(event, form) {
-        event.preventDefault(); // Chặn reload trang
-
-        const itemId = form.getAttribute("data-id");
-        const formData = new FormData(form);
-
-        // --- BƯỚC 1: CẬP NHẬT GIAO DIỆN NGAY LẬP TỨC (Không chờ Server) ---
-        const leftRow = document.getElementById("left-row-" + itemId);
-        const rightRow = document.getElementById("right-row-" + itemId);
-
-        // Ẩn tạm thời (chưa xóa hẳn để phòng trường hợp lỗi thì hiện lại)
-        if (leftRow) leftRow.style.display = "none";
-        if (rightRow) rightRow.style.display = "none";
-
-        // Tính lại tiền ngay lập tức
-        updateSummaryDynamic();
-
-        // --- BƯỚC 2: GỬI DỮ LIỆU NGẦM ---
-        fetch(form.action, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            if (response.ok) {
-              // Server xóa thành công -> Xóa hẳn khỏi DOM
-              if (leftRow) leftRow.remove();
-              if (rightRow) rightRow.remove();
-            } else {
-              // Server báo lỗi -> Hoàn tác lại giao diện cũ
-              alert("Lỗi kết nối! Không thể xóa sản phẩm.");
-              if (leftRow) leftRow.style.display = "flex"; // Hoặc display gốc của bạn
-              if (rightRow) rightRow.style.display = "grid"; // Hoặc display gốc
-              updateSummaryDynamic(); // Tính lại tiền cũ
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            // Lỗi mạng -> Hoàn tác
-            if (leftRow) leftRow.style.display = "flex";
-            if (rightRow) rightRow.style.display = "grid";
-            updateSummaryDynamic();
-          });
-      }
-
-      // =================================================
-      // 2. XỬ LÝ CHECKBOX (TICK CHỌN) - OPTIMISTIC UI
-      // =================================================
-      function handleSelect(checkbox) {
-        const itemId = checkbox.getAttribute("data-id");
-        const isChecked = checkbox.checked;
-
-        // --- BƯỚC 1: CẬP NHẬT GIAO DIỆN NGAY LẬP TỨC ---
-        toggleRightRow(itemId, isChecked);
-        updateSummaryDynamic();
-
-        // --- BƯỚC 2: GỬI DỮ LIỆU NGẦM ---
-        const formData = new FormData();
-        formData.append("cartItemId", itemId);
-        formData.append("selected", isChecked);
-
-        fetch("/user/cart/select", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              // Nếu lỗi -> Hoàn tác lại checkbox và giao diện
-              throw new Error("Server update failed");
-            }
-            // Nếu thành công thì không cần làm gì nữa vì giao diện đã đổi từ Bước 1 rồi
-          })
-          .catch((error) => {
-            console.error("Lỗi đồng bộ:", error);
-            // Hoàn tác lại trạng thái cũ nếu lỗi
-            checkbox.checked = !isChecked;
-            toggleRightRow(itemId, !isChecked);
-            updateSummaryDynamic();
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
-          });
-      }
-
-      // =================================================
-      // 3. CÁC HÀM HỖ TRỢ (GIỮ NGUYÊN)
-      // =================================================
-
-      function toggleRightRow(itemId, isChecked) {
-        const rightRow = document.getElementById("right-row-" + itemId);
-        if (rightRow) {
-          rightRow.style.display = isChecked ? "grid" : "none";
-        }
-      }
-
-      function updateSummaryDynamic() {
-        const rightRowsNow = document.querySelectorAll(".item-row-right");
-        const subtotalEl = document.getElementById("subtotal");
-        const finalTotalEl = document.getElementById("final-total"); // Đã có ID này
-        const checkoutBtn = document.querySelector(".checkout-btn");
-
-        let totalBill = 0;
-
-        rightRowsNow.forEach((row) => {
-          // Chỉ tính những dòng đang hiển thị thực sự
-          if (row.style.display !== "none" && row.style.display !== "") {
-            let rawPrice = row.getAttribute("data-price");
-            let price =
-              parseFloat(String(rawPrice).replace(/[^0-9.]/g, "")) || 0;
-
-            const qtyVal = row.querySelector(".qty-val");
-            const qty = qtyVal ? parseInt(qtyVal.innerText) : 0;
-
-            totalBill += price * qty;
-          }
-          // Fix trường hợp style chưa set (mặc định grid nếu được chọn từ đầu)
-          else if (window.getComputedStyle(row).display !== "none") {
-            let rawPrice = row.getAttribute("data-price");
+            // Parse giá tiền (chỉ lấy số)
             let price =
               parseFloat(String(rawPrice).replace(/[^0-9.]/g, "")) || 0;
             const qtyVal = row.querySelector(".qty-val");
@@ -556,22 +275,25 @@
         });
 
         const formattedMoney = totalBill.toLocaleString("vi-VN") + " VND";
-
         if (subtotalEl) subtotalEl.innerText = formattedMoney;
         if (finalTotalEl) finalTotalEl.innerText = formattedMoney;
 
+        // Cập nhật trạng thái nút Thanh Toán
         if (checkoutBtn) {
           if (totalBill === 0) {
-            checkoutBtn.classList.add("disabled");
-            checkoutBtn.style.pointerEvents = "none";
-            checkoutBtn.style.opacity = "0.5";
+            checkoutBtn.classList.add("disabled"); // Thêm class disabled (CSS sẽ chặn click)
+            checkoutBtn.setAttribute("href", "javascript:void(0)"); // Xóa link
           } else {
             checkoutBtn.classList.remove("disabled");
-            checkoutBtn.style.pointerEvents = "auto";
-            checkoutBtn.style.opacity = "1";
+            checkoutBtn.setAttribute("href", "/user/payment"); // Khôi phục link
           }
         }
       }
+
+      // QUAN TRỌNG: Gọi hàm này ngay khi trang tải xong để đồng bộ trạng thái nút
+      document.addEventListener("DOMContentLoaded", function () {
+        updateSummaryDynamic();
+      });
     </script>
   </body>
 </html>

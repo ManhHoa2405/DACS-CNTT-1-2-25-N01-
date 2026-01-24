@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Thanh toán QR</title>
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <style>
+      .qr-container {
+        text-align: center;
+        padding: 50px 20px;
+      }
+      .qr-image {
+        max-width: 300px;
+        margin: 20px auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .btn-finish {
+        background: #333;
+        color: #fff;
+        padding: 12px 30px;
+        text-decoration: none;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="qr-container">
+      <h2>Quét Mã QR để thanh toán</h2>
+      <p>
+        Vui lòng mở ứng dụng <strong th:text="${method}"></strong> và quét mã
+        bên dưới
+      </p>
+
+      <div class="qr-image">
+        <img
+          th:if="${method == 'MOMO'}"
+          th:src="@{/img/momo.jpg}"
+          width="100%"
+        />
+        <img
+          th:if="${method == 'ZALOPAY'}"
+          th:src="@{/img/zalopay.jpg}"
+          width="100%"
+        />
+      </div>
+
+      <p>Nội dung chuyển khoản: <strong>DH-[[${orderId}]]</strong></p>
+
+      <a
+        th:href="@{/user/payment/confirm(orderId=${orderId})}"
+        class="btn-finish"
+      >
+        Tôi đã thanh toán xong
+      </a>
+
+      <br /><br />
+      <a th:href="@{/user/homePage}" style="color: #666; font-size: 14px"
+        >Quay lại trang chủ</a
+      >
+    </div>
+  </body>
+</html>

@@ -1,5 +1,9 @@
 package com.example.clothes.model;
 
 public enum OrderStatus {
-    PENDING, PROCESSING, SHIPPING, DELIVERED, CANCELLED, RETURNED
+    PENDING,    // Chờ xử lý
+    CONFIRMED,  // Đã xác nhận
+    SHIPPING,   // Đang giao
+    DELIVERED,  // Đã giao
+    CANCELLED   // Đã hủy
 }
