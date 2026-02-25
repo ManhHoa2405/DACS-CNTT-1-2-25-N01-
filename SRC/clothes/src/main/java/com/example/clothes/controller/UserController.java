@@ -70,6 +70,79 @@ public class UserController {
     }
     
     // Hứng đường dẫn localhost:8080/user/homePage
+
+    // --- QUÊN MẬT KHẨU ---
+
+    @GetMapping("/account/forgot-password")
+    public String viewForgotPassword() {
+        return "account/forgot_password";
+    }
+
+    @PostMapping("/account/forgot-password")
+    public String processForgotPassword(@RequestParam String email, Model model) {
+        try {
+            userService.updateResetToken(email);
+            // Gửi mail thành công -> Chuyển thẳng sang trang nhập OTP
+            return "redirect:/account/reset-password";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "account/forgot_password";
+        }
+    }
+
+    @GetMapping("/account/reset-password")
+    public String viewResetPassword(Model model) {
+        return "account/reset_password";
+    }
+
+    @PostMapping("/account/reset-password")
+    public String processResetPassword(@RequestParam String otp, 
+                                       @RequestParam String password, 
+                                       @RequestParam String confirmPassword, 
+                                       HttpSession session, Model model) {
+        try {
+            if(!password.equals(confirmPassword)){
+                throw new Exception("Mật khẩu nhập lại không khớp!");
+            }
+            // Đổi mật khẩu và lấy thông tin user
+            User user = userService.resetPassword(otp, password);
+            
+            // Tự động đăng nhập luôn
+            session.setAttribute("currentUser", user);
+            return "redirect:/user/homePage";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "account/reset_password";
+        }
+    }
+
+    // --- ĐỔI MẬT KHẨU (Dành cho user đã đăng nhập) ---
+
+    @GetMapping("/user/change-password")
+    public String viewChangePassword(HttpSession session) {
+        if (session.getAttribute("currentUser") == null) return "redirect:/account/login";
+        return "user/change_password"; // Giao diện đổi mật khẩu
+    }
+
+    @PostMapping("/user/change-password")
+    public String processChangePassword(@RequestParam String oldPassword, 
+                                        @RequestParam String newPassword, 
+                                        @RequestParam String confirmPassword,
+                                        HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) return "redirect:/account/login";
+
+        try {
+            if(!newPassword.equals(confirmPassword)){
+                throw new Exception("Mật khẩu nhập lại không khớp!");
+            }
+            userService.changePassword(currentUser.getId(), oldPassword, newPassword);
+            return "redirect:/user/homePage";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "user/change_password";
+        }
+    }
     
     // Đăng xuất
     @GetMapping("/account/logout")

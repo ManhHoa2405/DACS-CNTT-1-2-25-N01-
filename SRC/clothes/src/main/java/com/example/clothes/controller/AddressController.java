@@ -35,7 +35,7 @@ public class AddressController {
         }
 
         try {
-            User user = userRepository.findById(sessionUser.getId().intValue()).orElseThrow();
+            User user = userRepository.findById(sessionUser.getId()).orElseThrow();
             
             addressData.setUser(user);
             
@@ -77,7 +77,7 @@ public class AddressController {
         User sessionUser = (User) session.getAttribute("currentUser");
         if (sessionUser == null) return ResponseEntity.status(401).build();
 
-        User user = userRepository.findById(sessionUser.getId().intValue()).orElseThrow();
+        User user = userRepository.findById(sessionUser.getId()).orElseThrow();
         List<ShippingAddress> addresses = shippingAddressRepository.findByUser(user);
 
         for (ShippingAddress addr : addresses) {

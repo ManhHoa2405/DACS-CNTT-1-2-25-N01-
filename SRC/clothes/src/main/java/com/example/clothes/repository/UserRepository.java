@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.clothes.model.User;
 
-public interface UserRepository extends JpaRepository<User, Integer>{
+public interface UserRepository extends JpaRepository<User, Long>{
     User findByEmail(String email);  
+    User findByResetToken(String resetToken);
 
     @Query("SELECT u FROM User u WHERE " +
            "u.name LIKE %?1% OR " +

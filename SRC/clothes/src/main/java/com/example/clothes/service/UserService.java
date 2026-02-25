@@ -3,10 +3,15 @@ package com.example.clothes.service;
 import com.example.clothes.model.User;
 import com.example.clothes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import java.util.Date;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -17,6 +22,9 @@ public class UserService {
     // Inject cái Bean "máy băm" đã tạo ở file SecurityConfig vào đây
     @Autowired
     private PasswordEncoder passwordEncoder; 
+
+    @Autowired
+    private JavaMailSender mailSender; // Công cụ gửi mail
 
     public void registerUser(User user) throws Exception {
         
@@ -65,4 +73,56 @@ public class UserService {
         // Nếu mọi thứ ok thì trả về user
         return user;
     }
+
+   // 1. Tạo và gửi mã OTP 6 số
+    public void updateResetToken(String email) throws Exception {
+        User user = userRepo.findByEmail(email);
+        if (user != null) {
+            // Random mã 6 số
+            Random random = new Random();
+            int otpNum = 100000 + random.nextInt(900000);
+            String otp = String.valueOf(otpNum);
+
+            user.setResetToken(otp);
+            user.setTokenExpiration(LocalDateTime.now().plusMinutes(5)); // Hết hạn sau 5 phút
+            userRepo.save(user);
+
+            // Gửi email
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(user.getEmail());
+            message.setSubject("Mã xác nhận khôi phục mật khẩu - Modimal");
+            message.setText("Chào " + user.getName() + ",\n\n"
+                    + "Mã xác nhận 6 số để đặt lại mật khẩu của bạn là: " + otp + "\n"
+                    + "Mã này sẽ hết hạn sau 5 phút.\n\n"
+                    + "Trân trọng,\nĐội ngũ Modimal.");
+            mailSender.send(message);
+
+        } else {
+            throw new Exception("Không tìm thấy người dùng với email này.");
+        }
+    }
+
+    // 2. Xác nhận OTP và đặt lại mật khẩu
+    public User resetPassword(String token, String newPassword) throws Exception {
+        User user = userRepo.findByResetToken(token);
+        if (user == null || user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new Exception("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setTokenExpiration(null);
+        return userRepo.save(user); // Trả về user để tự động đăng nhập
+    }
+
+    // 3. Đổi mật khẩu chủ động
+    public void changePassword(Long userId, String oldPassword, String newPassword) throws Exception {
+        User user = userRepo.findById(userId).orElseThrow(() -> new Exception("User không tồn tại"));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new Exception("Mật khẩu cũ không đúng!");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
+    }
+
 }
+
