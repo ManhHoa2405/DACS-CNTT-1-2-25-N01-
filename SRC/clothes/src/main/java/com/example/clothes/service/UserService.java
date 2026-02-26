@@ -74,7 +74,15 @@ public class UserService {
         return user;
     }
 
-   // 1. Tạo và gửi mã OTP 6 số
+   // --- CẬP NHẬT THÔNG TIN CÁ NHÂN ---
+    public User updateProfile(Long userId, String name, String phone) throws Exception {
+        User user = userRepo.findById(userId).orElseThrow(() -> new Exception("Không tìm thấy tài khoản!"));
+        user.setName(name);
+        user.setPhone(phone);
+        return userRepo.save(user); // Lưu và trả về User mới để cập nhật Session
+    }
+   
+    // 1. Tạo và gửi mã OTP 6 số
     public void updateResetToken(String email) throws Exception {
         User user = userRepo.findByEmail(email);
         if (user != null) {

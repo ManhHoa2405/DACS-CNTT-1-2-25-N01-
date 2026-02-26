@@ -1,4 +1,5 @@
 package com.example.clothes.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -6,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.clothes.model.User;
 import com.example.clothes.service.UserService;
@@ -18,13 +20,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // hiển thị đăng nhập
+    // --- ĐĂNG NHẬP & ĐĂNG KÝ ---
+
     @GetMapping("/account/login")
     public String ViewLogin(){
         return "account/login";
     }
 
-    // hiển thị đăng ký
     @GetMapping("/account/register")
     public String ViewRegister(){
         return "account/register";
@@ -33,15 +35,11 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user, Model model) {
         try {
-            // Lúc này 'user' đã có: name, phone, email, password (thô)
-            // Ô nhập lại mật khẩu đã bị loại bỏ ngay từ HTML nên không ảnh hưởng gì
-            
             userService.registerUser(user);
-            
-            return "redirect:account/login"; // Đăng ký xong chuyển qua đăng nhập
+            return "redirect:/account/login";
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error", e.getMessage()); // Gửi lỗi về lại form (ví dụ: Email trùng)
+            model.addAttribute("error", e.getMessage());
             return "account/register";
         }
     }
@@ -52,25 +50,16 @@ public class UserController {
                             HttpSession session, 
                             Model model) {
         try {
-            // Gọi Service kiểm tra
             User user = userService.login(email, password);
-
-            // Đăng nhập thành công -> Lưu vào Session
             session.setAttribute("currentUser", user);
-
-            // Chuyển hướng về trang chủ (hoặc trang admin tùy role)
             return "redirect:/user/homePage"; 
-
         } catch (Exception e) {
             e.printStackTrace();
-            // Đăng nhập thất bại -> Báo lỗi ra view
             model.addAttribute("error", e.getMessage());
             return "account/login";
         }
     }
     
-    // Hứng đường dẫn localhost:8080/user/homePage
-
     // --- QUÊN MẬT KHẨU ---
 
     @GetMapping("/account/forgot-password")
@@ -82,7 +71,6 @@ public class UserController {
     public String processForgotPassword(@RequestParam String email, Model model) {
         try {
             userService.updateResetToken(email);
-            // Gửi mail thành công -> Chuyển thẳng sang trang nhập OTP
             return "redirect:/account/reset-password";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -104,10 +92,7 @@ public class UserController {
             if(!password.equals(confirmPassword)){
                 throw new Exception("Mật khẩu nhập lại không khớp!");
             }
-            // Đổi mật khẩu và lấy thông tin user
             User user = userService.resetPassword(otp, password);
-            
-            // Tự động đăng nhập luôn
             session.setAttribute("currentUser", user);
             return "redirect:/user/homePage";
         } catch (Exception e) {
@@ -121,14 +106,18 @@ public class UserController {
     @GetMapping("/user/change-password")
     public String viewChangePassword(HttpSession session) {
         if (session.getAttribute("currentUser") == null) return "redirect:/account/login";
-        return "user/change_password"; // Giao diện đổi mật khẩu
+        
+        // SỬA Ở ĐÂY: Trả về thư mục account/change_password vì file HTML nằm ở đó
+        return "account/change_password"; 
     }
 
+    // SỬA Ở ĐÂY: Sửa URL thành /user/change-password để khớp với file HTML
     @PostMapping("/user/change-password")
     public String processChangePassword(@RequestParam String oldPassword, 
                                         @RequestParam String newPassword, 
                                         @RequestParam String confirmPassword,
-                                        HttpSession session, Model model) {
+                                        HttpSession session, 
+                                        RedirectAttributes redirectAttributes) { // Bỏ Model, dùng RedirectAttributes
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) return "redirect:/account/login";
 
@@ -137,18 +126,54 @@ public class UserController {
                 throw new Exception("Mật khẩu nhập lại không khớp!");
             }
             userService.changePassword(currentUser.getId(), oldPassword, newPassword);
-            return "redirect:/user/homePage";
+            
+            // Nếu thành công, thông báo xanh ở trang chủ
+           redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công!");
+            return "redirect:/user/change-password";
+            
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "user/change_password";
+            // Nếu có lỗi, dùng flash báo đỏ và redirect lại trang đổi mk
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/user/change-password";
         }
     }
     
-    // Đăng xuất
+    // --- THÔNG TIN TÀI KHOẢN (PROFILE) ---
+
+    @GetMapping("/user/profile")
+    public String viewProfile(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/account/login"; 
+        }
+        return "user/profile"; 
+    }
+
+    @PostMapping("/user/profile/update")
+    public String updateProfile(@RequestParam String name, 
+                                @RequestParam String phone, 
+                                HttpSession session, 
+                                RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) return "redirect:/account/login";
+
+        try {
+            User updatedUser = userService.updateProfile(currentUser.getId(), name, phone);
+            session.setAttribute("currentUser", updatedUser);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thông tin cá nhân thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        
+        return "redirect:/user/profile";
+    }
+
+    // --- ĐĂNG XUẤT ---
+    
     @GetMapping("/account/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Xóa session
+        session.invalidate(); 
         return "redirect:/account/login";
     }
-    
+        
 }

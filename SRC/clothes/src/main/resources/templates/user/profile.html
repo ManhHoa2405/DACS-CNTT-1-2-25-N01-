@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thông tin tài khoản</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
+
+    <style>
+      .profile-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      .profile-box {
+        flex: 1;
+        min-width: 300px;
+        background: #fff;
+        padding: 30px;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+      .profile-box h2 {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #5a6d57;
+        padding-bottom: 10px;
+        display: inline-block;
+      }
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      .form-group input:focus {
+        border-color: #5a6d57;
+      }
+      .form-group input[readonly] {
+        background-color: #f9f9f9;
+        color: #888;
+        cursor: not-allowed;
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 15px;
+        background-color: #5a6d57;
+        color: white;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+      }
+      .btn-submit:hover {
+        background-color: #4a5a48;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="banner"><p>Miễn phí vận chuyển cho mọi đơn hàng</p></div>
+      <nav class="navbar">
+        <a th:href="@{/user/homePage}" title="Trang chủ"
+          ><img th:src="@{/img/Logo.svg}" alt="Modimal"
+        /></a>
+        <div class="actions">
+          <div class="search-box">
+            <a href="#"><img th:src="@{/img/Search_light.svg}" /></a>
+          </div>
+          <div class="account">
+            <a th:href="@{/user/profile}"
+              ><img th:src="@{/img/Header profile icon.svg}"
+            /></a>
+          </div>
+          <div class="cart">
+            <a th:href="@{/user/cart}"
+              ><img th:src="@{/img/Header bag icon.svg}"
+            /></a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main style="background-color: #fafafa; padding-bottom: 40px">
+      <div
+        th:if="${successMessage}"
+        style="
+          color: green;
+          text-align: center;
+          padding: 20px;
+          font-weight: bold;
+        "
+      >
+        <span th:text="${successMessage}"></span>
+      </div>
+      <div
+        th:if="${error}"
+        style="color: red; text-align: center; padding: 20px; font-weight: bold"
+      >
+        <span th:text="${error}"></span>
+      </div>
+
+      <div class="profile-container">
+        <div class="profile-box">
+          <h2>Thông tin cá nhân</h2>
+          <form method="post" th:action="@{/user/profile/update}">
+            <div class="form-group">
+              <label>Họ và Tên</label>
+              <input
+                type="text"
+                name="name"
+                th:value="${session.currentUser.name}"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input
+                type="text"
+                name="phone"
+                th:value="${session.currentUser.phone}"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Email (Không thể thay đổi)</label>
+              <input
+                type="email"
+                name="email"
+                th:value="${session.currentUser.email}"
+                readonly
+              />
+            </div>
+
+            <button type="submit" class="btn-submit">Cập Nhật Thông Tin</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

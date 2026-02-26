@@ -78,12 +78,32 @@
           </div>
 
           <div class="account">
-            <a th:href="@{/account/login}" class="account_icon">
+            <a
+              th:href="${session.currentUser != null} ? @{/user/profile} : @{/account/login}"
+              class="account_icon"
+            >
               <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
             </a>
+
             <th:block th:if="${session.currentUser != null}">
               <div class="account_infor">
-                <span th:text="${session.currentUser.name}"></span>
+                <span
+                  th:text="${session.currentUser.name}"
+                  style="
+                    font-weight: bold;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 8px;
+                    margin-bottom: 4px;
+                    display: block;
+                  "
+                ></span>
+
+                <span>
+                  <a th:href="@{/user/profile}">Thông Tin Tài Khoản</a>
+                </span>
+                <span>
+                  <a th:href="@{/user/change-password}">Đổi Mật Khẩu</a>
+                </span>
                 <span>
                   <a th:href="@{/user/purchase}">Đơn Mua</a>
                 </span>
