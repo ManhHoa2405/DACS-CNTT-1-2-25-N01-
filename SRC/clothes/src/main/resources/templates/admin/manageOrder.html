@@ -97,36 +97,37 @@
           <!-- Stats -->
           <div class="order-stats">
             <div class="stat stat-blue">
-              <h2 th:text="${totalOrders}">150</h2>
+              <h2 th:text="${totalOrders}"></h2>
               <p>Tổng đơn hàng</p>
             </div>
             <div class="stat stat-yellow">
-              <h2 th:text="${pendingOrders}">15</h2>
+              <h2 th:text="${pendingOrders}"></h2>
               <p>Chờ xử lý</p>
             </div>
             <div class="stat stat-gray">
-              <h2 th:text="${shippingOrders}">10</h2>
+              <h2 th:text="${shippingOrders}"></h2>
               <p>Đang giao</p>
             </div>
             <div class="stat stat-green">
-              <h2 th:text="${successOrders}">125</h2>
+              <h2 th:text="${successOrders}"></h2>
               <p>Thành công</p>
             </div>
           </div>
 
           <!-- Search -->
-          <div class="search-bar">
-            <input type="text" placeholder="Tìm kiếm tên sản phẩm..." />
-            <button>Tìm Kiếm</button>
-          </div>
+          <form class="search-bar" th:action="@{/admin/manageOrder}" method="get">
+            <input type="text"  name ="keyword" th:value="${keyword}" autocomplete="off" placeholder="Tìm kiếm tên khách hàng hoặc số điện thoại..." />
+            <button type="submit">Tìm Kiếm</button>
+          </form>
 
           <!-- Tabs (UI demo) -->
           <div class="order-tabs">
-            <button class="active">Tất cả</button>
-            <button>Chờ xử lý</button>
-            <button>Đang giao</button>
-            <button>Hoàn thành</button>
-            <button>Đã hủy</button>
+            <a th:href="@{/admin/manageOrder}"th:class="${status == null ?  'active' : ''}">Tất cả</a>
+            <a th:href="@{/admin/manageOrder(status = 'PENDING')}" th:class ="${status == 'PENDING' ? 'active' : ''}">Chờ xử lý</a>
+            <a th:href="@{/admin/manageOrder(status = 'CONFIRMED')}" th:class ="${status == 'CONFIRMED' ? 'active' : ''}">Đã xác nhận</a>
+            <a th:href="@{/admin/manageOrder(status = 'SHIPPING')}" th:class ="${status == 'SHIPPING' ? 'active' : ''}">Đang giao</a>
+            <a th:href="@{/admin/manageOrder(status = 'DELIVERED')}" th:class ="${status == 'DELIVERED' ? 'active' : ''}">Hoàn thành</a>
+            <a th:href="@{/admin/manageOrder(status = 'CANCELLED')}" th:class ="${status == 'CANCELLED' ? 'active' : ''}">Đã hủy</a>
           </div>
 
           <!-- Table -->
@@ -145,37 +146,38 @@
 
               <tbody>
                 <tr th:each="order : ${orders}">
-                  <td th:text="${order.code}">#12034</td>
+                  <td th:text="${order.id}"></td>
                   <td>
-                    <div class="up" th:text="${order.customerName}">
-                      Nguyễn Văn A
+                    <div class="up" th:text="${order.receiveName}">
+                      
                     </div>
-                    <small th:text="${order.phone}">0988xxxxxx</small>
+                    <small th:text="${order.receivePhone}"></small>
                   </td>
                   <td>
-                    <div class="up" th:text="${order.date}">3/1/2026</div>
-                    <small th:text="${order.time}">21:33</small>
+                    <div class="up" th:text="${#temporals.format(order.createAt, 'yyyy-MM-dd')}">Ngày</div>
+                    <small th:text="${#temporals.format(order.createAt, 'HH:mm:ss')}">Giờ</small>
                   </td>
-                  <td th:text="${order.total}">550.000 VND</td>
+                  <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
                   <td>
                     <span
                       class="badge"
-                      th:classappend="${order.status}"
-                      th:text="${order.statusText}"
-                      >Đang xử lý</span
-                    >
+                      th:classappend="${#strings.toString(order.status) == 'PENDING' ? 'badge-warning' : 
+                         (#strings.toString(order.status) == 'CONFIRMED' ? 'badge-info' :
+                         (#strings.toString(order.status) == 'SHIPPING' ? 'badge-orange' : 
+                         (#strings.toString(order.status) == 'DELIVERED' or #strings.toString(order.status) == 'DELIVERED' ? 'badge-success' : 'badge-danger')))}"
+                      th:text="${#strings.toString(order.status) == 'PENDING' ? 'Chờ xử lý' : 
+                              (#strings.toString(order.status) == 'CONFIRMED' ? 'Đã xác nhận' : 
+                              #strings.toString(order.status) == 'SHIPPING' ? 'Đang giao' : 
+                              (#strings.toString(order.status) == 'DELIVERED' or #strings.toString(order.status) == 'DELIVERED' ? 'Thành công' : 'Đã hủy'))}">
+                    </span>
                   </td>
                   <td>
-                    <button
-                      class="btn edit"
-                      th:attr="data-order-id=${order.code}"
-                    >
+                   <button class="btn edit" th:attr="data-order-id=${order.id}">
                       <i class="fa-solid fa-pen"></i> Xử lý
                     </button>
-
-                    <button class="btn delete">
+                    <!-- <button class="btn delete" th:onclick="|if(confirm('Bạn có chắc muốn xóa đơn này?')) window.location.href='/admin/order/delete/${order.id}'|">
                       <i class="fa-solid fa-xmark"></i> Xóa
-                    </button>
+                    </button> -->
                   </td>
                 </tr>
               </tbody>
@@ -189,30 +191,57 @@
     <div class="modal-overlay" id="orderModal">
       <div class="modal">
         <div class="modal-header">
-          <h3>Cập nhật đơn <span id="orderId">#12034</span></h3>
+          <h3>Cập nhật đơn <span id="orderIdDisplay" ></span></h3>
           <button class="modal-close" onclick="closeModal()">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-
-        <div class="modal-body">
-          <label>Trạng thái mới:</label>
-          <select>
-            <option>Chờ xác nhận</option>
-            <option>Đang vận chuyển</option>
-            <option>Thành công</option>
-            <option>Đã hủy</option>
-          </select>
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn cancel" onclick="closeModal()">Đóng</button>
-          <button class="btn save">Lưu thay đổi</button>
-        </div>
+        <form th:action="@{/admin/manageOrderUpdate}" method = "post"> 
+          <div class="modal-body">
+            <input type="hidden" name="orderId" id="modalOrderIdInput">
+            <label>Trạng thái mới:</label>
+            <select name = "status">
+              <option value="CONFIRMED">Xác nhận</option>
+              <option value="SHIPPING">Đang vận chuyển</option>
+              <option value="DELIVERED">Thành công</option>
+              <option value="CANCELLED">Đã hủy</option>
+            </select>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn cancel" onclick="closeModal()">Đóng</button>
+            <button type="submit" class="btn save">Lưu thay đổi</button>
+          </div>
+        </form>
       </div>
     </div>
 
     <!-- JS -->
     <script th:src="@{/js/sidebar-active.js}"></script>
+    <script> 
+      document.addEventListener("DOMContentLoaded",function(){
+          const modal = document.getElementById("orderModal");
+          const orderIdInput = document.getElementById("modalOrderIdInput");
+          const orderIdDisplay = document.getElementById("orderIdDisplay");
+          document.querySelectorAll(".btn.edit").forEach(function(btn){
+              btn.addEventListener("click", function(){
+                const orderId = this.getAttribute("data-order-id");
+                orderIdInput.value = orderId;
+                orderIdDisplay.innerText = orderId;
+                modal.classList.add("show");
+              })
+          });
+
+          window.closeModal = function(){
+            modal.classList.remove("show");
+          };
+
+          modal.addEventListener("click", function(e){
+            if(e.target === modal){
+              closeModal();
+            }
+          });
+      })
+    </script>
   </body>
 </html>

@@ -28,6 +28,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.CascadeType;
 import com.example.clothes.model.Payment;
+import com.example.clothes.model.OrderStatus;
 @Entity
 @Table(name = "orders")
 @Data
@@ -88,6 +89,20 @@ public class Order {
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
-    
-    
+
+    public void setStatus(OrderStatus newStatus) {
+        this.status = newStatus;
+        LocalDateTime now = LocalDateTime.now();
+        
+        if (newStatus == null) return;
+
+        switch (newStatus) {
+            case CONFIRMED -> this.confirmedAt = now;
+            case SHIPPING -> this.shippingAt = now;
+            case DELIVERED -> this.deliveredAt = now;
+            case CANCELLED -> this.cancelledAt = now;
+            default -> {} // Bỏ qua nếu là trạng thái PENDING
+        }
+    }
 }
+
