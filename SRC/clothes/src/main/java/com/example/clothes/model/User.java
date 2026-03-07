@@ -75,4 +75,8 @@ public class User {
     public String getEmail() {
         return email;
     }
+
+    public Integer getId() {
+        return this.id;
+    }
 }

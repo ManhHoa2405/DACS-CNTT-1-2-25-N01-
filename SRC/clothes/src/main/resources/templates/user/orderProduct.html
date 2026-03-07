@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn Hàng Của Tôi</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
+    <style>
+      .profile-container {
+        display: flex; flex-wrap: wrap; gap: 30px;
+        max-width: 1000px; margin: 40px auto; padding: 0 20px;
+      }
+      .profile-box {
+        flex: 1; min-width: 300px; background: #fff; padding: 30px;
+        border: 1px solid #eaeaea; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+      /* Đã bổ sung lại CSS cấu trúc để không bị vỡ giao diện */
+      .head-list {
+        display: flex; justify-content: space-between; list-style: none;
+        padding-bottom: 15px; border-bottom: 1px solid #ddd; margin-bottom: 30px;
+      }
+      .head-list a { text-decoration: none; color: #666; font-weight: 500; font-size: 15px; padding-bottom: 14px; }
+      .head-list a.active { color: #000; font-weight: bold; border-bottom: 2px solid #000; }
+      .order-card { border: 1px solid #eaeaea; margin-bottom: 30px; border-radius: 4px; }
+      .order-item-row { display: flex; padding: 20px; border-bottom: 1px solid #eaeaea; justify-content: space-between; }
+      .item-info-wrapper { display: flex; gap: 20px; }
+      .item-img { width: 100px; height: 130px; object-fit: cover; }
+      .item-details h4 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+      .item-details p { font-size: 13px; color: #555; margin-bottom: 8px; }
+      .item-actions { text-align: right; display: flex; flex-direction: column; justify-content: space-between; }
+      .status-text { font-size: 14px; margin-bottom: 10px; display: block; }
+      .status-success { color: #1db55c; } .status-warning { color: #f1c40f; }
+      .status-info { color: #3498db; } .status-orange { color: #e67e22; } .status-danger { color: #e74c3c; }
+      .price-text { font-size: 14px; font-weight: 600; color: #e74c3c; }
+      .order-total-row { padding: 15px 20px; text-align: right; background-color: #fafafa; }
+      .order-total-row span { font-size: 15px; }
+      .order-total-row .total-price { font-size: 18px; font-weight: bold; color: #be2918; margin-left: 15px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+      <div class="banner"><p>Miễn phí vận chuyển cho mọi đơn hàng</p></div>
+      <nav class="navbar">
+        <a th:href="@{/user/homePage}" title="Trang chủ"><img th:src="@{/img/Logo.svg}" alt="Modimal"/></a>
+        <div class="nav_infor">
+          <li><a th:href="@{/user/profile}">Thông tin cá nhân</a></li>
+          <li><a th:href="@{/user/orderProduct}">Đơn hàng</a></li>
+          <li><a th:href="@{/user/change-password}">Đổi mật khẩu</a></li>
+        </div>
+        <div class="actions">
+          <div class="search-box"><a href="#"><img th:src="@{/img/Search_light.svg}" /></a></div>
+          <div class="account"><a th:href="@{/user/profile}"><img th:src="@{/img/Header profile icon.svg}"/></a></div>
+          <div class="cart"><a th:href="@{/user/cart}"><img th:src="@{/img/Header bag icon.svg}"/></a></div>
+        </div>
+      </nav>
+    </header>
+
+    <main style="background-color: #fafafa; padding-bottom: 40px">
+        <div class="profile-container">
+            <div class="profile-box">
+                <div class="profile-head">
+                    <ul class="head-list">
+                        <li><a th:href="@{/user/orderProduct}" th:classappend="${currentStatus == null ? 'active' : ''}">Tất cả</a></li>
+                        <li><a th:href="@{/user/orderProduct(status='PENDING')}" th:classappend="${currentStatus == 'PENDING' ? 'active' : ''}">Chờ xác nhận</a></li>
+                        <li><a th:href="@{/user/orderProduct(status='SHIPPING')}" th:classappend="${currentStatus == 'SHIPPING' ? 'active' : ''}">Đang giao</a></li>
+                        <li><a th:href="@{/user/orderProduct(status='DELIVERED')}" th:classappend="${currentStatus == 'DELIVERED' ? 'active' : ''}">Hoàn thành</a></li>
+                        <li><a th:href="@{/user/orderProduct(status='CANCELLED')}" th:classappend="${currentStatus == 'CANCELLED' ? 'active' : ''}">Hủy đơn</a></li>
+                    </ul>
+                </div>
+                
+                <div class="order-container">
+                    <div th:if="${#lists.isEmpty(orders)}" style="text-align: center; padding: 40px; color: #777;">
+                        Bạn chưa có đơn hàng nào.
+                    </div>
+
+                    <div class="order-card" th:each="order : ${orders}">
+                        
+                        <div class="order-item-row" th:each="item, iterStat : ${order.orderItems}">
+                            
+                            <div class="item-info-wrapper">
+                                <img class="item-img" th:if="${!#lists.isEmpty(item.productVariant.product.images)}" 
+                                     th:src="${item.productVariant.product.images[0].imageUrl}" />
+                                
+                                <div class="item-details">
+                                    <h4 th:text="${item.productVariant.product.name}">Tên sản phẩm</h4>
+                                    <p>Loại Sản Phẩm: <span th:text="${item.productVariant.product.category.name}">Đầm</span></p>
+                                    <p>Size: <span th:text="${item.productVariant.size}">M</span></p>
+                                    <p>Số Lượng: <span th:text="${item.quantity}">1</span></p>
+                                </div>
+                            </div>
+
+                            <div class="item-actions">
+                                <div th:if="${iterStat.index == 0}">
+                                    <span class="status-text status-warning" th:if="${order.status.name() == 'PENDING'}"><i class="fa fa-clock"></i> Chờ xác nhận</span>
+                                    <span class="status-text status-info" th:if="${order.status.name() == 'CONFIRMED'}"><i class="fa fa-box"></i> Đã xác nhận</span>
+                                    <span class="status-text status-orange" th:if="${order.status.name() == 'SHIPPING'}"><i class="fa fa-truck"></i> Đang vận chuyển</span>
+                                    <span class="status-text status-success" th:if="${order.status.name() == 'DELIVERED'}"><i class="fa fa-check-circle"></i> Giao hàng thành công</span>
+                                    <span class="status-text status-danger" th:if="${order.status.name() == 'CANCELLED'}"><i class="fa fa-times-circle"></i> Đã hủy</span>
+                                </div>
+                                <div>
+                                    <span style="font-weight: 500; font-size: 14px; margin-right: 10px;">Giá:</span>
+                                    <span class="price-text" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                                </div>
+                            </div>
+                        </div> <div class="order-total-row">
+                            <span>Thành tiền:</span>
+                            <span class="total-price" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</span>
+                            <div th:if="${order.status.name() == 'PENDING'}">
+                                <form th:action="@{/user/order/cancel}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                    <input type="hidden" name="orderId" th:value="${order.id}">
+                                    <button type="submit" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-family: 'Montserrat', sans-serif;">
+                                        Hủy đơn hàng
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div th:if="${order.status.name() == 'CONFIRMED' or order.status.name() == 'SHIPPING'}" 
+                                 style="color: #888; font-size: 13px; font-style: italic; margin-top: 10px;">
+                                 Không thể hủy vì đơn đã được shop giao cho đơn vị vận chuyển
+                            </div>
+                        </div>
+                        
+                    </div> </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html> 

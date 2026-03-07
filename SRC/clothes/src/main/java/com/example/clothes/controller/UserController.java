@@ -10,16 +10,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.clothes.model.User;
+import com.example.clothes.model.Order;
+import com.example.clothes.model.OrderStatus;
 import com.example.clothes.service.UserService;
-
+import com.example.clothes.repository.OrderRepository;
 import jakarta.servlet.http.HttpSession;
-
+import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController {
    
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrderRepository orderRepo;
     // --- ĐĂNG NHẬP & ĐĂNG KÝ ---
 
     @GetMapping("/account/login")
@@ -180,6 +186,67 @@ public class UserController {
     public String logout(HttpSession session) {
         session.invalidate(); 
         return "redirect:/account/login";
+    }
+
+
+    @GetMapping("/user/orderProduct")
+    public String viewOrderProduct(
+        @RequestParam(required = false ) String status,
+        HttpSession session,
+        Model model
+    ){
+        // 1 kiểm tra đăng nhập 
+        User currentUser = (User) session.getAttribute("currentUser");
+        if(currentUser == null){
+            return "redirect:/account/login";
+        }
+
+        // 2 tabs 
+        List<Order> orders;
+        if(status != null && !status.isEmpty()){
+            orders = orderRepo.findByUserAndStatusOrderByCreateAtDesc(currentUser, OrderStatus.valueOf(status));
+        }else{
+            orders = orderRepo.findByUserOrderByCreateAtDesc(currentUser);
+        }
+
+        // 3 truyền ra dữ liệu 
+        model.addAttribute("orders", orders);
+        model.addAttribute("currentStatus", status);
+
+        return "user/orderProduct";
+    }
+
+    @PostMapping("/user/order/cancel")
+    public String cancelOrder(@RequestParam("orderId") Long orderId, // Đã đổi Integer thành Long ở đây
+                              HttpSession session, 
+                              RedirectAttributes redirectAttributes) {
+                                
+        // 1. Kiểm tra đăng nhập
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/account/login";
+        }
+
+        // 2. Tìm đơn hàng trong Database (Giờ truyền Long vào sẽ hết báo lỗi đỏ)
+        Order order = orderRepo.findById(orderId).orElse(null);
+
+        // 3. Kiểm tra bảo mật: Đơn hàng phải tồn tại VÀ phải đúng là của user đang đăng nhập
+        if (order != null && order.getUser().getId().equals(currentUser.getId())) {
+            
+            // 4. Kiểm tra điều kiện: Chỉ cho phép hủy nếu đang ở trạng thái PENDING
+            if (order.getStatus() == OrderStatus.PENDING) {
+                order.setStatus(OrderStatus.CANCELLED);
+                orderRepo.save(order);
+                // Gửi thông báo thành công ra màn hình
+                redirectAttributes.addFlashAttribute("successMessage", "Hủy đơn hàng thành công!");
+            } else {
+                // Gửi thông báo lỗi nếu cố tình hack
+                redirectAttributes.addFlashAttribute("errorMessage", "Không thể hủy vì đơn đã được xử lý!");
+            }
+        }
+
+        // 5. Quay lại trang danh sách đơn hàng
+        return "redirect:/user/orderProduct";
     }
         
 }

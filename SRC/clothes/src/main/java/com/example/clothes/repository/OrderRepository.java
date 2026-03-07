@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import com.example.clothes.model.User;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     // tính tổng đơn hàng theo trạng thái status
@@ -41,4 +41,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // phân trang 
     Page<Order> findAllByOrderByCreateAtDesc(Pageable pageable);
+
+
+   // Lấy tất cả đơn hàng của một User (Sắp xếp mới nhất lên đầu)
+    List<Order> findByUserOrderByCreateAtDesc(User user);
+
+    // Lấy đơn hàng của User lọc theo Trạng thái (Chờ xác nhận, Đang giao...)
+    List<Order> findByUserAndStatusOrderByCreateAtDesc(User user, OrderStatus status);
+
+
+    List<Order> findById(Integer OrderId);
 }

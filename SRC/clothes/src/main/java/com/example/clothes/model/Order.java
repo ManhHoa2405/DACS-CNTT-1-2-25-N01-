@@ -104,5 +104,19 @@ public class Order {
             default -> {} // Bỏ qua nếu là trạng thái PENDING
         }
     }
+
+    
+    public OrderStatus getStatus() {
+        if (this.status == null) {
+            return OrderStatus.PENDING;
+        }
+        return this.status;
+    }
+
+
+    public User getUser() {
+        return this.user; 
+       
+    }
 }
 
