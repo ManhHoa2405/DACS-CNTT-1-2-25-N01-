@@ -19,9 +19,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import jakarta.persistence.CascadeType;
-import com.example.clothes.model.ShippingAddress;
-import com.example.clothes.model.Order;
-import com.example.clothes.model.Cart;
 
 @Entity
 @Table(name = "users")
@@ -56,20 +53,26 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-
-    // quan he voi cac entity khac (neu co) se duoc them o day
-    // ví dụ quan hệ 1-n với ShippingAddress
+    // Quan hệ 1-N với ShippingAddress
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<ShippingAddress> shippingAddresses;
 
-    // ví dụ quan hệ 1-n với Order
+    // Quan hệ 1-N với Order
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<Order> orders;
 
-    // quan hệ 1-1 với Cart
+    // Quan hệ 1-1 với Cart
     @OneToOne(mappedBy = "user")
     private Cart cart;
 
+    public String getEmail() {
+        return email;
+    }
+
+    // ĐÃ SỬA: Phải trả về Long thay vì Integer để không bị lỗi
+    public Long getId() {
+        return this.id;
+    }
 }

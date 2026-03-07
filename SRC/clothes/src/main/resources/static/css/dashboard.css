@@ -1,6 +1,6 @@
-.content {
+/* .content {
   height: 100vh;
-}
+} */
 .right-content h1 {
   margin-top: 35px;
   color: #000000;
@@ -102,7 +102,7 @@
 /* Status badge */
 .status {
   padding: 4px 10px;
-  /* border-radius: 20px; */
+  border-radius:6px;
   font-size: 1.2rem;
   font-weight: 500;
   display: inline-block;
@@ -147,3 +147,8 @@
   background: #748c70;
   color: #fff;
 }
+.status { background-color: #f1c40f; color: #111; } /* Vàng */
+.status-orange  { background-color: #e67e22; color: #fff; } /* Cam */
+.status-info    { background-color: #3498db; color: #fff; } /* Xanh dương (Đã xác nhận) */
+.status-success { background-color: #2ecc71; color: #fff; } /* Xanh lá */
+.status-danger  { background-color: #e74c3c; color: #fff; } /* Đỏ */

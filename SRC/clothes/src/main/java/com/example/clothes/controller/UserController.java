@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.clothes.model.User;
+import com.example.clothes.model.Order;
+import com.example.clothes.model.OrderStatus;
 import com.example.clothes.service.OrderService;
 import com.example.clothes.service.UserService;
-import java.util.List;
-import com.example.clothes.model.Order;
+import com.example.clothes.repository.OrderRepository;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -24,6 +27,9 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderRepository orderRepo;
 
     // --- ĐĂNG NHẬP & ĐĂNG KÝ ---
 
@@ -57,7 +63,13 @@ public class UserController {
         try {
             User user = userService.login(email, password);
             session.setAttribute("currentUser", user);
-            return "redirect:/user/homePage"; 
+            
+            if("admin@gmail.com".equalsIgnoreCase(user.getEmail())){
+                return "redirect:/admin/dashboard"; 
+            }else{
+                return "redirect:/user/homePage"; 
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", e.getMessage());
@@ -175,36 +187,81 @@ public class UserController {
         return "redirect:/account/login";
     }
 
-    // --- XEM ĐƠN HÀNG ---
+    // ========================================================
+    // PHẦN XỬ LÝ ĐƠN HÀNG (ĐÃ GỘP CODE CỦA BẠN VÀ NHÓM CHUẨN XÁC)
+    // ========================================================
+
+    // 1. Quản lý đơn hàng cũ (của bạn) - Trả về toàn bộ danh sách để Javascript xử lý phân trang
     @GetMapping("/user/purchase")
     public String viewPurchaseHistory(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/account/login";
         }
-        
         List<Order> listOrders = orderService.findByUser(currentUser); 
         model.addAttribute("listOrders", listOrders);
-
         return "user/purchase"; 
     }
 
-    // --- XỬ LÝ HỦY ĐƠN HÀNG ---
+    // 2. Hủy đơn hàng cũ (của bạn)
     @PostMapping("/user/purchase/cancel")
     public String cancelOrder(@RequestParam("orderId") Long orderId, RedirectAttributes redirectAttributes) {
         try {
-            // Gọi hàm hủy bên Service
             orderService.cancelOrder(orderId);
-            
-            // Nếu thành công, gửi một cờ (flag) sang file HTML để nó biết đường bật Modal Thành Công
             redirectAttributes.addFlashAttribute("cancelSuccess", true);
-            
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        
-        // Dù thành công hay thất bại thì cũng quay lại trang Quản lý đơn hàng
         return "redirect:/user/purchase"; 
+    }
+
+    // 3. Quản lý đơn hàng mới (của bạn cùng nhóm)
+    @GetMapping("/user/orderProduct")
+    public String viewOrderProduct(
+        @RequestParam(required = false ) String status,
+        HttpSession session,
+        Model model
+    ){
+        User currentUser = (User) session.getAttribute("currentUser");
+        if(currentUser == null){
+            return "redirect:/account/login";
+        }
+
+        List<Order> orders;
+        if(status != null && !status.isEmpty()){
+            orders = orderRepo.findByUserAndStatusOrderByCreateAtDesc(currentUser, OrderStatus.valueOf(status));
+        }else{
+            orders = orderRepo.findByUserOrderByCreateAtDesc(currentUser);
+        }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("currentStatus", status);
+
+        return "user/orderProduct";
+    }
+
+    // 4. Hủy đơn hàng mới (của bạn cùng nhóm)
+    @PostMapping("/user/order/cancel")
+    public String cancelOrderTeam(@RequestParam("orderId") Long orderId, 
+                                  HttpSession session, 
+                                  RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/account/login";
+        }
+
+        Order order = orderRepo.findById(orderId).orElse(null);
+
+        if (order != null && order.getUser().getId().equals(currentUser.getId())) {
+            if (order.getStatus() == OrderStatus.PENDING) {
+                order.setStatus(OrderStatus.CANCELLED);
+                orderRepo.save(order);
+                redirectAttributes.addFlashAttribute("successMessage", "Hủy đơn hàng thành công!");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Không thể hủy vì đơn đã được xử lý!");
+            }
+        }
+        return "redirect:/user/orderProduct";
     }
 }

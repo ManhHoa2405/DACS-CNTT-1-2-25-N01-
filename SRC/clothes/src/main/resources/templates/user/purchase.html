@@ -21,7 +21,7 @@
         background-color: #fafafa;
       }
 
-      /* Menu Tài khoản giữa Header (GIỮ NGUYÊN) */
+      /* Menu Tài khoản giữa Header */
       .nav-account {
         display: flex;
         gap: 15px;
@@ -48,15 +48,11 @@
         font-weight: 600;
       }
 
-      /* ========================================= */
-      /* CSS TRANG ĐƠN HÀNG (ĐÃ PHÓNG TO TỐI ĐA)   */
-      /* ========================================= */
-
+      /* CSS TRANG ĐƠN HÀNG */
       .purchase-container {
-        /* Tăng max-width lên 1400px để form rộng gần full màn hình trên PC */
         max-width: 1400px;
         margin: 40px auto;
-        padding: 0 40px; /* Tăng padding 2 bên */
+        padding: 0 40px;
         font-family: "Montserrat", sans-serif;
       }
 
@@ -66,7 +62,7 @@
         justify-content: space-between;
         background: #fff;
         padding: 0;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         border: 1px solid #eaeaea;
         border-radius: 8px;
         overflow: hidden;
@@ -77,16 +73,16 @@
         text-align: center;
       }
       .order-tabs li.active {
-        border-bottom: 4px solid #5a6d57; /* Viền dưới dày hơn */
+        border-bottom: 4px solid #5a6d57;
         font-weight: bold;
         color: #5a6d57;
       }
       .order-tabs a {
         display: block;
-        padding: 22px 10px; /* Tăng chiều cao của tab */
+        padding: 22px 10px;
         color: #555;
         text-decoration: none;
-        font-size: 1.3rem; /* Chữ tab to hơn hẳn */
+        font-size: 1.3rem;
         cursor: pointer;
         transition: 0.3s;
       }
@@ -94,12 +90,35 @@
         color: #5a6d57;
       }
 
+      /* Khối Sắp Xếp (Dropdown) */
+      .sort-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+      }
+      .sort-select {
+        padding: 10px 15px;
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.2rem;
+        color: #555;
+        outline: none;
+        cursor: pointer;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        transition: border-color 0.3s;
+      }
+      .sort-select:hover {
+        border-color: #ccc;
+      }
+
       /* Card Đơn hàng */
       .order-card {
         background: #fff;
         border: 1px solid #eaeaea;
         border-radius: 10px;
-        padding: 40px; /* Tăng khoảng cách lề trong card lên 40px */
+        padding: 40px;
         margin-bottom: 30px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       }
@@ -109,11 +128,11 @@
         border-bottom: 1px solid #eee;
         padding-bottom: 20px;
         margin-bottom: 25px;
-        font-size: 1.2rem; /* Chữ mã đơn hàng to hơn */
+        font-size: 1.2rem;
       }
       .order-status {
         font-weight: bold;
-        font-size: 1.3rem; /* Chữ trạng thái to hơn */
+        font-size: 1.3rem;
       }
       .status-pending {
         color: #f39c12;
@@ -144,39 +163,35 @@
       }
       .item-info {
         display: flex;
-        gap: 30px; /* Tăng khoảng cách giữa ảnh và nội dung chữ */
+        gap: 30px;
         align-items: flex-start;
       }
-
-      /* --- HÌNH ẢNH SẢN PHẨM (KÉO TO RÕ RỆT) --- */
       .item-img {
-        width: 140px; /* Ảnh to ra 140px */
-        height: 180px; /* Chiều cao 180px */
+        width: 140px;
+        height: 180px;
         object-fit: cover;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
-
-      /* Nội dung sản phẩm */
       .item-details h4 {
-        font-size: 1.6rem; /* Tên sản phẩm to nổi bật */
+        font-size: 1.6rem;
         margin-bottom: 12px;
         color: #333;
         font-weight: 600;
         margin-top: 5px;
       }
       .item-details p {
-        font-size: 1.2rem; /* Text phụ to hơn */
+        font-size: 1.2rem;
         color: #777;
         margin-bottom: 8px;
       }
       .item-price {
         font-weight: 600;
         color: #e74c3c;
-        font-size: 1.6rem; /* Giá tiền từng món to tương đương tên SP */
+        font-size: 1.6rem;
       }
 
-      /* Footer của Card đơn hàng (Thành tiền & Nút bấm) */
+      /* Footer Card */
       .order-footer {
         display: flex;
         justify-content: flex-end;
@@ -187,21 +202,22 @@
         border-top: 1px solid #eee;
       }
       .total-price {
-        font-size: 1.4rem; /* Chữ "Thành tiền:" to hơn */
+        font-size: 1.4rem;
       }
       .total-price span {
-        font-size: 1.8rem; /* Số tổng tiền cực to và rõ */
+        font-size: 1.8rem;
         font-weight: bold;
         color: #e74c3c;
         margin-left: 15px;
       }
+
       .btn-action {
-        padding: 15px 40px; /* Nút bấm to, dễ click */
+        padding: 15px 40px;
         border: none;
         border-radius: 6px;
         cursor: pointer;
         font-weight: bold;
-        font-size: 1.2rem; /* Chữ trong nút to ra */
+        font-size: 1.2rem;
         font-family: "Montserrat", sans-serif;
         transition: 0.3s;
       }
@@ -221,7 +237,7 @@
         background-color: #455543;
       }
 
-      /* Modal Style (Popup Hủy đơn) */
+      /* Modal Hủy Đơn */
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -238,7 +254,7 @@
         background: #fff;
         padding: 50px;
         border-radius: 12px;
-        width: 500px; /* Popup to hơn một chút */
+        width: 500px;
         text-align: center;
         box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
       }
@@ -276,6 +292,34 @@
       .btn-no {
         background-color: #e74c3c;
       }
+
+      /* Khối Phân Trang */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+        list-style: none;
+        padding: 0;
+      }
+      .pagination a {
+        padding: 10px 18px;
+        border: 1px solid #eaeaea;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #555;
+        font-weight: bold;
+        font-size: 1.2rem;
+        transition: 0.3s;
+      }
+      .pagination a:hover {
+        background-color: #f2f2f2;
+      }
+      .pagination a.active {
+        background-color: #5a6d57;
+        color: white;
+        border-color: #5a6d57;
+      }
     </style>
   </head>
 
@@ -289,13 +333,11 @@
         <a th:href="@{/user/homePage}" title="Trang chủ"
           ><img th:src="@{/img/Logo.svg}" alt="Modimal"
         /></a>
-
         <ul class="nav-account">
           <li><a th:href="@{/user/profile}">Thông Tin Cá Nhân</a></li>
           <li class="active"><a th:href="@{/user/purchase}">Đơn Hàng</a></li>
           <li><a th:href="@{/user/change-password}">Đổi Mật Khẩu</a></li>
         </ul>
-
         <div class="actions">
           <div class="account">
             <a
@@ -322,9 +364,9 @@
             <a>Đang Xử Lý</a>
           </li>
           <li class="tab-item" onclick="filterOrders('SHIPPING', this)">
-            <a>Vận Chuyển</a>
+            <a>Đang Vận Chuyển</a>
           </li>
-          <li class="tab-item" onclick="filterOrders('COMPLETED', this)">
+          <li class="tab-item" onclick="filterOrders('DELIVERED', this)">
             <a>Hoàn Thành</a>
           </li>
           <li class="tab-item" onclick="filterOrders('CANCELLED', this)">
@@ -332,93 +374,126 @@
           </li>
         </ul>
 
-        <div id="order-list">
-          <div
-            class="order-card"
-            th:each="order : ${listOrders}"
-            th:data-status="${order.status.name()}"
+        <div class="sort-container" th:if="${!#lists.isEmpty(listOrders)}">
+          <select
+            class="sort-select"
+            id="sortSelect"
+            onchange="changeSortOrder(this.value)"
           >
-            <div class="order-header">
-              <span th:text="'Mã đơn: #' + ${order.id}"></span>
+            <option value="NEWEST">Sắp xếp: Mới nhất - Cũ nhất</option>
+            <option value="OLDEST">Sắp xếp: Cũ nhất - Mới nhất</option>
+          </select>
+        </div>
 
-              <span
-                class="order-status status-pending"
-                th:if="${order.status.name() == 'PENDING'}"
-                >Đang xử lý</span
-              >
-              <span
-                class="order-status status-shipping"
-                th:if="${order.status.name() == 'SHIPPING'}"
-                >🚚 Vận chuyển</span
-              >
-              <span
-                class="order-status status-completed"
-                th:if="${order.status.name() == 'COMPLETED'}"
-                >Hoàn thành</span
-              >
-              <span
-                class="order-status status-cancelled"
-                th:if="${order.status.name() == 'CANCELLED'}"
-                >Đã hủy</span
-              >
-            </div>
-
-            <div class="order-item" th:each="item : ${order.orderItems}">
-              <div class="item-info">
-                <img
-                  th:src="${item.productVariant.product.mainImage}"
-                  class="item-img"
-                  alt="Sản phẩm"
-                  onerror="
-                    this.src = 'https://via.placeholder.com/80x100?text=Image'
-                  "
-                />
-                <div class="item-details">
-                  <h4 th:text="${item.productVariant.product.name}">Tên SP</h4>
-                  <p
-                    th:text="'Phân loại: ' + ${item.productVariant.product.category.name}"
-                  ></p>
-                  <p th:text="'Số lượng: ' + ${item.quantity}"></p>
-                </div>
-              </div>
-              <div
-                class="item-price"
-                th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
-              ></div>
-            </div>
-
-            <div class="order-footer">
-              <div class="total-price">
-                Thành tiền:
+        <div id="order-list">
+          <div id="card-container">
+            <div
+              class="order-card"
+              th:each="order : ${listOrders}"
+              th:data-status="${order.status.name()}"
+              th:data-id="${order.id}"
+            >
+              <div class="order-header">
+                <span th:text="'Mã đơn: #' + ${order.id}"></span>
                 <span
-                  th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'POINT', 0, 'POINT')} + ' VND'"
-                ></span>
+                  class="order-status status-pending"
+                  th:if="${order.status.name() == 'PENDING'}"
+                  >Đang xử lý</span
+                >
+                <span
+                  class="order-status status-shipping"
+                  th:if="${order.status.name() == 'SHIPPING'}"
+                  >Đang vận chuyển</span
+                >
+                <span
+                  class="order-status status-completed"
+                  th:if="${order.status.name() == 'COMPLETED'}"
+                  >Hoàn thành</span
+                >
+                <span
+                  class="order-status status-cancelled"
+                  th:if="${order.status.name() == 'CANCELLED'}"
+                  >Đã hủy</span
+                >
               </div>
 
-              <button
-                th:if="${order.status.name() == 'PENDING'}"
-                class="btn-action btn-cancel"
-                th:onclick="'openCancelModal(' + ${order.id} + ')'"
-              >
-                Hủy Đơn Hàng
-              </button>
+              <div class="order-item" th:each="item : ${order.orderItems}">
+                <div class="item-info">
+                  <img
+                    th:src="${item.productVariant.product.mainImage}"
+                    class="item-img"
+                    alt="Sản phẩm"
+                    onerror="
+                      this.src = 'https://via.placeholder.com/80x100?text=Image'
+                    "
+                  />
+                  <div class="item-details">
+                    <h4 th:text="${item.productVariant.product.name}">
+                      Tên SP
+                    </h4>
+                    <p
+                      th:text="'Phân loại: ' + ${item.productVariant.product.category.name}"
+                    ></p>
+                    <p th:text="'Số lượng: ' + ${item.quantity}"></p>
+                  </div>
+                </div>
+                <div
+                  class="item-price"
+                  th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                ></div>
+              </div>
 
-              <span
-                th:if="${order.status.name() == 'SHIPPING'}"
-                style="color: #888; font-style: italic; font-size: 0.9rem"
-              >
-                Không thể hủy khi đang vận chuyển
-              </span>
+              <div class="order-footer">
+                <div class="total-price">
+                  Thành tiền:
+                  <span
+                    th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                  ></span>
+                </div>
+                <button
+                  th:if="${order.status.name() == 'PENDING'}"
+                  class="btn-action btn-cancel"
+                  th:onclick="'openCancelModal(' + ${order.id} + ')'"
+                >
+                  Hủy Đơn Hàng
+                </button>
+                <span
+                  th:if="${order.status.name() == 'SHIPPING'}"
+                  style="color: #888; font-style: italic; font-size: 0.9rem"
+                  >Không thể hủy khi đang vận chuyển</span
+                >
+              </div>
             </div>
           </div>
 
           <div
+            id="db-empty-msg"
             th:if="${#lists.isEmpty(listOrders)}"
-            style="text-align: center; padding: 50px; color: #888"
+            style="
+              text-align: center;
+              padding: 50px;
+              color: #888;
+              font-size: 1.3rem;
+            "
           >
             Bạn chưa có đơn hàng nào.
           </div>
+
+          <div
+            id="js-empty-msg"
+            style="
+              display: none;
+              text-align: center;
+              padding: 50px;
+              color: #888;
+              font-size: 1.3rem;
+            "
+          >
+            Không có đơn hàng nào trong mục này.
+          </div>
         </div>
+
+        <ul class="pagination" id="pagination-container"></ul>
       </div>
     </main>
 
@@ -475,47 +550,144 @@
           Bạn Sẽ Được Chuyển Về Danh Sách Đơn Hàng Trong Vài Giây...
         </p>
       </div>
-
       <script>
         setTimeout(function () {
           document.getElementById("cancelSuccessModal").style.display = "none";
-          // Tự động click vào tab "Đã Hủy" để user thấy đơn vừa hủy
           document.querySelector("li.tab-item:last-child").click();
         }, 3000);
       </script>
     </div>
 
     <script>
-      // Hàm chuyển Tab (Chỉ hiển thị CSS trên Frontend)
+      const itemsPerPage = 5;
+      let currentPage = 1;
+      let currentStatus = "ALL";
+      let currentSort = "NEWEST"; // Mặc định là Mới nhất
+      let allCards = [];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        allCards = Array.from(document.querySelectorAll(".order-card"));
+        renderOrders();
+      });
+
+      // Hàm khi người dùng thay đổi tiêu chí Sắp xếp (Dropdown)
+      function changeSortOrder(sortType) {
+        currentSort = sortType;
+        currentPage = 1; // Reset về trang 1 mỗi khi đổi bộ lọc
+        renderOrders();
+      }
+
+      function renderOrders() {
+        // 1. Lọc theo trạng thái Tab
+        let filteredCards = allCards.filter((card) => {
+          return (
+            currentStatus === "ALL" ||
+            card.getAttribute("data-status") === currentStatus
+          );
+        });
+
+        // 2. Sắp xếp đơn hàng bằng cách đọc data-id
+        filteredCards.sort((a, b) => {
+          let idA = parseInt(a.getAttribute("data-id"));
+          let idB = parseInt(b.getAttribute("data-id"));
+
+          if (currentSort === "NEWEST") {
+            return idB - idA; // Đơn có ID lớn (mới tạo) lên trên
+          } else {
+            return idA - idB; // Đơn có ID nhỏ (tạo lâu rồi) lên trên
+          }
+        });
+
+        // 3. Ẩn toàn bộ giao diện cũ
+        allCards.forEach((card) => (card.style.display = "none"));
+
+        // 4. Cắt trang
+        let totalItems = filteredCards.length;
+        let totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages || 1;
+
+        let start = (currentPage - 1) * itemsPerPage;
+        let end = start + itemsPerPage;
+
+        // 5. Đưa các thẻ HTML đã được sắp xếp trở lại màn hình
+        const cardContainer = document.getElementById("card-container");
+        filteredCards.slice(start, end).forEach((card) => {
+          card.style.display = "block";
+          cardContainer.appendChild(card); // Lệnh này giúp tự động đảo vị trí HTML
+        });
+
+        // 6. Vẽ thanh phân trang
+        renderPagination(totalPages);
+
+        // 7. Xử lý logic hiển thị thông báo rỗng
+        const emptyMsgDB = document.getElementById("db-empty-msg");
+        const emptyMsgJS = document.getElementById("js-empty-msg");
+
+        if (totalItems === 0 && allCards.length > 0) {
+          emptyMsgJS.style.display = "block";
+          if (emptyMsgDB) emptyMsgDB.style.display = "none";
+        } else {
+          emptyMsgJS.style.display = "none";
+        }
+      }
+
+      function renderPagination(totalPages) {
+        const paginationContainer = document.getElementById(
+          "pagination-container",
+        );
+        paginationContainer.innerHTML = "";
+
+        if (totalPages <= 1) return;
+
+        if (currentPage > 1) {
+          let prev = document.createElement("li");
+          prev.innerHTML = `<a href="javascript:void(0)" onclick="goToPage(${currentPage - 1})">❮ Trước</a>`;
+          paginationContainer.appendChild(prev);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+          let li = document.createElement("li");
+          let a = document.createElement("a");
+          a.href = "javascript:void(0)";
+          a.innerText = i;
+          a.onclick = () => goToPage(i);
+          if (i === currentPage) a.className = "active";
+          li.appendChild(a);
+          paginationContainer.appendChild(li);
+        }
+
+        if (currentPage < totalPages) {
+          let next = document.createElement("li");
+          next.innerHTML = `<a href="javascript:void(0)" onclick="goToPage(${currentPage + 1})">Sau ❯</a>`;
+          paginationContainer.appendChild(next);
+        }
+      }
+
+      function goToPage(page) {
+        currentPage = page;
+        renderOrders();
+        document
+          .querySelector(".order-tabs")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
       function filterOrders(status, element) {
-        // 1. Đổi class active cho tab
         document
           .querySelectorAll(".tab-item")
           .forEach((tab) => tab.classList.remove("active"));
         element.classList.add("active");
 
-        // 2. Ẩn/hiện đơn hàng theo trạng thái
-        let cards = document.querySelectorAll(".order-card");
-        cards.forEach((card) => {
-          if (status === "ALL") {
-            card.style.display = "block";
-          } else {
-            if (card.getAttribute("data-status") === status) {
-              card.style.display = "block";
-            } else {
-              card.style.display = "none";
-            }
-          }
-        });
+        currentStatus = status;
+        currentPage = 1;
+
+        renderOrders();
       }
 
-      // Hàm mở Popup Hủy Đơn
       function openCancelModal(orderId) {
-        document.getElementById("cancelOrderId").value = orderId; // Lưu ID vào form ẩn
+        document.getElementById("cancelOrderId").value = orderId;
         document.getElementById("cancelConfirmModal").style.display = "flex";
       }
 
-      // Hàm đóng Popup
       function closeCancelModal() {
         document.getElementById("cancelConfirmModal").style.display = "none";
       }

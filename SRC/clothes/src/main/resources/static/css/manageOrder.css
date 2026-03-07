@@ -1,6 +1,6 @@
-.content {
+/* .content {
   height: 100vh;
-}
+} */
 
 .right-content h1 {
   margin-top: 35px;
@@ -14,7 +14,7 @@
 .order-container {
   padding: 30px;
   background-color: #efefec;
-  min-height: 100vh;
+  /* min-height: 100vh; */
 }
 
 /* ===== Stats ===== */
@@ -82,7 +82,12 @@
   gap: 10px;
   margin-bottom: 15px;
 }
-
+.order-tabs a{
+  list-style: none;
+  padding: 10px;
+  border-radius: 5px;
+  color:black;
+}
 .order-tabs button {
   padding: 8px 16px;
   border-radius: 6px;
@@ -96,6 +101,11 @@
   color: #fff;
 }
 
+.badge-warning { background-color: #f1c40f; color: #111; } /* Vàng */
+.badge-orange  { background-color: #e67e22; color: #fff; } /* Cam */
+.badge-info    { background-color: #3498db; color: #fff; } /* Xanh dương (Đã xác nhận) */
+.badge-success { background-color: #2ecc71; color: #fff; } /* Xanh lá */
+.badge-danger  { background-color: #e74c3c; color: #fff; } /* Đỏ */
 /* ===== Table ===== */
 .order-table {
   background: #fff;

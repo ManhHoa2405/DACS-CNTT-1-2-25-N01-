@@ -22,7 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.data.domain.Pageable;
 import com.example.clothes.DTO.ProductDTO;
 import com.example.clothes.model.Product;
+import com.example.clothes.model.Order;
+import com.example.clothes.model.OrderStatus;
 import com.example.clothes.model.ProductVariant;
+import com.example.clothes.repository.OrderRepository;
 import com.example.clothes.repository.ProductRepository;
 import com.example.clothes.service.ProductService;
 @Controller
@@ -33,8 +36,34 @@ public class AdminController {
 
     @Autowired
     private ProductRepository productRepo;
+
+    @Autowired
+    private OrderRepository orderRepo;
+
     @GetMapping("/admin/dashboard")
-    public String viewDashboard(){
+    public String viewDashboard(
+        @RequestParam(defaultValue = "0") int page,
+        Model model
+    ){
+        // Thống kê dữ liệu cho dashboard
+        model.addAttribute("succeessOrders",orderRepo.countByStatus(OrderStatus.DELIVERED));
+        model.addAttribute("sumOrdersDelivered",orderRepo.sumTotalAmountByStatus(OrderStatus.DELIVERED));
+        model.addAttribute("totalCusotomer",orderRepo.countDistinctUsersByStatus(OrderStatus.DELIVERED));
+        model.addAttribute("totalProducts", orderRepo.sumProductQuanityByStatus(OrderStatus.DELIVERED));
+
+        // Truyền dữ liệu ra view
+        // List<Order> orders;
+        // orders = orderRepo.findAllByOrderByCreateAtDesc();
+        // model.addAttribute("orders", orders);
+        // phân trang
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Order> orderPage = orderRepo.findAllByOrderByCreateAtDesc(pageable);
+
+        model.addAttribute("orders", orderPage.getContent()); // Lấy danh sách đơn hàng của trang hiện tại
+        model.addAttribute("currentPage", page); // số trang hiện tại
+        model.addAttribute("totalPages",orderPage.getTotalPages());  // tổng số trang
+
+
         return "admin/dashboard";
     }
     
@@ -197,9 +226,53 @@ public class AdminController {
     //}
     // hiển trị trang quản lý đơn hàng
     @GetMapping("/admin/manageOrder")
-    public String viewManageOrder(){
+    
+    public String viewManageOrder(
+        @RequestParam(required = false ) String status,
+        @RequestParam(required = false ) String keyword,
+        
+        Model model
+    ){
+        // 1 thống kê số lượng cho 4 ô vuông (Tổng đơn hàng, chờ xử lý, đang giao, thành công)
+
+        model.addAttribute("totalOrders", orderRepo.count());
+        model.addAttribute("pendingOrders", orderRepo.countByStatus(OrderStatus.PENDING));
+        model.addAttribute("confirmOrders", orderRepo.countByStatus(OrderStatus.CONFIRMED));
+        model.addAttribute("shippingOrders", orderRepo.countByStatus(OrderStatus.SHIPPING));
+        model.addAttribute("successOrders", orderRepo.countByStatus(OrderStatus.DELIVERED));
+
+        //  2 tìm kiếm 
+        List<Order> orders;
+
+        // 
+        if(keyword != null && keyword.trim().isEmpty()) keyword = null; 
+        if(status != null && status.trim().isEmpty()) status = null;
+
+        if(keyword != null){
+            orders = orderRepo.findByReceiveNameContainingOrReceivePhoneContainingOrderByCreateAtDesc(keyword, keyword);
+        }else if (status != null) {
+            orders = orderRepo.findByStatusOrderByCreateAtDesc(OrderStatus.valueOf(status));
+        } else {
+            orders = orderRepo.findAllByOrderByCreateAtDesc(); // Lấy tất cả nếu không có filter
+        }
+
+        // 3. Truyền dữ liệu ra view
+        model.addAttribute("orders",orders);
+        model.addAttribute("status", status);
+        model.addAttribute("keyword", keyword);
         return "admin/manageOrder";
     }
     
-    
+    @PostMapping("/admin/manageOrderUpdate")
+    public String updateOrderStatus(
+        @RequestParam("orderId") Long orderId,
+        @RequestParam("status") String status
+    ){
+        Order order  = orderRepo.findById(orderId).orElse(null);
+        if(order != null){
+            order.setStatus(OrderStatus.valueOf(status));
+            orderRepo.save(order);
+        }
+        return "redirect:/admin/manageOrder";
+    }
 }
