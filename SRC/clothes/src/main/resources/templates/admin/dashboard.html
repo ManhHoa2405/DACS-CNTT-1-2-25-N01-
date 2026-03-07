@@ -71,22 +71,22 @@
         <div class="general">
           <div class="general-item" style="border-left: solid 2px blue">
             <div class="menu-title">Tổng đơn hàng</div>
-            <div class="data" th:text="${totalOrders}">2345</div>
+            <div class="data" th:text="${succeessOrders}"></div>
           </div>
 
           <div class="general-item" style="border-left: solid 2px green">
             <div class="menu-title">Doanh thu</div>
-            <div class="data" th:text="${revenue}">180.545.000 VND</div>
+            <div class="data" th:text="${sumOrdersDelivered}"></div>
           </div>
 
           <div class="general-item" style="border-left: solid 2px yellow">
             <div class="menu-title">Khách hàng</div>
-            <div class="data" th:text="${totalCustomers}">80</div>
+            <div class="data" th:text="${totalCusotomer}"></div>
           </div>
 
           <div class="general-item" style="border-left: solid 2px red">
             <div class="menu-title">Sản phẩm</div>
-            <div class="data" th:text="${totalProducts}">250</div>
+            <div class="data" th:text="${totalProducts}"></div>
           </div>
         </div>
 
@@ -109,17 +109,25 @@
 
                 <tbody>
                   <tr th:each="order : ${orders}">
-                    <td th:text="${order.code}">#ORD-01</td>
-                    <td th:text="${order.customerName}">Nguyễn Văn A</td>
-                    <td th:text="${order.orderDate}">01/01/2026</td>
-                    <td th:text="${order.total}">1.600.000 VND</td>
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.receiveName}"></td>
+                    <td >
+                      <div class="up" th:text="${#temporals.format(order.createAt,'dd/MM/yyyy')}"></div>
+                      <small th:text ="${#temporals.format(order.createAt, 'HH:mm:ss')}"></small>
+                    </td>
+                    <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA',0,'POINT')} + ' VND'"></td>
                     <td>
-                      <span
-                        class="status"
-                        th:classappend="${order.status}"
-                        th:text="${order.statusText}"
-                        >Hoàn thành</span
-                      >
+                      <span class="status"
+                            th:classappend="${#strings.toString(order.status) == 'PENDING' ? 'status-warning' :
+                                          (#strings.toString(order.status) == 'CONFIRMED' ? 'status-info' :
+                                          (#strings.toString(order.status) == 'SHIPPING' ? 'status-orange' :
+                                          (#strings.toString(order.status) == 'DELIVERED' ? 'status-success' : 'status-danger')))}"
+                            
+                            th:text="${#strings.toString(order.status) == 'PENDING' ? 'Chờ xử lý' :
+                                    (#strings.toString(order.status) == 'CONFIRMED' ? 'Đã xác nhận' :
+                                    (#strings.toString(order.status) == 'SHIPPING' ? 'Đang giao' :
+                                    (#strings.toString(order.status) == 'DELIVERED' ? 'Thành công' : 'Đã hủy')))}">
+                      </span>
                     </td>
                   </tr>
                 </tbody>
@@ -127,12 +135,22 @@
             </div>
 
             <!-- Pagination (demo UI) -->
-            <div class="pagination">
-              <button>‹</button>
-              <button class="active">1</button>
-              <button>2</button>
-              <button>3</button>
-              <button>›</button>
+            <div class="pagination" th:if="${totalPages > 1}">
+              <button th:onclick="|window.location.href='/admin/dashboard?page=${currentPage - 1}'|" 
+                      th:disabled="${currentPage == 0}">
+                ‹
+              </button>
+              
+              <button th:each="i: ${#numbers.sequence(0, totalPages - 1)}"
+                      th:onclick="|window.location.href='/admin/dashboard?page=${i}'|"
+                      th:classappend="${currentPage == i ? 'active' : ''}"
+                      th:text="${i + 1}">
+              </button>
+             
+              <button th:onclick="|window.location.href='/admin/dashboard?page=${currentPage + 1}'|" 
+                      th:disabled="${currentPage == totalPages - 1}">
+                ›
+              </button>
             </div>
           </div>
         </div>

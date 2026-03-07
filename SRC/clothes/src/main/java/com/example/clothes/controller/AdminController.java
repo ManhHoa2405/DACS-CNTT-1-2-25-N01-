@@ -41,7 +41,29 @@ public class AdminController {
     private OrderRepository orderRepo;
 
     @GetMapping("/admin/dashboard")
-    public String viewDashboard(){
+    public String viewDashboard(
+        @RequestParam(defaultValue = "0") int page,
+        Model model
+    ){
+        // Thống kê dữ liệu cho dashboard
+        model.addAttribute("succeessOrders",orderRepo.countByStatus(OrderStatus.DELIVERED));
+        model.addAttribute("sumOrdersDelivered",orderRepo.sumTotalAmountByStatus(OrderStatus.DELIVERED));
+        model.addAttribute("totalCusotomer",orderRepo.countDistinctUsersByStatus(OrderStatus.DELIVERED));
+        model.addAttribute("totalProducts", orderRepo.sumProductQuanityByStatus(OrderStatus.DELIVERED));
+
+        // Truyền dữ liệu ra view
+        // List<Order> orders;
+        // orders = orderRepo.findAllByOrderByCreateAtDesc();
+        // model.addAttribute("orders", orders);
+        // phân trang
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Order> orderPage = orderRepo.findAllByOrderByCreateAtDesc(pageable);
+
+        model.addAttribute("orders", orderPage.getContent()); // Lấy danh sách đơn hàng của trang hiện tại
+        model.addAttribute("currentPage", page); // số trang hiện tại
+        model.addAttribute("totalPages",orderPage.getTotalPages());  // tổng số trang
+
+
         return "admin/dashboard";
     }
     

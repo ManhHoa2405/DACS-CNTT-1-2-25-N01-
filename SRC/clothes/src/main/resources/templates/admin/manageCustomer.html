@@ -145,7 +145,7 @@
     }
   });
 </script>
-<tbody id="customerTable">
+<!-- <tbody id="customerTable">
     <tr th:if="${customers == null or customers.empty}">
         <td colspan="5" style="text-align: center;">Không tìm thấy dữ liệu</td>
     </tr>
@@ -162,7 +162,7 @@
         
         <td th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}"></td>
     </tr>
-</tbody>
+</tbody> -->
 
     <!-- Sidebar JS -->
     <script th:src="@{/js/sidebar-active.js}"></script>
