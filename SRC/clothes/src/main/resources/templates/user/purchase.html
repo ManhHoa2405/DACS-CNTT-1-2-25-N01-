@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý đơn hàng</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
+
+    <style>
+      body {
+        background-color: #fafafa;
+      }
+
+      /* Menu Tài khoản giữa Header (GIỮ NGUYÊN) */
+      .nav-account {
+        display: flex;
+        gap: 15px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+      }
+      .nav-account li a {
+        text-decoration: none;
+        color: #666;
+        font-weight: 500;
+        font-size: 1.4rem;
+        padding: 12px 44px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+      .nav-account li a:hover {
+        color: #333;
+      }
+      .nav-account li.active a {
+        background-color: #f2f2f2;
+        color: #333;
+        font-weight: 600;
+      }
+
+      /* ========================================= */
+      /* CSS TRANG ĐƠN HÀNG (ĐÃ PHÓNG TO TỐI ĐA)   */
+      /* ========================================= */
+
+      .purchase-container {
+        /* Tăng max-width lên 1400px để form rộng gần full màn hình trên PC */
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 0 40px; /* Tăng padding 2 bên */
+        font-family: "Montserrat", sans-serif;
+      }
+
+      /* Tab trạng thái */
+      .order-tabs {
+        display: flex;
+        justify-content: space-between;
+        background: #fff;
+        padding: 0;
+        margin-bottom: 30px;
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
+        overflow: hidden;
+        list-style: none;
+      }
+      .order-tabs li {
+        flex: 1;
+        text-align: center;
+      }
+      .order-tabs li.active {
+        border-bottom: 4px solid #5a6d57; /* Viền dưới dày hơn */
+        font-weight: bold;
+        color: #5a6d57;
+      }
+      .order-tabs a {
+        display: block;
+        padding: 22px 10px; /* Tăng chiều cao của tab */
+        color: #555;
+        text-decoration: none;
+        font-size: 1.3rem; /* Chữ tab to hơn hẳn */
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .order-tabs li.active a {
+        color: #5a6d57;
+      }
+
+      /* Card Đơn hàng */
+      .order-card {
+        background: #fff;
+        border: 1px solid #eaeaea;
+        border-radius: 10px;
+        padding: 40px; /* Tăng khoảng cách lề trong card lên 40px */
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+      .order-header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+        font-size: 1.2rem; /* Chữ mã đơn hàng to hơn */
+      }
+      .order-status {
+        font-weight: bold;
+        font-size: 1.3rem; /* Chữ trạng thái to hơn */
+      }
+      .status-pending {
+        color: #f39c12;
+      }
+      .status-shipping {
+        color: #3498db;
+      }
+      .status-completed {
+        color: #2ecc71;
+      }
+      .status-cancelled {
+        color: #e74c3c;
+      }
+
+      /* Chi tiết sản phẩm trong đơn */
+      .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 25px;
+        margin-bottom: 25px;
+        border-bottom: 1px dashed #eee;
+      }
+      .order-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .item-info {
+        display: flex;
+        gap: 30px; /* Tăng khoảng cách giữa ảnh và nội dung chữ */
+        align-items: flex-start;
+      }
+
+      /* --- HÌNH ẢNH SẢN PHẨM (KÉO TO RÕ RỆT) --- */
+      .item-img {
+        width: 140px; /* Ảnh to ra 140px */
+        height: 180px; /* Chiều cao 180px */
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Nội dung sản phẩm */
+      .item-details h4 {
+        font-size: 1.6rem; /* Tên sản phẩm to nổi bật */
+        margin-bottom: 12px;
+        color: #333;
+        font-weight: 600;
+        margin-top: 5px;
+      }
+      .item-details p {
+        font-size: 1.2rem; /* Text phụ to hơn */
+        color: #777;
+        margin-bottom: 8px;
+      }
+      .item-price {
+        font-weight: 600;
+        color: #e74c3c;
+        font-size: 1.6rem; /* Giá tiền từng món to tương đương tên SP */
+      }
+
+      /* Footer của Card đơn hàng (Thành tiền & Nút bấm) */
+      .order-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 30px;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid #eee;
+      }
+      .total-price {
+        font-size: 1.4rem; /* Chữ "Thành tiền:" to hơn */
+      }
+      .total-price span {
+        font-size: 1.8rem; /* Số tổng tiền cực to và rõ */
+        font-weight: bold;
+        color: #e74c3c;
+        margin-left: 15px;
+      }
+      .btn-action {
+        padding: 15px 40px; /* Nút bấm to, dễ click */
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.2rem; /* Chữ trong nút to ra */
+        font-family: "Montserrat", sans-serif;
+        transition: 0.3s;
+      }
+      .btn-cancel {
+        background-color: #fff;
+        color: #e74c3c;
+        border: 1px solid #e74c3c;
+      }
+      .btn-cancel:hover {
+        background-color: #fdf0ef;
+      }
+      .btn-reorder {
+        background-color: #5a6d57;
+        color: white;
+      }
+      .btn-reorder:hover {
+        background-color: #455543;
+      }
+
+      /* Modal Style (Popup Hủy đơn) */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .modal-box {
+        background: #fff;
+        padding: 50px;
+        border-radius: 12px;
+        width: 500px; /* Popup to hơn một chút */
+        text-align: center;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      }
+      .modal-box h3 {
+        margin-bottom: 30px;
+        font-size: 1.6rem;
+        color: #333;
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 35px;
+      }
+      .modal-btn {
+        padding: 15px 45px;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        border-radius: 6px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 60px;
+        transition: transform 0.2s;
+      }
+      .modal-btn:hover {
+        transform: scale(1.05);
+      }
+      .btn-yes {
+        background-color: #2ecc71;
+      }
+      .btn-no {
+        background-color: #e74c3c;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header
+      class="header"
+      style="background-color: #fff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)"
+    >
+      <div class="banner"><p>Miễn phí vận chuyển cho mọi đơn hàng</p></div>
+      <nav class="navbar">
+        <a th:href="@{/user/homePage}" title="Trang chủ"
+          ><img th:src="@{/img/Logo.svg}" alt="Modimal"
+        /></a>
+
+        <ul class="nav-account">
+          <li><a th:href="@{/user/profile}">Thông Tin Cá Nhân</a></li>
+          <li class="active"><a th:href="@{/user/purchase}">Đơn Hàng</a></li>
+          <li><a th:href="@{/user/change-password}">Đổi Mật Khẩu</a></li>
+        </ul>
+
+        <div class="actions">
+          <div class="account">
+            <a
+              th:href="${session.currentUser != null} ? @{/user/profile} : @{/account/login}"
+              ><img th:src="@{/img/Header profile icon.svg}"
+            /></a>
+          </div>
+          <div class="cart">
+            <a th:href="@{/user/cart}"
+              ><img th:src="@{/img/Header bag icon.svg}"
+            /></a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="purchase-container">
+        <ul class="order-tabs">
+          <li class="tab-item active" onclick="filterOrders('ALL', this)">
+            <a>Tất Cả</a>
+          </li>
+          <li class="tab-item" onclick="filterOrders('PENDING', this)">
+            <a>Đang Xử Lý</a>
+          </li>
+          <li class="tab-item" onclick="filterOrders('SHIPPING', this)">
+            <a>Vận Chuyển</a>
+          </li>
+          <li class="tab-item" onclick="filterOrders('COMPLETED', this)">
+            <a>Hoàn Thành</a>
+          </li>
+          <li class="tab-item" onclick="filterOrders('CANCELLED', this)">
+            <a>Đã Hủy</a>
+          </li>
+        </ul>
+
+        <div id="order-list">
+          <div
+            class="order-card"
+            th:each="order : ${listOrders}"
+            th:data-status="${order.status.name()}"
+          >
+            <div class="order-header">
+              <span th:text="'Mã đơn: #' + ${order.id}"></span>
+
+              <span
+                class="order-status status-pending"
+                th:if="${order.status.name() == 'PENDING'}"
+                >Đang xử lý</span
+              >
+              <span
+                class="order-status status-shipping"
+                th:if="${order.status.name() == 'SHIPPING'}"
+                >🚚 Vận chuyển</span
+              >
+              <span
+                class="order-status status-completed"
+                th:if="${order.status.name() == 'COMPLETED'}"
+                >Hoàn thành</span
+              >
+              <span
+                class="order-status status-cancelled"
+                th:if="${order.status.name() == 'CANCELLED'}"
+                >Đã hủy</span
+              >
+            </div>
+
+            <div class="order-item" th:each="item : ${order.orderItems}">
+              <div class="item-info">
+                <img
+                  th:src="${item.productVariant.product.mainImage}"
+                  class="item-img"
+                  alt="Sản phẩm"
+                  onerror="
+                    this.src = 'https://via.placeholder.com/80x100?text=Image'
+                  "
+                />
+                <div class="item-details">
+                  <h4 th:text="${item.productVariant.product.name}">Tên SP</h4>
+                  <p
+                    th:text="'Phân loại: ' + ${item.productVariant.product.category.name}"
+                  ></p>
+                  <p th:text="'Số lượng: ' + ${item.quantity}"></p>
+                </div>
+              </div>
+              <div
+                class="item-price"
+                th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'POINT')} + ' VND'"
+              ></div>
+            </div>
+
+            <div class="order-footer">
+              <div class="total-price">
+                Thành tiền:
+                <span
+                  th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'POINT', 0, 'POINT')} + ' VND'"
+                ></span>
+              </div>
+
+              <button
+                th:if="${order.status.name() == 'PENDING'}"
+                class="btn-action btn-cancel"
+                th:onclick="'openCancelModal(' + ${order.id} + ')'"
+              >
+                Hủy Đơn Hàng
+              </button>
+
+              <span
+                th:if="${order.status.name() == 'SHIPPING'}"
+                style="color: #888; font-style: italic; font-size: 0.9rem"
+              >
+                Không thể hủy khi đang vận chuyển
+              </span>
+            </div>
+          </div>
+
+          <div
+            th:if="${#lists.isEmpty(listOrders)}"
+            style="text-align: center; padding: 50px; color: #888"
+          >
+            Bạn chưa có đơn hàng nào.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="modal-overlay" id="cancelConfirmModal">
+      <div class="modal-box">
+        <h3>Bạn Có Chắc Hủy Đơn Hàng Không?</h3>
+        <form
+          id="cancelForm"
+          method="post"
+          th:action="@{/user/purchase/cancel}"
+        >
+          <input type="hidden" name="orderId" id="cancelOrderId" />
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="modal-btn btn-no"
+              onclick="closeCancelModal()"
+            >
+              X
+            </button>
+            <button type="submit" class="modal-btn btn-yes">✓</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="cancelSuccessModal"
+      th:if="${cancelSuccess}"
+      style="display: flex"
+    >
+      <div class="modal-box" style="padding: 60px 40px">
+        <div
+          style="
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #2ecc71;
+            color: #2ecc71;
+            font-size: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+          "
+        >
+          ✓
+        </div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 15px">
+          Đơn Hàng Đã Hủy Thành Công
+        </h2>
+        <p style="color: #888; font-size: 1.1rem">
+          Bạn Sẽ Được Chuyển Về Danh Sách Đơn Hàng Trong Vài Giây...
+        </p>
+      </div>
+
+      <script>
+        setTimeout(function () {
+          document.getElementById("cancelSuccessModal").style.display = "none";
+          // Tự động click vào tab "Đã Hủy" để user thấy đơn vừa hủy
+          document.querySelector("li.tab-item:last-child").click();
+        }, 3000);
+      </script>
+    </div>
+
+    <script>
+      // Hàm chuyển Tab (Chỉ hiển thị CSS trên Frontend)
+      function filterOrders(status, element) {
+        // 1. Đổi class active cho tab
+        document
+          .querySelectorAll(".tab-item")
+          .forEach((tab) => tab.classList.remove("active"));
+        element.classList.add("active");
+
+        // 2. Ẩn/hiện đơn hàng theo trạng thái
+        let cards = document.querySelectorAll(".order-card");
+        cards.forEach((card) => {
+          if (status === "ALL") {
+            card.style.display = "block";
+          } else {
+            if (card.getAttribute("data-status") === status) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          }
+        });
+      }
+
+      // Hàm mở Popup Hủy Đơn
+      function openCancelModal(orderId) {
+        document.getElementById("cancelOrderId").value = orderId; // Lưu ID vào form ẩn
+        document.getElementById("cancelConfirmModal").style.display = "flex";
+      }
+
+      // Hàm đóng Popup
+      function closeCancelModal() {
+        document.getElementById("cancelConfirmModal").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

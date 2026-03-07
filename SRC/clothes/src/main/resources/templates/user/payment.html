@@ -4,19 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thanh toán - Modimal</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
     <link rel="stylesheet" th:href="@{/css/reset.css}" />
     <link rel="stylesheet" th:href="@{/css/payment.css}" />
-
     <style>
-      /* --- STYLE CHUNG --- */
+      /* --- GIỮ NGUYÊN CSS NHƯ TRƯỚC --- */
       .no-address {
         padding: 20px;
         border: 1px dashed #ccc;
@@ -39,8 +36,6 @@
       .btn-add-new:hover {
         background-color: #555;
       }
-
-      /* --- STYLE MODAL & FORM (LÀM TO HƠN) --- */
       .modal {
         display: none;
         position: fixed;
@@ -54,18 +49,16 @@
         align-items: center;
         justify-content: center;
       }
-
       .modal-content {
         background-color: #fff;
         margin: auto;
-        padding: 30px; /* Tăng padding */
-        border-radius: 12px; /* Bo tròn mềm mại hơn */
-        width: 650px; /* Tăng chiều rộng modal */
+        padding: 30px;
+        border-radius: 12px;
+        width: 650px;
         max-width: 95%;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         animation: slideDown 0.3s ease-out;
       }
-
       @keyframes slideDown {
         from {
           transform: translateY(-50px);
@@ -76,7 +69,6 @@
           opacity: 1;
         }
       }
-
       .modal-header {
         display: flex;
         justify-content: space-between;
@@ -100,8 +92,6 @@
       .close-modal:hover {
         color: #000;
       }
-
-      /* Danh sách địa chỉ */
       .address-item-row {
         display: flex;
         justify-content: space-between;
@@ -146,7 +136,6 @@
         background: #d9534f;
         color: white;
       }
-
       .btn-switch-mode {
         width: 100%;
         padding: 15px;
@@ -164,8 +153,6 @@
         background: #e0e0e0;
         border-color: #666;
       }
-
-      /* Form nhập liệu (To và rõ ràng) */
       .form-row {
         display: flex;
         gap: 20px;
@@ -174,23 +161,21 @@
       .form-col {
         flex: 1;
       }
-
       .form-input,
       .address-select {
         width: 100%;
-        padding: 12px 15px; /* Input cao hơn */
+        padding: 12px 15px;
         border: 1px solid #ddd;
         border-radius: 6px;
         font-size: 15px;
         outline: none;
         transition: border-color 0.2s;
-        box-sizing: border-box; /* Quan trọng để không bị vỡ layout */
+        box-sizing: border-box;
       }
       .form-input:focus,
       .address-select:focus {
         border-color: #333;
       }
-
       .modal-footer {
         margin-top: 30px;
         display: flex;
@@ -220,8 +205,6 @@
       .btn-confirm:hover {
         background-color: #000;
       }
-
-      /* Style Modal Thành Công */
       .success-modal {
         display: none;
         position: fixed;
@@ -289,7 +272,7 @@
               href="#"
               class="edit-link"
               th:if="${hasAddress}"
-              onclick="openAddressModal('LIST')"
+              onclick="openAddressModal()"
               >Thay Đổi</a
             >
           </div>
@@ -314,7 +297,10 @@
             <button
               type="button"
               class="btn-add-new"
-              onclick="openAddressModal('FORM')"
+              onclick="
+                openAddressModal();
+                showAddAddressForm();
+              "
             >
               + Thêm Địa Chỉ Mới
             </button>
@@ -331,24 +317,28 @@
             <div class="shipping-info">
               <span>Phí Vận Chuyển</span><span class="free-text">Miễn Phí</span>
             </div>
-
             <div class="method-selector">
               <p class="selector-label">Chọn Phương Thức</p>
-              <label class="radio-option">
-                <input type="radio" name="paymentMethod" value="CASH" checked />
-                <span class="custom-radio"></span> Thanh Toán Tiền Mặt (COD)
-              </label>
-              <label class="radio-option">
-                <input type="radio" name="paymentMethod" value="MOMO" />
-                <span class="custom-radio"></span> Ví MoMo
-              </label>
-              <label class="radio-option">
-                <input type="radio" name="paymentMethod" value="ZALOPAY" />
-                <span class="custom-radio"></span> Ví ZaloPay
-              </label>
+              <label class="radio-option"
+                ><input
+                  type="radio"
+                  name="paymentMethod"
+                  value="CASH"
+                  checked
+                />
+                <span class="custom-radio"></span> Thanh Toán Tiền Mặt
+                (COD)</label
+              >
+              <label class="radio-option"
+                ><input type="radio" name="paymentMethod" value="MOMO" />
+                <span class="custom-radio"></span> Ví MoMo</label
+              >
+              <label class="radio-option"
+                ><input type="radio" name="paymentMethod" value="ZALOPAY" />
+                <span class="custom-radio"></span> Ví ZaloPay</label
+              >
             </div>
           </div>
-
           <div class="form-actions">
             <a th:href="@{/user/cart}" class="btn-back">❮ Quay Trở Lại</a>
             <button
@@ -372,7 +362,6 @@
               <img
                 th:if="${item.productVariant.product.images != null and !item.productVariant.product.images.isEmpty()}"
                 th:src="@{${item.productVariant.product.images[0].imageUrl}}"
-                alt="Product Image"
               />
             </div>
             <div class="item-info">
@@ -448,7 +437,7 @@
                 </button>
               </div>
             </div>
-            <button class="btn-switch-mode" onclick="switchView('FORM')">
+            <button class="btn-switch-mode" onclick="showAddAddressForm()">
               + Thêm Địa Chỉ Mới
             </button>
           </div>
@@ -472,7 +461,6 @@
                 />
               </div>
             </div>
-
             <div class="form-row">
               <div class="form-col">
                 <select id="province" class="address-select">
@@ -490,7 +478,6 @@
                 </select>
               </div>
             </div>
-
             <div class="form-row">
               <input
                 type="text"
@@ -499,9 +486,8 @@
                 class="form-input"
               />
             </div>
-
             <div class="modal-footer">
-              <button class="btn-cancel" onclick="switchView('LIST')">
+              <button class="btn-cancel" onclick="backToListView()">
                 Quay lại
               </button>
               <button class="btn-confirm" id="btnSaveAddress">
@@ -530,40 +516,32 @@
     </div>
 
     <script th:src="@{/js/apiAddress.js}"></script>
-    <script th:src="@{/js/apiAddress.js}"></script>
+
     <script>
       const modal = document.getElementById("addressModal");
-      const successModal = document.getElementById("successModal");
 
-      // --- LOGIC MODAL ---
-      function openAddressModal(mode) {
+      // Hàm mở modal và mặc định hiển thị list
+      function openAddressModal() {
         modal.style.display = "flex";
-        switchView(mode);
+        document.getElementById("view-list").style.display = "block";
+        document.getElementById("view-form").style.display = "none";
+        document.getElementById("modalTitle").innerText = "Danh Sách Địa Chỉ";
       }
+
       function closeAddressModal() {
         modal.style.display = "none";
       }
-      function switchView(mode) {
-        document.getElementById("view-list").style.display =
-          mode === "LIST" ? "block" : "none";
-        document.getElementById("view-form").style.display =
-          mode === "FORM" ? "block" : "none";
-        document.getElementById("modalTitle").innerText =
-          mode === "LIST" ? "Danh Sách Địa Chỉ" : "Thêm Địa Chỉ Mới";
-      }
+
       window.onclick = function (e) {
         if (e.target === modal) closeAddressModal();
       };
 
-      // --- 1. CHỌN ĐỊA CHỈ (NHANH - KHÔNG RELOAD) ---
+      // --- CHỌN ĐỊA CHỈ MẶC ĐỊNH ---
       function setDefault(addressId) {
-        // Cập nhật giao diện ngay lập tức
         const row = document.getElementById("addr-row-" + addressId);
         if (row) {
           const namePhone = row.querySelector("strong").innerText;
           const addressDetail = row.querySelector("p").innerText;
-
-          // Update Card bên ngoài
           const mainCard = document.querySelector(".address-card");
           if (mainCard) {
             mainCard.querySelector(".user-name").innerText = namePhone;
@@ -571,30 +549,46 @@
           }
           closeAddressModal();
         }
-        // Gửi request ngầm
         fetch("/user/address/set-default?addressId=" + addressId, {
           method: "POST",
         });
       }
 
-      // --- 2. XÓA ĐỊA CHỈ (NHANH - KHÔNG RELOAD) ---
+      // --- XÓA ĐỊA CHỈ ---
       function deleteAddress(addressId) {
         if (!confirm("Bạn có chắc muốn xóa địa chỉ này?")) return;
 
         const row = document.getElementById("addr-row-" + addressId);
-        if (row) row.remove(); // Xóa ngay trên màn hình
 
+        // 1. XÓA TRÊN GIAO DIỆN NGAY LẬP TỨC (Không chờ Server)
+        if (row) {
+          row.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+          row.style.opacity = "0"; // Hiệu ứng mờ dần
+          row.style.transform = "translateX(20px)"; // Hiệu ứng trượt nhẹ
+
+          // Chờ 0.3s cho hiệu ứng chạy xong rồi mới xóa hẳn thẻ
+          setTimeout(() => {
+            row.remove();
+          }, 300);
+        }
+
+        // 2. GỬI LỆNH XÓA NGẦM LÊN SERVER
         fetch("/user/address/delete?addressId=" + addressId, {
           method: "POST",
-        }).then((res) => {
-          if (!res.ok) {
-            alert("Lỗi: Không thể xóa địa chỉ này.");
+        })
+          .then((res) => {
+            // Nếu Server báo lỗi, ta báo người dùng và tải lại trang để lấy lại dữ liệu đúng
+            if (!res.ok) {
+              alert("Đã xảy ra lỗi trên máy chủ, không thể xóa!");
+              window.location.reload();
+            }
+          })
+          .catch((err) => {
+            alert("Lỗi mạng, vui lòng kiểm tra lại kết nối!");
             window.location.reload();
-          }
-        });
+          });
       }
-
-      // --- 3. LƯU ĐỊA CHỈ MỚI ---
+      // --- LƯU ĐỊA CHỈ (SỬ DỤNG x-www-form-urlencoded) ---
       document.getElementById("btnSaveAddress").onclick = function () {
         const name = document.getElementById("newName").value;
         const phone = document.getElementById("newPhone").value;
@@ -612,56 +606,156 @@
             document.getElementById("ward").selectedIndex
           ]?.text;
 
-        if (!name || !phone || !detail || !province || !district || !ward) {
-          alert("Vui lòng điền đầy đủ thông tin");
+        if (
+          !name ||
+          !phone ||
+          !detail ||
+          province === "Chọn" ||
+          district === "Chọn" ||
+          ward === "Chọn"
+        ) {
+          alert("Vui lòng điền và chọn đầy đủ thông tin địa chỉ");
           return;
         }
 
-        const data = {
-          receiveName: name,
-          receivePhone: phone,
-          province: province,
-          district: district,
-          ward: ward,
-          addressDetail: detail,
-          isDefault: true,
-        };
+        const params = new URLSearchParams();
+        params.append("receiveName", name);
+        params.append("receivePhone", phone);
+        params.append("province", province);
+        params.append("district", district);
+        params.append("ward", ward);
+        params.append("addressDetail", detail);
+
+        // Đổi trạng thái nút để báo hiệu đang lưu
+        const btnSave = document.getElementById("btnSaveAddress");
+        const originalText = btnSave.innerText;
+        btnSave.innerText = "Đang xử lý...";
+        btnSave.disabled = true;
 
         fetch("/user/address/add", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }).then((res) => {
-          if (res.ok) window.location.reload();
-          else alert("Lỗi khi thêm địa chỉ");
-        });
-      };
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+        })
+          .then((res) => res.text())
+          .then((text) => {
+            btnSave.innerText = originalText;
+            btnSave.disabled = false;
 
-      // --- 4. XỬ LÝ THANH TOÁN ---
+            if (text === "ok") {
+              // 1. Dữ liệu địa chỉ đầy đủ
+              const fullAddressStr = `${detail}, ${ward}, ${district}, ${province}`;
+              const namePhoneStr = `${name} - ${phone}`;
+              // Tạo ID ngẫu nhiên cho frontend (DB tự có ID thật rồi)
+              const tempId = new Date().getTime();
+
+              // 2. Tạo thẻ HTML mới cho danh sách trong Modal
+              const newRow = document.createElement("div");
+              newRow.className = "address-item-row";
+              newRow.id = `addr-row-${tempId}`;
+              newRow.innerHTML = `
+                <label class="address-info-radio">
+                  <input type="radio" name="addr-select" checked onclick="setDefault(${tempId})" />
+                  <div>
+                    <strong style="font-size: 16px">${namePhoneStr}</strong>
+                    <p style="font-size: 14px; color: #666; margin-top: 4px">${fullAddressStr}</p>
+                  </div>
+                </label>
+                <div class="address-actions">
+                  <button type="button" class="btn-delete-addr" onclick="deleteAddress(${tempId})">Xóa</button>
+                </div>
+              `;
+
+              // Chèn thẻ mới lên đầu danh sách view-list (trước nút "+ Thêm địa chỉ mới")
+              const viewList = document.getElementById("view-list");
+              const switchModeBtn = viewList.querySelector(".btn-switch-mode");
+              if (switchModeBtn) {
+                viewList.insertBefore(newRow, switchModeBtn);
+              } else {
+                viewList.appendChild(newRow);
+              }
+
+              // 3. Cập nhật Card ở ngoài màn hình chính
+              let mainCard = document.querySelector(".address-card");
+              if (!mainCard) {
+                // Nếu trước đó chưa có địa chỉ nào, phải xóa dòng chữ "Chưa có địa chỉ"
+                const noAddressBox = document.querySelector(".no-address");
+                if (noAddressBox) noAddressBox.remove();
+
+                // Thêm nút "Thay Đổi"
+                const sectionHeader = document.querySelector(
+                  ".payment-section .section-header",
+                );
+                const editLink = document.createElement("a");
+                editLink.href = "#";
+                editLink.className = "edit-link";
+                editLink.innerText = "Thay Đổi";
+                editLink.onclick = function () {
+                  openAddressModal();
+                };
+                sectionHeader.appendChild(editLink);
+
+                // Tạo Card mới
+                mainCard = document.createElement("div");
+                mainCard.className = "address-card";
+                mainCard.innerHTML = `<p class="user-name"></p><p class="address-detail"></p>`;
+
+                // Chèn Card ngay sau section-header
+                sectionHeader.parentNode.insertBefore(
+                  mainCard,
+                  sectionHeader.nextSibling,
+                );
+
+                // Bật lại nút Đặt Hàng
+                const btnOrder = document.querySelector(".btn-order");
+                if (btnOrder) btnOrder.disabled = false;
+              }
+
+              // Đổ dữ liệu vào Card ngoài
+              mainCard.querySelector(".user-name").innerText = namePhoneStr;
+              mainCard.querySelector(".address-detail").innerText =
+                fullAddressStr;
+
+              // 4. Xóa rỗng các ô nhập liệu của Form
+              document.getElementById("newName").value = "";
+              document.getElementById("newPhone").value = "";
+              document.getElementById("detail-address").value = "";
+              document.getElementById("province").selectedIndex = 0;
+              document.getElementById("district").innerHTML =
+                '<option value="">Quận/Huyện</option>';
+              document.getElementById("district").disabled = true;
+              document.getElementById("ward").innerHTML =
+                '<option value="">Phường/Xã</option>';
+              document.getElementById("ward").disabled = true;
+
+              // 5. Đóng Modal ngay lập tức
+              closeAddressModal();
+            } else {
+              alert("Lỗi khi lưu địa chỉ trên máy chủ!");
+            }
+          })
+          .catch((err) => {
+            btnSave.innerText = originalText;
+            btnSave.disabled = false;
+            alert("Lỗi kết nối tới máy chủ!");
+          });
+      };
+      // --- XỬ LÝ ĐẶT HÀNG ---
       document.getElementById("paymentForm").onsubmit = function (e) {
         const paymentMethod = document.querySelector(
           'input[name="paymentMethod"]:checked',
         ).value;
-
         if (paymentMethod === "CASH") {
-          e.preventDefault(); // Chặn chuyển trang nếu là Tiền mặt
-
+          e.preventDefault();
           const formData = new FormData(this);
           fetch(this.action, { method: "POST", body: formData })
             .then((response) => {
-              // Nếu Server trả về redirect thành công (có status=true)
-              if (response.redirected && response.url.includes("status=true")) {
-                successModal.style.display = "flex"; // HIỆN MODAL THÀNH CÔNG
-              } else {
-                alert("Đặt hàng thất bại! Vui lòng kiểm tra lại.");
-              }
+              if (response.ok)
+                document.getElementById("successModal").style.display = "flex";
+              else alert("Đặt hàng thất bại!");
             })
-            .catch((err) => {
-              console.error(err);
-              alert("Lỗi kết nối.");
-            });
+            .catch((err) => alert("Lỗi kết nối."));
         }
-        // Nếu là MOMO/ZALOPAY -> Form tự submit -> Server redirect sang trang QR
       };
     </script>
   </body>

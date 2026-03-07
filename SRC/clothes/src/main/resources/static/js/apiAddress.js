@@ -1,16 +1,13 @@
-const addressListView = document.getElementById("addressListView");
-const addAddressForm = document.getElementById("addAddressForm");
+// apiAddress.js
+const addressListView = document.getElementById("view-list"); // Đổi ID cho khớp HTML
+const addAddressForm = document.getElementById("view-form"); // Đổi ID cho khớp HTML
 const modalTitle = document.getElementById("modalTitle");
-const backBtn = document.getElementById("backBtn");
-const closeBtnModal = document.getElementById("closeBtn");
 
 // Hàm chuyển sang màn hình thêm mới
 function showAddAddressForm() {
   addressListView.style.display = "none";
   addAddressForm.style.display = "block";
-  modalTitle.innerText = "Địa Chỉ Mới";
-  backBtn.style.display = "block";
-  closeBtnModal.style.display = "none";
+  modalTitle.innerText = "Thêm Địa Chỉ Mới";
 
   // Gọi API lấy tỉnh thành nếu chưa có dữ liệu
   if (document.getElementById("province").options.length <= 1) {
@@ -22,12 +19,10 @@ function showAddAddressForm() {
 function backToListView() {
   addressListView.style.display = "block";
   addAddressForm.style.display = "none";
-  modalTitle.innerText = "Địa Chỉ Của Tôi";
-  backBtn.style.display = "none";
-  closeBtnModal.style.display = "block";
+  modalTitle.innerText = "Danh Sách Địa Chỉ";
 }
 
-// Logic API Provinces (Giữ nguyên như phần trước đã hướng dẫn)
+// Logic API Provinces
 const host = "https://provinces.open-api.vn/api/";
 function loadProvinces() {
   fetch(host + "?depth=1")
@@ -45,24 +40,35 @@ function renderData(array, selectId) {
 
 // Xử lý thay đổi Tỉnh -> Hiện Huyện
 document.getElementById("province").addEventListener("change", function () {
+  const districtSelect = document.getElementById("district");
+  const wardSelect = document.getElementById("ward");
+  districtSelect.innerHTML = '<option value="">Quận/Huyện</option>';
+  wardSelect.innerHTML = '<option value="">Phường/Xã</option>';
+  districtSelect.disabled = true;
+  wardSelect.disabled = true;
+
   if (this.value) {
     fetch(`${host}p/${this.value}?depth=2`)
       .then((res) => res.json())
       .then((data) => {
         renderData(data.districts, "district");
-        document.getElementById("district").disabled = false;
+        districtSelect.disabled = false;
       });
   }
 });
 
 // Xử lý thay đổi Huyện -> Hiện Xã
 document.getElementById("district").addEventListener("change", function () {
+  const wardSelect = document.getElementById("ward");
+  wardSelect.innerHTML = '<option value="">Phường/Xã</option>';
+  wardSelect.disabled = true;
+
   if (this.value) {
     fetch(`${host}d/${this.value}?depth=2`)
       .then((res) => res.json())
       .then((data) => {
         renderData(data.wards, "ward");
-        document.getElementById("ward").disabled = false;
+        wardSelect.disabled = false;
       });
   }
 });

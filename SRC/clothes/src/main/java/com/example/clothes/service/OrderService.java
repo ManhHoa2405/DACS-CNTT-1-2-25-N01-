@@ -3,16 +3,22 @@ package com.example.clothes.service;
 import com.example.clothes.model.*;
 import com.example.clothes.repository.*;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
+    @Autowired
+    private OrderRepository orderRepo;
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
@@ -20,6 +26,10 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final CartService cartService;
     private final ShippingAddressRepository shippingAddressRepository; 
+
+    public List<Order> findByUser(User user) {
+        return orderRepo.findByUser(user);
+    }
 
     // 1. Hàm tạo đơn hàng
     @Transactional
@@ -114,6 +124,24 @@ public class OrderService {
                     .toList();
             
             cartItemRepository.deleteAll(selectedItems);
+        }
+    }
+
+    // --- HÀM HỦY ĐƠN HÀNG ---
+    @Transactional
+    public void cancelOrder(Long orderId) throws Exception {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        
+        if (order == null) {
+            throw new Exception("Không tìm thấy đơn hàng!");
+        }
+
+        // Chỉ cho phép hủy nếu đơn đang ở trạng thái PENDING (Đang xử lý)
+        if (order.getStatus() == OrderStatus.PENDING) {
+            order.setStatus(OrderStatus.CANCELLED); // Chuyển trạng thái sang Đã Hủy
+            orderRepository.save(order);
+        } else {
+            throw new Exception("Không thể hủy đơn hàng ở trạng thái này!");
         }
     }
 }

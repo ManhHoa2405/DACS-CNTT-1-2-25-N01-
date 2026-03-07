@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.clothes.model.User;
+import com.example.clothes.service.OrderService;
 import com.example.clothes.service.UserService;
-
+import java.util.List;
+import com.example.clothes.model.Order;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -19,6 +21,9 @@ public class UserController {
    
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
     // --- ĐĂNG NHẬP & ĐĂNG KÝ ---
 
@@ -101,23 +106,20 @@ public class UserController {
         }
     }
 
-    // --- ĐỔI MẬT KHẨU (Dành cho user đã đăng nhập) ---
+    // --- ĐỔI MẬT KHẨU ---
 
     @GetMapping("/user/change-password")
     public String viewChangePassword(HttpSession session) {
         if (session.getAttribute("currentUser") == null) return "redirect:/account/login";
-        
-        // SỬA Ở ĐÂY: Trả về thư mục account/change_password vì file HTML nằm ở đó
         return "account/change_password"; 
     }
 
-    // SỬA Ở ĐÂY: Sửa URL thành /user/change-password để khớp với file HTML
     @PostMapping("/user/change-password")
     public String processChangePassword(@RequestParam String oldPassword, 
                                         @RequestParam String newPassword, 
                                         @RequestParam String confirmPassword,
                                         HttpSession session, 
-                                        RedirectAttributes redirectAttributes) { // Bỏ Model, dùng RedirectAttributes
+                                        RedirectAttributes redirectAttributes) { 
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) return "redirect:/account/login";
 
@@ -126,13 +128,10 @@ public class UserController {
                 throw new Exception("Mật khẩu nhập lại không khớp!");
             }
             userService.changePassword(currentUser.getId(), oldPassword, newPassword);
-            
-            // Nếu thành công, thông báo xanh ở trang chủ
-           redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công!");
+            redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công!");
             return "redirect:/user/change-password";
             
         } catch (Exception e) {
-            // Nếu có lỗi, dùng flash báo đỏ và redirect lại trang đổi mk
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/user/change-password";
         }
@@ -175,5 +174,37 @@ public class UserController {
         session.invalidate(); 
         return "redirect:/account/login";
     }
+
+    // --- XEM ĐƠN HÀNG ---
+    @GetMapping("/user/purchase")
+    public String viewPurchaseHistory(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/account/login";
+        }
         
+        List<Order> listOrders = orderService.findByUser(currentUser); 
+        model.addAttribute("listOrders", listOrders);
+
+        return "user/purchase"; 
+    }
+
+    // --- XỬ LÝ HỦY ĐƠN HÀNG ---
+    @PostMapping("/user/purchase/cancel")
+    public String cancelOrder(@RequestParam("orderId") Long orderId, RedirectAttributes redirectAttributes) {
+        try {
+            // Gọi hàm hủy bên Service
+            orderService.cancelOrder(orderId);
+            
+            // Nếu thành công, gửi một cờ (flag) sang file HTML để nó biết đường bật Modal Thành Công
+            redirectAttributes.addFlashAttribute("cancelSuccess", true);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        
+        // Dù thành công hay thất bại thì cũng quay lại trang Quản lý đơn hàng
+        return "redirect:/user/purchase"; 
+    }
 }

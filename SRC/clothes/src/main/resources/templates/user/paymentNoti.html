@@ -46,40 +46,50 @@
         </ul>
 
         <!-- Actions -->
-        <div class="actions">
-          <div class="search-box">
-            <a href="javascript:void(0)" onclick="toggleSearch()">
-              <img th:src="@{/img/Search_light.svg}" alt="Search" />
-            </a>
-          </div>
 
           <div class="account">
-            <a th:href="@{/login}">
+            <a
+              th:href="${session.currentUser != null} ? @{/user/profile} : @{/account/login}"
+              class="account_icon"
+            >
               <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
             </a>
-          </div>
 
+            <th:block th:if="${session.currentUser != null}">
+              <div class="account_infor">
+                <span
+                  th:text="${session.currentUser.name}"
+                  style="
+                    font-weight: bold;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 8px;
+                    margin-bottom: 4px;
+                    display: block;
+                  "
+                ></span>
+
+                <span>
+                  <a th:href="@{/user/profile}">Thông Tin Tài Khoản</a>
+                </span>
+                <span>
+                  <a th:href="@{/user/change-password}">Đổi Mật Khẩu</a>
+                </span>
+                <span>
+                  <a th:href="@{/user/purchase}">Đơn Hàng</a>
+                </span>
+                <span>
+                  <a th:href="@{/account/logout}">Đăng Xuất</a>
+                </span>
+              </div>
+            </th:block>
+          </div>
           <div class="cart">
-            <a href="#">
+            <a th:href="@{/user/cart}">
               <img th:src="@{/img/Header bag icon.svg}" alt="Cart" />
             </a>
           </div>
         </div>
       </nav>
-
-      <!-- Search Slide -->
-      <div class="search-slide" id="searchSlide">
-        <div class="search-inner">
-          <form class="search-form">
-            <button type="submit" class="search-btn">
-              <img th:src="@{/img/Search_light.svg}" alt="search" />
-            </button>
-            <input type="text" placeholder="Tìm kiếm" />
-          </form>
-
-          <span class="close-search" onclick="toggleSearch()">✕</span>
-        </div>
-      </div>
     </header>
 
     <!-- MAIN -->
