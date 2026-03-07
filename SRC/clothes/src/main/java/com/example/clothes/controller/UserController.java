@@ -52,7 +52,13 @@ public class UserController {
         try {
             User user = userService.login(email, password);
             session.setAttribute("currentUser", user);
-            return "redirect:/user/homePage"; 
+            //kiểm tra Email phân quyềnfindByEmail
+            if("admin@gmail.com".equalsIgnoreCase(user.getEmail())){
+                return "redirect:/admin/dashboard"; 
+            }else{
+                return "redirect:/user/homePage"; 
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", e.getMessage());
