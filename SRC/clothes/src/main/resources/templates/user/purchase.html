@@ -123,13 +123,23 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       }
       .order-header {
-        display: flex;
-        justify-content: space-between;
+        /* display: flex; */
+        /* justify-content: space-between; */
         border-bottom: 1px solid #eee;
         padding-bottom: 20px;
         margin-bottom: 25px;
         font-size: 1.2rem;
       }
+      .order-header-infor{
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+      }
+      .order-header-address{
+        display: flex;
+        flex: 1;
+        gap: 5px;
+      }        
       .order-status {
         font-weight: bold;
         font-size: 1.3rem;
@@ -394,27 +404,41 @@
               th:data-id="${order.id}"
             >
               <div class="order-header">
-                <span th:text="'Mã đơn: #' + ${order.id}"></span>
-                <span
-                  class="order-status status-pending"
-                  th:if="${order.status.name() == 'PENDING'}"
-                  >Đang xử lý</span
-                >
-                <span
-                  class="order-status status-shipping"
-                  th:if="${order.status.name() == 'SHIPPING'}"
-                  >Đang vận chuyển</span
-                >
-                <span
-                  class="order-status status-completed"
-                  th:if="${order.status.name() == 'DELIVERED'}"
-                  >Hoàn thành</span
-                >
-                <span
-                  class="order-status status-cancelled"
-                  th:if="${order.status.name() == 'CANCELLED'}"
-                  >Đã hủy</span
-                >
+                <div class="order-header-infor">
+                  <span th:text="'Mã đơn: #' + ${order.id}"></span>
+                  
+                  
+                  <span
+                    class="order-status status-pending"
+                    th:if="${order.status.name() == 'PENDING'}"
+                    >Đang xử lý</span
+                  >
+                  <span
+                    class="order-status status-shipping"
+                    th:if="${order.status.name() == 'SHIPPING'}"
+                    >Đang vận chuyển</span
+                  >
+                  <span
+                    class="order-status status-completed"
+                    th:if="${order.status.name() == 'DELIVERED'}"
+                    >Hoàn thành</span
+                  >
+                  <span
+                    class="order-status status-cancelled"
+                    th:if="${order.status.name() == 'CANCELLED'}"
+                    >Đã hủy</span
+                  >
+
+                </div>
+                <div class="order-header-address">
+                    <div style="font-weight: bold; color: #333;" th:text="${order.receiveName}"></div>
+                    <div style="color: #d35400; font-weight: 500; margin-bottom: 5px;" th:text="${order.receivePhone}"></div>
+                    
+                    <div style="font-size: 13px; color: #555;">
+                        <i class="fa fa-map-marker-alt"></i> <span th:text="${order.addressDetail + ', ' + order.ward + ', ' + order.district + ', ' + order.province}"></span>
+                        
+                    </div>
+                </div>
               </div>
 
               <div class="order-item" th:each="item : ${order.orderItems}">
