@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.clothes.model.Product;
 import com.example.clothes.service.ProductService;
@@ -17,31 +18,7 @@ public class HomeController {
     private ProductService productService;
     @GetMapping("/user/homePage")
     public String showHomePage(HttpSession session, Model model) {
-        // Kiểm tra xem đã đăng nhập chưa (nếu cần bảo mật)
-        // if (session.getAttribute("currentUser") == null) {
-        //     return "redirect:/account/login"; // Chưa đăng nhập thì đá về login
-        // }
-        
-        
-        // Trả về file templates/user/homePage.html
-
-        // 1. Lấy danh sách ÁO
-    // List<Product> listAo = productService.getProductsForUser(null, "Áo", null, null);
-    // if(listAo.size() > 3) listAo = listAo.subList(0, 3); // Chỉ lấy 4 cái
-    // model.addAttribute("listAo", listAo);
-        
-    
-    // List<Product> listQuan = productService.getProductsForUser(null, "Quần", null, null);
-    // if(listQuan.size() > 3) listQuan = listQuan.subList(0, 3);
-    // model.addAttribute("listQuan",listQuan);
-
-    // List<Product> lisChanVay = productService.getProductsForUser(null, "Chân Váy", null, null);
-    // if(lisChanVay.size() > 3) lisChanVay = lisChanVay.subList(0, 3);
-    // model.addAttribute("lisChanVay", lisChanVay);
-
-    // List<Product> listDam = productService.getProductsForUser(null, "Đầm", null, null);
-    // if(listDam.size() > 3) listDam = listDam.subList(0, 3);
-    // model.addAttribute("listDam",listDam);
+ 
 
     // 1. Lấy Top 3 Áo mới nhất (Truyền tham số "newest" vào sort)
         model.addAttribute("listAo", getTop3Products("Áo"));
@@ -65,5 +42,20 @@ public class HomeController {
         // (Không lo lỗi IndexOutOfBounds nếu list chỉ có 1 hoặc 2 sản phẩm)
         return products.stream().limit(3).toList();
     }
+    @GetMapping("/user/searchProduct")
+        public String searchProduct(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(name = "categoryName", required = false) String categoryName,
+             @RequestParam(name = "size", required = false) String size,
+            @RequestParam(name = "sort", required = false) String sort,
+            Model model
+        ){
+            // List<Product> searchResults = productService.getAllProducts(keyword);
+    
+            List<Product> searchResults = productService.getProductsForUser(keyword, categoryName, size, sort);
+            model.addAttribute("searchResults", searchResults);
+            model.addAttribute("keyword", keyword); 
+            return "user/searchProduct";
+        }
     // 
 }

@@ -127,7 +127,7 @@
         title="Nhấn Enter để tìm kiếm."
       >
         <div class="search-inner">
-          <form action="#" class="search-form" title="Nhấn Enter để tìm kiếm.">
+          <form th:action="@{/user/searchProduct}" method="get" class="search-form" title="Nhấn Enter để tìm kiếm.">
             <button type="submit" class="search-btn">
               <img th:src="@{/img/Search_light.svg}" alt="search" />
             </button>
@@ -136,6 +136,9 @@
               type="text"
               placeholder="Tìm kiếm"
               title="Nhấn Enter để tìm kiếm."
+              autocomplete="off"
+              name = "keyword"
+              required
             />
           </form>
 

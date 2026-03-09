@@ -53,11 +53,77 @@
         <nav class="navbar">
              <a th:href="@{/user/homePage}"><img th:src="@{/img/Logo.svg}" alt="Modimal" /></a>
              <div class="actions">
+                <div class="search-box">
+                  <a href="javascript:void(0)" onclick="toggleSearch()">
+                    <img th:src="@{/img/Search_light.svg}" alt="Search-icon" />
+                  </a>
+                </div>
+
+                <div class="account">
+                  <a
+                    th:href="${session.currentUser != null} ? @{/user/profile} : @{/account/login}"
+                    class="account_icon"
+                  >
+                    <img th:src="@{/img/Header profile icon.svg}" alt="Account" />
+                  </a>
+
+                  <th:block th:if="${session.currentUser != null}">
+                    <div class="account_infor">
+                      <span
+                        th:text="${session.currentUser.name}"
+                        style="
+                          font-weight: bold;
+                          border-bottom: 1px solid #ddd;
+                          padding-bottom: 8px;
+                          margin-bottom: 4px;
+                          display: block;
+                        "
+                      ></span>
+
+                      <span>
+                        <a th:href="@{/user/profile}">Thông Tin Tài Khoản</a>
+                      </span>
+                      <span>
+                        <a th:href="@{/user/change-password}">Đổi Mật Khẩu</a>
+                      </span>
+                      <span>
+                        <a th:href="@{/user/purchase}">Đơn Hàng</a>
+                      </span>
+                      <span>
+                        <a th:href="@{/account/logout}">Đăng Xuất</a>
+                      </span>
+                    </div>
+                  </th:block>
+                </div>
                  <div class="cart">
                     <a th:href="@{/user/cart}"><img th:src="@{/img/Header bag icon.svg}" alt="Cart" /></a>
                  </div>
              </div>
         </nav>
+        <div
+        class="search-slide"
+        id="searchSlide"
+        title="Nhấn Enter để tìm kiếm."
+      >
+        <div class="search-inner">
+          <form th:action="@{/user/searchProduct}" method="get" class="search-form" title="Nhấn Enter để tìm kiếm.">
+            <button type="submit" class="search-btn">
+              <img th:src="@{/img/Search_light.svg}" alt="search" />
+            </button>
+
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+              title="Nhấn Enter để tìm kiếm."
+              autocomplete="off"
+              name = "keyword"
+              required
+            />
+          </form>
+
+          <span class="close-search" onclick="toggleSearch()">✕</span>
+        </div>
+      </div>
     </header>
 
     <main class="product-detail">
@@ -203,5 +269,6 @@
     </script>
 
     <script th:src="@{/js/quantity.js}"></script>
+    <script th:src="@{/js/searchSlide.js}"></script>
   </body>
 </html>
